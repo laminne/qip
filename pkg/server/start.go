@@ -1,7 +1,9 @@
 package server
 
 import (
+	"encoding/json"
 	"fmt"
+	"github.com/laminne/notepod/pkg/types"
 	"net/http"
 	"strings"
 
@@ -58,73 +60,40 @@ func webFingerHandler(c echo.Context) error {
 
 func userAcctHandler(c echo.Context) error {
 	if strings.Contains(c.Request().Header.Get("Accept"), "application/activity+json") {
-		return c.String(200, `{
-			"@context": [
-			  "https://www.w3.org/ns/activitystreams",
-			  "https://w3id.org/security/v1",
-			  {
-				"manuallyApprovesFollowers": "as:manuallyApprovesFollowers",
-				"sensitive": "as:sensitive",
-				"Hashtag": "as:Hashtag",
-				"quoteUrl": "as:quoteUrl",
-				"toot": "http://joinmastodon.org/ns#",
-				"Emoji": "toot:Emoji",
-				"featured": "toot:featured",
-				"discoverable": "toot:discoverable",
-				"schema": "http://schema.org#",
-				"PropertyValue": "schema:PropertyValue",
-				"value": "schema:value",
-				"misskey": "https://misskey-hub.net/ns#",
-				"_misskey_content": "misskey:_misskey_content",
-				"_misskey_quote": "misskey:_misskey_quote",
-				"_misskey_reaction": "misskey:_misskey_reaction",
-				"_misskey_votes": "misskey:_misskey_votes",
-				"_misskey_talk": "misskey:_misskey_talk",
-				"isCat": "misskey:isCat",
-				"vcard": "http://www.w3.org/2006/vcard/ns#"
-			  }
-			],
-			"type": "Person",
-			"id": "https://np.test.laminne33569.net/users/1",
-			"inbox": "https://np.test.laminne33569.net/inbox",
-			"outbox": "https://np.test.laminne33569.net/users/1/outbox",
-			"followers": "https://np.test.laminne33569.net/users/1/followers",
-			"following": "https://np.test.laminne33569.net/users/1/following",
-			"featured": "https://np.test.laminne33569.net/users/1/collections/featured",
-			"sharedInbox": "https://np.test.laminne33569.net/inbox",
-			"endpoints": {
-			  "sharedInbox": "https://np.test.laminne33569.net/inbox"
+		res := activitypub.Person(types.PersonResponseArgs{
+			ID:             "1",
+			UserName:       "test",
+			UserScreenName: "test",
+			Summary:        "<p>Hello Fediverse World</p>",
+			Icon: struct {
+				Url       string
+				Sensitive bool
+				Name      interface{}
+			}{
+				Url:       "https://s3.arkjp.net/misskey/a29d961e-9347-469b-b959-5b0c8ae12d8b.png",
+				Sensitive: false,
+				Name:      nil,
 			},
-			"url": "https://np.test.laminne33569.net/@test",
-			"preferredUsername": "test",
-			"name": "test",
-			"summary": "<p>Hello Fediverse World</p>",
-			"icon": {
-			  "type": "Image",
-			  "url": "https://s3.arkjp.net/misskey/a29d961e-9347-469b-b959-5b0c8ae12d8b.png",
-			  "sensitive": false,
-			  "name": null
+			Image: struct {
+				Url       string
+				Sensitive bool
+				Name      interface{}
+			}{
+				Url:       "https://s3.arkjp.net/misskey/webpublic-147f04c9-b5c1-4a91-a0cf-28bea9cd267a.png",
+				Sensitive: false,
+				Name:      nil,
 			},
-			"image": {
-			  "type": "Image",
-			  "url": "https://s3.arkjp.net/misskey/webpublic-147f04c9-b5c1-4a91-a0cf-28bea9cd267a.png",
-			  "sensitive": false,
-			  "name": null
-			},
-			"tag": [],
-			"manuallyApprovesFollowers": false,
-			"discoverable": true,
-			"publicKey": {
-			  "id": "https://np.test.laminne33569.net/users/1#main-key",
-			  "type": "Key",
-			  "owner": "https://np.test.laminne33569.net/users/1",
-			  "publicKeyPem": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnIizFGc9AR3Mv0x0Gasf\nTjrPIr7eztYe6xWjWqt4cnIQ/\npLPR/ZanVZ7v5VGo8jD+X5Y7WXYxhkZrYZg6xWv\nlcoQxxr07G72btUntWEkXYTSxEeY64C6Qo8Mh+zSdfU9MGAeUyNJS9VhpsS1yvMF\nlvuTYB9rv1j+CMg0hDui8MEr0ngLkdI+l+mgBLVdVKxyxb7MMLn/24dphINIMPAU\nFN7piy6EP3nZ6oOCsnFLQqZR+dnYKHueyGuWl++zgglL7aZGaSVXRddcUTmDduTE\n+uAgd/q6xSiM16DPnIDac7MREsp5wTSaP9jU2618FWV5r2Iljve0ZKnEn+G/Zna2\nHwIDAQAB\n-----END PUBLIC KEY-----"
-			},
-			"isCat": false,
-			"vcard:bday": "2023-02-21",
-			"vcard:Address": "Test"
-		  }
-		  `)
+			Tag:                       nil,
+			ManuallyApprovesFollowers: false,
+			PublicKey:                 "-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnIizFGc9AR3Mv0x0Gasf\\nTjrPIr7eztYe6xWjWqt4cnIQ/\\npLPR/ZanVZ7v5VGo8jD+X5Y7WXYxhkZrYZg6xWv\\nlcoQxxr07G72btUntWEkXYTSxEeY64C6Qo8Mh+zSdfU9MGAeUyNJS9VhpsS1yvMF\\nlvuTYB9rv1j+CMg0hDui8MEr0ngLkdI+l+mgBLVdVKxyxb7MMLn/24dphINIMPAU\\nFN7piy6EP3nZ6oOCsnFLQqZR+dnYKHueyGuWl++zgglL7aZGaSVXRddcUTmDduTE\\n+uAgd/q6xSiM16DPnIDac7MREsp5wTSaP9jU2618FWV5r2Iljve0ZKnEn+G/Zna2\\nHwIDAQAB\\n-----END PUBLIC KEY-----",
+		})
+
+		j, err := json.Marshal(res)
+		if err != nil {
+			return c.NoContent(500)
+		}
+
+		return c.JSONBlob(200, j)
 	}
 	return c.String(404, ``)
 }

@@ -1,9 +1,9 @@
 やることリスト:
 
-- WebFinger
+- WebFinger OK?
 - in/outBox
 - followers
 - publickey
 - host-meta(XML)
 - host-meta.json
-- nodeinfo
+- nodeinfo OK
