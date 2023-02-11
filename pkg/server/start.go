@@ -47,5 +47,5 @@ func webFingerHandler(c echo.Context) error {
 
 	r := activitypub.WebFinger(acct)
 
-	return c.Blob(http.StatusAccepted, "application/json+activity", []byte(r))
+	return c.Blob(http.StatusAccepted, "application/jrd+json; charset=utf-8", []byte(r))
 }
