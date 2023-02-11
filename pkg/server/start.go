@@ -19,7 +19,10 @@ func StartServer(port int) {
 	e.GET("/.well-known/nodeinfo", nodeInfoHandler)
 	e.GET("/nodeinfo/2.0", nodeInfo2Handler)
 	e.GET("/.well-known/webfinger", webFingerHandler)
-
+	e.GET("/users/acct:test", func(c echo.Context) error {
+		fmt.Println("Hello")
+		return c.String(404, "not found")
+	})
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", port)))
 }
 
