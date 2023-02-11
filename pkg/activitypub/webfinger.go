@@ -1,8 +1,12 @@
 package activitypub
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 func WebFinger(acct string) string {
+	user := strings.Split(acct, "@")
 	return fmt.Sprintf(`{
 		"subject": "acct:%s@np.test.laminne33569.net",
 		"links": [
@@ -22,5 +26,5 @@ func WebFinger(acct string) string {
 		  }
 		]
 	  }
-	  `, acct, acct, acct)
+	  `, user[0], user[0], user[0])
 }

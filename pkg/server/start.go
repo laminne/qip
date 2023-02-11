@@ -43,6 +43,7 @@ func webFingerHandler(c echo.Context) error {
 	if acct == "" {
 		return c.Blob(http.StatusBadRequest, "plain/text", []byte(""))
 	}
+	fmt.Println(acct)
 
 	r := activitypub.WebFinger(acct)
 
