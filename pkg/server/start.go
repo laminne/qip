@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -43,12 +44,20 @@ func nodeInfo2Handler(c echo.Context) error {
 
 func webFingerHandler(c echo.Context) error {
 	acct := c.QueryParam("resource")
+	if len(strings.Split(acct, ":")) != 0 {
+		acct = acct[5:]
+	}
+	fmt.Println(acct)
 	if acct == "" {
 		return c.Blob(http.StatusBadRequest, "plain/text", []byte(""))
 	}
-	fmt.Println(acct)
 
 	r := activitypub.WebFinger(acct)
 
 	return c.Blob(http.StatusAccepted, "application/jrd+json; charset=utf-8", []byte(r))
+}
+
+func personHandler(c echo.Context) error {
+
+	return c.Blob(http.StatusAccepted, "application/jrd+json; charset=utf-8", []byte(""))
 }
