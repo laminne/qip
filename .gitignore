@@ -1,1 +1,2 @@
 pkg/activitypub/raw
+*.pem
