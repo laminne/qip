@@ -21,7 +21,7 @@ func StartServer(port int) {
 	e.GET("/nodeinfo/2.0", nodeInfo2Handler)
 	e.GET("/.well-known/webfinger", webFingerHandler)
 
-	e.GET("/users/acct:test", func(c echo.Context) error {
+	e.GET("/users/test", func(c echo.Context) error {
 		if strings.Contains(c.Request().Header.Get("Accept"), "application/activity+json") {
 			return c.String(200, `{
 				"@context": [
