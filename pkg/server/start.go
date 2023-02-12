@@ -1,17 +1,40 @@
 package server
 
 import (
+	"database/sql"
 	"fmt"
-	"github.com/laminne/notepod/pkg/types"
 	"net/http"
 	"strings"
+
+	"github.com/laminne/notepod/pkg/repository"
+
+	bun2 "github.com/laminne/notepod/pkg/repository/bun"
+
+	"github.com/uptrace/bun/dialect/pgdialect"
+
+	"github.com/uptrace/bun/driver/pgdriver"
+
+	"github.com/laminne/notepod/pkg/types"
+	"github.com/uptrace/bun"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/laminne/notepod/pkg/activitypub"
 )
 
+var UserRepository repository.UserRepository
+
 func StartServer(port int) {
+	db := bun.NewDB(
+		sql.OpenDB(
+			pgdriver.NewConnector(
+				pgdriver.WithDSN("postgres://postgres:notepod@localhost:5432/notepod?sslmode=disable"),
+			),
+		),
+		pgdialect.New(),
+	)
+	UserRepository = bun2.NewUserRepository(db)
+
 	e := echo.New()
 
 	e.Use(middleware.Logger())
