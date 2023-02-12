@@ -23,6 +23,7 @@ func StartServer(port int) {
 	e.GET("/.well-known/webfinger", webFingerHandler)
 
 	e.GET("/users/test", userAcctHandler)
+	e.GET("/users/acct:test", userAcctHandler)
 	e.GET("/users/1", userAcctHandler)
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", port)))
 }
@@ -48,8 +49,6 @@ func webFingerHandler(c echo.Context) error {
 	if acct == "" {
 		return c.Blob(http.StatusBadRequest, "plain/text", []byte(""))
 	}
-
-	fmt.Println(acct)
 
 	r, err := activitypub.WebFinger(acct)
 	if err != nil {
