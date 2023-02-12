@@ -1,9 +1,10 @@
 package activitypub
 
 import (
-	"github.com/laminne/notepod/pkg/types"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/laminne/notepod/pkg/activitypub/types"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestPerson(t *testing.T) {
