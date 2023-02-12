@@ -4,8 +4,11 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"strings"
+
+	"github.com/laminne/notepod/pkg/controller/models"
 
 	"github.com/laminne/notepod/pkg/controller"
 
@@ -26,6 +29,7 @@ import (
 
 var UserRepository repository.UserRepository
 var apController controller.ActivityPubController
+var userController controller.UserController
 
 func StartServer(port int) {
 	db := bun.NewDB(
@@ -36,20 +40,23 @@ func StartServer(port int) {
 		),
 		pgdialect.New(),
 	)
+
 	UserRepository = *bun2.NewUserRepository(db)
 	apController = *controller.NewActivityPubController(UserRepository)
+	userController = *controller.NewUserController(UserRepository)
 
 	e := echo.New()
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	e.GET("/", helloHandler)
+	//e.GET("/", helloHandler)
 	e.GET("/.well-known/nodeinfo", nodeInfoHandler)
 	e.GET("/nodeinfo/2.0", nodeInfo2Handler)
 	e.GET("/.well-known/webfinger", webFingerHandler)
-
 	e.GET("/users/:name", userAcctHandler)
+
+	e.POST("/api/users", createUserHandler)
 
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", port)))
 }
@@ -103,4 +110,20 @@ func userAcctHandler(c echo.Context) error {
 		return c.JSONBlob(200, j)
 	}
 	return c.String(404, ``)
+}
+
+func createUserHandler(c echo.Context) error {
+	b := models.CreateUserRequestJSON{}
+	body, _ := io.ReadAll(c.Request().Body)
+	err := json.Unmarshal(body, &b)
+	if err != nil {
+		return err
+	}
+
+	res, err := userController.CreateUser(b)
+	if err != nil {
+		return err
+	}
+
+	return c.JSON(200, res)
 }

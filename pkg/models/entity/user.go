@@ -8,6 +8,7 @@ type User struct {
 	ID             string     `bun:"id"`
 	Host           *string    `bun:"host"`
 	Name           string     `bun:"name"`
+	Password       *string    `bun:"password"`
 	ScreenName     string     `bun:"screenName"`
 	Summary        string     `bun:"summary"`
 	CreatedAt      time.Time  `bun:"createdAt"`
