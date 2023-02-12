@@ -82,27 +82,29 @@ func (r UserRepository) Update(u domain.User) (domain.User, error) {
 
 func (r UserRepository) FindByID(id id.SnowFlakeID) (*domain.User, error) {
 	u := entity.User{}
-
-	err := r.db.NewSelect().Model(&u).Where(fmt.Sprintf("id = %s", id)).Scan(context.Background())
+	err := r.db.NewSelect().Model(&u).Where("id = ?", id).Scan(context.Background(), &u)
 	if err != nil {
+		fmt.Println(err, "err")
 		return nil, errors.New("failed to find user by id")
 	}
 
 	res := r.etod(u)
-
 	return &res, nil
 }
 
-func (r UserRepository) FindByUserName(n string) (*domain.User, error) {
-	u := entity.User{}
+func (r UserRepository) FindByUserName(n string) ([]domain.User, error) {
+	var u, b []entity.User
 
-	err := r.db.NewSelect().Model(&u).Where(fmt.Sprintf("userName"))
+	err := r.db.NewSelect().Model(&u).Where(fmt.Sprintf("userName = %s", n)).Scan(context.Background(), &b)
 	if err != nil {
 		return nil, errors.New("failed to find user by username")
 	}
 
-	res := r.etod(u)
-	return &res, nil
+	var res []domain.User
+	for _, v := range b {
+		res = append(res, r.etod(v))
+	}
+	return res, nil
 }
 
 func (r UserRepository) FindByHost(h string) ([]domain.User, error) {
@@ -119,4 +121,21 @@ func (r UserRepository) FindByHost(h string) ([]domain.User, error) {
 	}
 
 	return res, nil
+}
+
+func (r UserRepository) FindLocalByUserName(n string) (domain.User, error) {
+	var u, b []entity.User
+
+	err := r.db.NewSelect().Model(&u).Where(fmt.Sprintf("host IS null")).Scan(context.Background(), &b)
+	if err != nil {
+		return domain.User{}, errors.New("failed to find user by username")
+	}
+
+	for _, v := range b {
+		if v.Name == n {
+			return r.etod(v), nil
+		}
+	}
+
+	return domain.User{}, errors.New("user not found")
 }

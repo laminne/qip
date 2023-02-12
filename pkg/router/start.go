@@ -1,10 +1,13 @@
-package server
+package router
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
+
+	"github.com/laminne/notepod/pkg/controller"
 
 	"github.com/laminne/notepod/pkg/repository"
 
@@ -14,7 +17,6 @@ import (
 
 	"github.com/uptrace/bun/driver/pgdriver"
 
-	"github.com/laminne/notepod/pkg/types"
 	"github.com/uptrace/bun"
 
 	"github.com/labstack/echo/v4"
@@ -23,6 +25,7 @@ import (
 )
 
 var UserRepository repository.UserRepository
+var apController controller.ActivityPubController
 
 func StartServer(port int) {
 	db := bun.NewDB(
@@ -33,7 +36,8 @@ func StartServer(port int) {
 		),
 		pgdialect.New(),
 	)
-	UserRepository = bun2.NewUserRepository(db)
+	UserRepository = *bun2.NewUserRepository(db)
+	apController = *controller.NewActivityPubController(UserRepository)
 
 	e := echo.New()
 
@@ -45,9 +49,8 @@ func StartServer(port int) {
 	e.GET("/nodeinfo/2.0", nodeInfo2Handler)
 	e.GET("/.well-known/webfinger", webFingerHandler)
 
-	e.GET("/users/test", userAcctHandler)
-	e.GET("/users/acct:test", userAcctHandler)
-	e.GET("/users/1", userAcctHandler)
+	e.GET("/users/:name", userAcctHandler)
+
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", port)))
 }
 
@@ -83,35 +86,21 @@ func webFingerHandler(c echo.Context) error {
 
 func userAcctHandler(c echo.Context) error {
 	if strings.Contains(c.Request().Header.Get("Accept"), "application/activity+json") {
-		res := activitypub.Person(types.PersonResponseArgs{
-			ID:             "1",
-			UserName:       "test",
-			UserScreenName: "test",
-			Summary:        "<p>Hello Fediverse World</p>",
-			Icon: struct {
-				Url       string
-				Sensitive bool
-				Name      interface{}
-			}{
-				Url:       "https://s3.arkjp.net/misskey/a29d961e-9347-469b-b959-5b0c8ae12d8b.png",
-				Sensitive: false,
-				Name:      nil,
-			},
-			Image: struct {
-				Url       string
-				Sensitive bool
-				Name      interface{}
-			}{
-				Url:       "https://s3.arkjp.net/misskey/webpublic-147f04c9-b5c1-4a91-a0cf-28bea9cd267a.png",
-				Sensitive: false,
-				Name:      nil,
-			},
-			Tag:                       nil,
-			ManuallyApprovesFollowers: false,
-			PublicKey:                 "-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnIizFGc9AR3Mv0x0Gasf\\nTjrPIr7eztYe6xWjWqt4cnIQ/\\npLPR/ZanVZ7v5VGo8jD+X5Y7WXYxhkZrYZg6xWv\\nlcoQxxr07G72btUntWEkXYTSxEeY64C6Qo8Mh+zSdfU9MGAeUyNJS9VhpsS1yvMF\\nlvuTYB9rv1j+CMg0hDui8MEr0ngLkdI+l+mgBLVdVKxyxb7MMLn/24dphINIMPAU\\nFN7piy6EP3nZ6oOCsnFLQqZR+dnYKHueyGuWl++zgglL7aZGaSVXRddcUTmDduTE\\n+uAgd/q6xSiM16DPnIDac7MREsp5wTSaP9jU2618FWV5r2Iljve0ZKnEn+G/Zna2\\nHwIDAQAB\\n-----END PUBLIC KEY-----",
-		})
+		param := c.Param("name")
+		name := param
 
-		return c.JSONBlob(200, res)
+		if len(param) == 0 {
+			return c.String(404, "")
+		}
+		if string(param[0]) == "@" {
+			name = string(param[1:])
+		} else if string(param[:5]) == "acct:" {
+			name = string(param[5:])
+		}
+
+		res := apController.GetUser(name)
+		j, _ := json.Marshal(res)
+		return c.JSONBlob(200, j)
 	}
 	return c.String(404, ``)
 }

@@ -1,7 +1,7 @@
 package main
 
-import "github.com/laminne/notepod/pkg/server"
+import "github.com/laminne/notepod/pkg/router"
 
 func main() {
-	server.StartServer(7000)
+	router.StartServer(7000)
 }

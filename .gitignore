@@ -1,3 +1,5 @@
 pkg/activitypub/raw
 *.pem
 .idea
+*.exe
+*.log

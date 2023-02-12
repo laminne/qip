@@ -4,7 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/laminne/notepod/pkg/types"
+
+	"github.com/laminne/notepod/pkg/activitypub/types"
 )
 
 func WebFinger(acct string) (string, error) {

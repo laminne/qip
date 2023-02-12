@@ -1,12 +1,12 @@
 package activitypub
 
 import (
-	"encoding/json"
 	"fmt"
-	"github.com/laminne/notepod/pkg/types"
+
+	"github.com/laminne/notepod/pkg/activitypub/types"
 )
 
-func Person(args types.PersonResponseArgs) []byte {
+func Person(args types.PersonResponseArgs) types.PersonResponseJSONLD {
 	res := types.PersonResponseJSONLD{
 		Context: []interface{}{
 			"https://www.w3.org/ns/activitystreams",
@@ -97,8 +97,5 @@ func Person(args types.PersonResponseArgs) []byte {
 	}
 
 	res.Context = append(res.Context, context)
-
-	j, _ := json.Marshal(res)
-
-	return j
+	return res
 }
