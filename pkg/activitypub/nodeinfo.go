@@ -61,7 +61,7 @@ const nodeinfo2 = `{
 	  "themeColor": "#8b819a"
 	}
   }`
-const ServerFQDN = "np.laminne33569.net"
+const ServerFQDN = "np.test.laminne33569.net"
 
 func NodeInfo() string  { return fmt.Sprintf(nodeinfo, ServerFQDN) }
 func NodeInfo2() string { return nodeinfo2 }

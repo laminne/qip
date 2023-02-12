@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 	"strings"
 
 	"github.com/laminne/notepod/pkg/controller"
@@ -42,13 +41,8 @@ func StartServer(port int) {
 
 	e := echo.New()
 
-	a, _ := os.OpenFile("notepod.log", os.O_RDWR|os.O_CREATE, 0660)
-	defer a.Close()
-
-	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-		Output: a,
-	}))
-	//e.Use(middleware.Recover())
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
 
 	e.GET("/", helloHandler)
 	e.GET("/.well-known/nodeinfo", nodeInfoHandler)
@@ -102,7 +96,6 @@ func userAcctHandler(c echo.Context) error {
 			name = string(param[1:])
 		} else if string(param[:5]) == "acct:" {
 			name = string(param[5:])
-
 		}
 
 		res := apController.GetUser(name)
