@@ -8,19 +8,22 @@ import (
 type SnowFlakeID string
 
 type Generator interface {
-	NewID() SnowFlakeID
+	NewID(t time.Time) SnowFlakeID
+}
+
+func NewSnowFlakeIDGenerator() *SnowFlakeIDGenerator {
+	return &SnowFlakeIDGenerator{}
 }
 
 type SnowFlakeIDGenerator struct {
-	Time time.Time
 }
 
 // SnowFlakeEpoch Epoch: 2020/04/01 00:00:00 (UTC+9/JST)
 const SnowFlakeEpoch = 1585666800
 
-func (i *SnowFlakeIDGenerator) NewID() SnowFlakeID {
+func (i *SnowFlakeIDGenerator) NewID(t time.Time) SnowFlakeID {
 	var snowFlakeID int64
-	var unixDate int64 = i.Time.UnixMilli()
+	var unixDate int64 = t.UnixMilli()
 	var date int64 = unixDate - SnowFlakeEpoch
 	var workerID int64 = 0
 	var processID int64 = 0
