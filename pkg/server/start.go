@@ -1,7 +1,6 @@
 package server
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/laminne/notepod/pkg/types"
 	"net/http"
@@ -45,15 +44,17 @@ func nodeInfo2Handler(c echo.Context) error {
 
 func webFingerHandler(c echo.Context) error {
 	acct := c.QueryParam("resource")
-	if len(strings.Split(acct, ":")) != 0 {
-		acct = acct[5:]
-	}
-	fmt.Println(acct)
+
 	if acct == "" {
 		return c.Blob(http.StatusBadRequest, "plain/text", []byte(""))
 	}
 
-	r := activitypub.WebFinger(acct)
+	fmt.Println(acct)
+
+	r, err := activitypub.WebFinger(acct)
+	if err != nil {
+		return c.Blob(http.StatusUnprocessableEntity, "plain/text", []byte(""))
+	}
 
 	return c.Blob(http.StatusAccepted, "application/jrd+json; charset=utf-8", []byte(r))
 }
@@ -88,12 +89,7 @@ func userAcctHandler(c echo.Context) error {
 			PublicKey:                 "-----BEGIN PUBLIC KEY-----\\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnIizFGc9AR3Mv0x0Gasf\\nTjrPIr7eztYe6xWjWqt4cnIQ/\\npLPR/ZanVZ7v5VGo8jD+X5Y7WXYxhkZrYZg6xWv\\nlcoQxxr07G72btUntWEkXYTSxEeY64C6Qo8Mh+zSdfU9MGAeUyNJS9VhpsS1yvMF\\nlvuTYB9rv1j+CMg0hDui8MEr0ngLkdI+l+mgBLVdVKxyxb7MMLn/24dphINIMPAU\\nFN7piy6EP3nZ6oOCsnFLQqZR+dnYKHueyGuWl++zgglL7aZGaSVXRddcUTmDduTE\\n+uAgd/q6xSiM16DPnIDac7MREsp5wTSaP9jU2618FWV5r2Iljve0ZKnEn+G/Zna2\\nHwIDAQAB\\n-----END PUBLIC KEY-----",
 		})
 
-		j, err := json.Marshal(res)
-		if err != nil {
-			return c.NoContent(500)
-		}
-
-		return c.JSONBlob(200, j)
+		return c.JSONBlob(200, res)
 	}
 	return c.String(404, ``)
 }
