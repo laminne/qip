@@ -3,18 +3,23 @@ package usecase
 import (
 	"fmt"
 
+	"github.com/laminne/notepod/pkg/utils/password/argon2"
+
+	"github.com/laminne/notepod/pkg/utils/password"
+
 	"github.com/laminne/notepod/pkg/models/domain"
 	"github.com/laminne/notepod/pkg/repository"
 	"github.com/laminne/notepod/pkg/utils/id"
 )
 
 type UserUseCase struct {
-	repo repository.UserRepository
+	repo    repository.UserRepository
+	encoder password.Encoder
 }
 
 func NewUserUseCase(repo repository.UserRepository) *UserUseCase {
 	fmt.Println(repo)
-	return &UserUseCase{repo: repo}
+	return &UserUseCase{repo: repo, encoder: argon2.NewArgon2PasswordEncoder()}
 }
 
 func (c UserUseCase) FindByID(id id.SnowFlakeID) (*domain.User, error) {
@@ -44,6 +49,14 @@ func (c UserUseCase) FindLocalByUserName(name string) (*domain.User, error) {
 }
 
 func (c UserUseCase) Create(u domain.User) (domain.User, error) {
+	encodedPassword, err := c.encoder.EncodePassword(u.Password)
+	if err != nil {
+		return domain.User{}, err
+	}
+
+	u.Password = string(encodedPassword)
+	fmt.Println(u.Password)
+
 	r, err := c.repo.Create(u)
 	if err != nil {
 		return domain.User{}, err

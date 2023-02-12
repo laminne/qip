@@ -13,6 +13,7 @@ type User struct {
 	Name           string
 	ScreenName     string
 	Summary        string
+	Password       string
 	CreatedAt      time.Time
 	UpdatedAt      *time.Time
 	PrivateKey     string
@@ -30,6 +31,7 @@ func NewUser(
 	name string,
 	screenName string,
 	summary string,
+	password string,
 	createdAt time.Time,
 	updatedAt *time.Time,
 	privateKey string,
@@ -50,6 +52,7 @@ func NewUser(
 		Name:           name,
 		ScreenName:     screenName,
 		Summary:        summary,
+		Password:       password,
 		CreatedAt:      createdAt,
 		UpdatedAt:      updatedAt,
 		PrivateKey:     privateKey,
@@ -67,6 +70,11 @@ func validateUserName(n string) error {
 		return errors.New("username validation failed")
 	}
 	return nil
+}
+
+// UpdatePassword ユーザーのパスワードを変更
+func (u *User) UpdatePassword(p string) {
+	u.Password = p
 }
 
 // NoteCountUp ユーザーのノート数を増やす

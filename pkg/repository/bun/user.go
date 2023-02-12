@@ -26,6 +26,7 @@ func (r UserRepository) dtoe(u domain.User) entity.User {
 		Name:           u.Name,
 		ScreenName:     u.ScreenName,
 		Summary:        u.Summary,
+		Password:       &u.Password,
 		CreatedAt:      u.CreatedAt,
 		UpdatedAt:      u.UpdatedAt,
 		PrivateKey:     u.PrivateKey,
@@ -45,6 +46,7 @@ func (r UserRepository) etod(e entity.User) domain.User {
 		Name:           e.Name,
 		ScreenName:     e.ScreenName,
 		Summary:        e.Summary,
+		Password:       *e.Password,
 		CreatedAt:      e.CreatedAt,
 		UpdatedAt:      e.UpdatedAt,
 		PrivateKey:     e.PrivateKey,
@@ -55,6 +57,7 @@ func (r UserRepository) etod(e entity.User) domain.User {
 		HeaderImageURL: e.HeaderImageURL,
 		IconImageURL:   e.IconImageURL,
 	}
+
 }
 
 func (r UserRepository) Create(u domain.User) (domain.User, error) {
