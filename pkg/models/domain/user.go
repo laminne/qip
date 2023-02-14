@@ -20,7 +20,7 @@ type User struct {
 	PublicKey      string
 	FollowerCount  int
 	FollowingCount int
-	NoteCount      int
+	PostsCount     int
 	HeaderImageURL *string
 	IconImageURL   *string
 }
@@ -38,7 +38,7 @@ func NewUser(
 	publicKey string,
 	followerCount int,
 	followingCount int,
-	noteCount int,
+	postsCount int,
 	headerImageURL *string,
 	iconImageURL *string) (*User, error) {
 
@@ -59,7 +59,7 @@ func NewUser(
 		PublicKey:      publicKey,
 		FollowerCount:  followerCount,
 		FollowingCount: followingCount,
-		NoteCount:      noteCount,
+		PostsCount:     postsCount,
 		HeaderImageURL: headerImageURL,
 		IconImageURL:   iconImageURL,
 	}, nil
@@ -77,14 +77,14 @@ func (u *User) UpdatePassword(p string) {
 	u.Password = p
 }
 
-// NoteCountUp ユーザーのノート数を増やす
-func (u *User) NoteCountUp() {
-	u.NoteCount++
+// PostsCountUp ユーザーのノート数を増やす
+func (u *User) PostsCountUp() {
+	u.PostsCount++
 }
 
-// NoteCountDown ユーザーのノート数を減らす
-func (u *User) NoteCountDown() {
-	u.NoteCount--
+// PostsCountDown ユーザーのノート数を減らす
+func (u *User) PostsCountDown() {
+	u.PostsCount--
 }
 
 // FollowerCountUp ユーザーの被フォロー数を増やす

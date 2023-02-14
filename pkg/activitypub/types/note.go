@@ -2,7 +2,7 @@ package types
 
 import "time"
 
-type NoteJSONLD struct {
+type PostJSONLD struct {
 	ID        string      `json:"id"`    // /notes/:id/activity
 	Actor     string      `json:"actor"` // /users/:id
 	Type      string      `json:"type"`  // 本人: Create / RN: Announce
@@ -12,7 +12,7 @@ type NoteJSONLD struct {
 	Cc        []string    `json:"cc"`     // /users/:id/followers
 }
 
-type NoteObject struct {
+type PostObject struct {
 	ID             string `json:"id"`               // /notes/:id/activity
 	Type           string `json:"type"`             // Note
 	AttributedTo   string `json:"attributedTo"`     // /users/:id

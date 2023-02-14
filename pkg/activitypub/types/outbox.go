@@ -16,7 +16,7 @@ type UserOutBoxPageJSONLD struct {
 	PartOf       string        `json:"partOf"`
 	Type         string        `json:"type"`
 	TotalItems   int           `json:"totalItems"`
-	OrderedItems []NoteJSONLD  `json:"orderedItems"`
+	OrderedItems []PostJSONLD  `json:"orderedItems"`
 	Prev         string        `json:"prev"`
 	Next         string        `json:"next"`
 }

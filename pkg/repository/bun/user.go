@@ -33,7 +33,7 @@ func (r UserRepository) dtoe(u domain.User) entity.User {
 		PublicKey:      u.PublicKey,
 		FollowerCount:  u.FollowerCount,
 		FollowingCount: u.FollowingCount,
-		NoteCount:      u.NoteCount,
+		PostsCount:     u.NoteCount,
 		HeaderImageURL: u.HeaderImageURL,
 		IconImageURL:   u.IconImageURL,
 	}
@@ -53,7 +53,7 @@ func (r UserRepository) etod(e entity.User) domain.User {
 		PublicKey:      e.PublicKey,
 		FollowerCount:  e.FollowerCount,
 		FollowingCount: e.FollowingCount,
-		NoteCount:      e.NoteCount,
+		NoteCount:      e.PostsCount,
 		HeaderImageURL: e.HeaderImageURL,
 		IconImageURL:   e.IconImageURL,
 	}

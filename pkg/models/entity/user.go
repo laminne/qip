@@ -17,7 +17,7 @@ type User struct {
 	PublicKey      string     `bun:"publicKey"`
 	FollowerCount  int        `bun:"followerCount"`
 	FollowingCount int        `bun:"followingCount"`
-	NoteCount      int        `bun:"noteCount"`
+	PostsCount     int        `bun:"postsCount"`
 	HeaderImageURL *string    `bun:"headerImageUrl"`
 	IconImageURL   *string    `bun:"iconImageUrl"`
 }
