@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/laminne/notepod/cmd/bun/migrations"
+	"github.com/approversrsrs/qip/cmd/bun/migrations"
 	"github.com/uptrace/bun/migrate"
 	"github.com/urfave/cli/v2"
 
@@ -20,7 +20,7 @@ func main() {
 	db := bun.NewDB(
 		sql.OpenDB(
 			pgdriver.NewConnector(
-				pgdriver.WithDSN("postgres://postgres:notepod@localhost:5432/notepod?sslmode=disable"),
+				pgdriver.WithDSN("postgres://postgres:qip@localhost:5432/qip?sslmode=disable"),
 			),
 		),
 		pgdialect.New(),
@@ -41,7 +41,7 @@ func main() {
 func newDBCommand(mi *migrate.Migrator) *cli.Command {
 	return &cli.Command{
 		Name:  "db",
-		Usage: "Notepod Database migration tools",
+		Usage: "qip Database migration tools",
 		Subcommands: []*cli.Command{
 			{
 				Name:  "init",

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/laminne/notepod/pkg/activitypub/types"
+	"github.com/approvers/qip/pkg/activitypub/types"
 )
 
 func WebFinger(acct string) (string, error) {

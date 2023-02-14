@@ -8,13 +8,13 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/laminne/notepod/pkg/controller/models"
+	"github.com/approvers/qip/pkg/controller/models"
 
-	"github.com/laminne/notepod/pkg/controller"
+	"github.com/approvers/qip/pkg/controller"
 
-	"github.com/laminne/notepod/pkg/repository"
+	"github.com/approvers/qip/pkg/repository"
 
-	bun2 "github.com/laminne/notepod/pkg/repository/bun"
+	bun2 "github.com/approvers/qip/pkg/repository/bun"
 
 	"github.com/uptrace/bun/dialect/pgdialect"
 
@@ -22,9 +22,9 @@ import (
 
 	"github.com/uptrace/bun"
 
+	"github.com/approvers/qip/pkg/activitypub"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/laminne/notepod/pkg/activitypub"
 )
 
 var UserRepository repository.UserRepository
@@ -35,7 +35,7 @@ func StartServer(port int) {
 	db := bun.NewDB(
 		sql.OpenDB(
 			pgdriver.NewConnector(
-				pgdriver.WithDSN("postgres://postgres:notepod@localhost:5432/notepod?sslmode=disable"),
+				pgdriver.WithDSN("postgres://postgres:qip@localhost:5432/qip?sslmode=disable"),
 			),
 		),
 		pgdialect.New(),

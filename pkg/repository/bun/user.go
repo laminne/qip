@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/laminne/notepod/pkg/models/domain"
-	"github.com/laminne/notepod/pkg/models/entity"
-	"github.com/laminne/notepod/pkg/utils/id"
+	"github.com/approvers/qip/pkg/models/domain"
+	"github.com/approvers/qip/pkg/models/entity"
+	"github.com/approvers/qip/pkg/utils/id"
 	"github.com/uptrace/bun"
 )
 

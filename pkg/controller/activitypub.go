@@ -3,13 +3,13 @@ package controller
 import (
 	"strconv"
 
-	"github.com/laminne/notepod/pkg/utils/id"
+	"github.com/approvers/qip/pkg/utils/id"
 
-	"github.com/laminne/notepod/pkg/activitypub"
-	"github.com/laminne/notepod/pkg/activitypub/types"
-	"github.com/laminne/notepod/pkg/models/domain"
-	"github.com/laminne/notepod/pkg/repository"
-	"github.com/laminne/notepod/pkg/usecase"
+	"github.com/approvers/qip/pkg/activitypub"
+	"github.com/approvers/qip/pkg/activitypub/types"
+	"github.com/approvers/qip/pkg/models/domain"
+	"github.com/approvers/qip/pkg/repository"
+	"github.com/approvers/qip/pkg/usecase"
 )
 
 type ActivityPubController struct {

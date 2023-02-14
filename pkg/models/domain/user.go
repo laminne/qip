@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/laminne/notepod/pkg/utils/id"
+	"github.com/approvers/qip/pkg/utils/id"
 )
 
 type User struct {

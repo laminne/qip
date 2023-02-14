@@ -14,7 +14,7 @@ const nodeinfo = `{
 const nodeinfo2 = `{
 	"version": "2.0",
 	"software": {
-	  "name": "notepod",
+	  "name": "qip",
 	  "version": "0.0.1"
 	},
 	"protocols": [
@@ -38,8 +38,8 @@ const nodeinfo2 = `{
 	  "localComments": 0
 	},
 	"metadata": {
-	  "nodeName": "Notepod Dev",
-	  "nodeDescription": "Notepod",
+	  "nodeName": "qip Dev",
+	  "nodeDescription": "qip",
 	  "maintainer": {
 		"name": "test",
 		"email": "test@example.com"

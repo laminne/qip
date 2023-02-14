@@ -1,6 +1,6 @@
 package activitypub
 
-import "github.com/laminne/notepod/pkg/activitypub/types"
+import "github.com/approvers/qip/pkg/activitypub/types"
 
 func UserOutBox() types.UserOutBoxPageJSONLD {
 	res := types.UserOutBoxResponseJSONLD{

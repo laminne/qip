@@ -1,8 +1,8 @@
 package repository
 
 import (
-	"github.com/laminne/notepod/pkg/models/domain"
-	"github.com/laminne/notepod/pkg/utils/id"
+	"github.com/approvers/qip/pkg/models/domain"
+	"github.com/approvers/qip/pkg/utils/id"
 )
 
 type UserRepository interface {

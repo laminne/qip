@@ -3,13 +3,13 @@ package usecase
 import (
 	"fmt"
 
-	"github.com/laminne/notepod/pkg/utils/password/argon2"
+	"github.com/approvers/qip/pkg/utils/password/argon2"
 
-	"github.com/laminne/notepod/pkg/utils/password"
+	"github.com/approvers/qip/pkg/utils/password"
 
-	"github.com/laminne/notepod/pkg/models/domain"
-	"github.com/laminne/notepod/pkg/repository"
-	"github.com/laminne/notepod/pkg/utils/id"
+	"github.com/approvers/qip/pkg/models/domain"
+	"github.com/approvers/qip/pkg/repository"
+	"github.com/approvers/qip/pkg/utils/id"
 )
 
 type UserUseCase struct {
