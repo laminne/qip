@@ -12,6 +12,7 @@ import (
 	"github.com/approvers/qip/pkg/usecase"
 )
 
+// ActivityPubController ActivityPubの通信に応答する部分
 type ActivityPubController struct {
 	repo    repository.UserRepository
 	usecase usecase.UserUseCase
@@ -24,6 +25,7 @@ func NewActivityPubController(r repository.UserRepository) *ActivityPubControlle
 	}
 }
 
+// GetUser 自インスタンスのユーザーを取得
 func (c ActivityPubController) GetUser(uid string) *types.PersonResponseJSONLD {
 	// snowflakeかUsernameか判別
 	_, err := strconv.Atoi(uid)

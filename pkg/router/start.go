@@ -100,9 +100,9 @@ func userAcctHandler(c echo.Context) error {
 			return c.String(404, "")
 		}
 		if string(param[0]) == "@" {
-			name = string(param[1:])
+			name = param[1:]
 		} else if string(param[:5]) == "acct:" {
-			name = string(param[5:])
+			name = param[5:]
 		}
 
 		res := apController.GetUser(name)

@@ -12,6 +12,7 @@ import (
 	"github.com/approvers/qip/pkg/utils/id"
 )
 
+// UserController ユーザー関連のAPI
 type UserController struct {
 	repo        repository.UserRepository
 	usecase     usecase.UserUseCase
@@ -40,7 +41,7 @@ func (u UserController) CreateUser(q models.CreateUserRequestJSON) (models.Creat
 		PublicKey:      "",
 		FollowerCount:  0,
 		FollowingCount: 0,
-		NoteCount:      0,
+		PostsCount:     0,
 		HeaderImageURL: nil,
 		IconImageURL:   nil,
 	}
