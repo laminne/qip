@@ -3,15 +3,16 @@ package controller
 import (
 	"strconv"
 
-	"github.com/laminne/notepod/pkg/utils/id"
+	"github.com/approvers/qip/pkg/utils/id"
 
-	"github.com/laminne/notepod/pkg/activitypub"
-	"github.com/laminne/notepod/pkg/activitypub/types"
-	"github.com/laminne/notepod/pkg/models/domain"
-	"github.com/laminne/notepod/pkg/repository"
-	"github.com/laminne/notepod/pkg/usecase"
+	"github.com/approvers/qip/pkg/activitypub"
+	"github.com/approvers/qip/pkg/activitypub/types"
+	"github.com/approvers/qip/pkg/models/domain"
+	"github.com/approvers/qip/pkg/repository"
+	"github.com/approvers/qip/pkg/usecase"
 )
 
+// ActivityPubController ActivityPubの通信に応答する部分
 type ActivityPubController struct {
 	repo    repository.UserRepository
 	usecase usecase.UserUseCase
@@ -24,6 +25,7 @@ func NewActivityPubController(r repository.UserRepository) *ActivityPubControlle
 	}
 }
 
+// GetUser 自インスタンスのユーザーを取得
 func (c ActivityPubController) GetUser(uid string) *types.PersonResponseJSONLD {
 	// snowflakeかUsernameか判別
 	_, err := strconv.Atoi(uid)

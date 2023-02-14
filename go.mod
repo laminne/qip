@@ -1,4 +1,4 @@
-module github.com/laminne/notepod
+module github.com/approvers/qip
 
 go 1.19
 

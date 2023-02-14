@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   db:
@@ -9,7 +9,7 @@ services:
     volumes:
       - db:/var/lib/postgresql/data
     environment:
-      - POSTGRES_PASSWORD=notepod
+      - POSTGRES_PASSWORD=qip
 
 volumes:
   db:

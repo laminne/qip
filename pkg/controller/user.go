@@ -3,15 +3,16 @@ package controller
 import (
 	"time"
 
-	"github.com/laminne/notepod/pkg/activitypub"
+	"github.com/approvers/qip/pkg/activitypub"
 
-	"github.com/laminne/notepod/pkg/controller/models"
-	"github.com/laminne/notepod/pkg/models/domain"
-	"github.com/laminne/notepod/pkg/repository"
-	"github.com/laminne/notepod/pkg/usecase"
-	"github.com/laminne/notepod/pkg/utils/id"
+	"github.com/approvers/qip/pkg/controller/models"
+	"github.com/approvers/qip/pkg/models/domain"
+	"github.com/approvers/qip/pkg/repository"
+	"github.com/approvers/qip/pkg/usecase"
+	"github.com/approvers/qip/pkg/utils/id"
 )
 
+// UserController ユーザー関連のAPI
 type UserController struct {
 	repo        repository.UserRepository
 	usecase     usecase.UserUseCase
@@ -40,7 +41,7 @@ func (u UserController) CreateUser(q models.CreateUserRequestJSON) (models.Creat
 		PublicKey:      "",
 		FollowerCount:  0,
 		FollowingCount: 0,
-		NoteCount:      0,
+		PostsCount:     0,
 		HeaderImageURL: nil,
 		IconImageURL:   nil,
 	}

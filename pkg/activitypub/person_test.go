@@ -3,7 +3,7 @@ package activitypub
 import (
 	"testing"
 
-	"github.com/laminne/notepod/pkg/activitypub/types"
+	"github.com/approvers/qip/pkg/activitypub/types"
 	"github.com/stretchr/testify/assert"
 )
 

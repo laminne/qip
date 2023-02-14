@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/laminne/notepod/pkg/models/entity"
+	"github.com/approvers/qip/pkg/models/entity"
 
 	"github.com/uptrace/bun"
 )

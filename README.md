@@ -1,1 +1,1 @@
-# NotePod - Experimental ActivityPub Implementation
+# Qip - Experimental ActivityPub Implementation
