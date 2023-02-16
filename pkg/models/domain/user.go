@@ -18,8 +18,8 @@ type User struct {
 	UpdatedAt      *time.Time
 	PrivateKey     string
 	PublicKey      string
-	FollowerCount  int
-	FollowingCount int
+	WatcherCount   int
+	WatchingCount  int
 	PostsCount     int
 	HeaderImageURL *string
 	IconImageURL   *string
@@ -36,8 +36,8 @@ func NewUser(
 	updatedAt *time.Time,
 	privateKey string,
 	publicKey string,
-	followerCount int,
-	followingCount int,
+	watcherCount int,
+	watchingCount int,
 	postsCount int,
 	headerImageURL *string,
 	iconImageURL *string) (*User, error) {
@@ -57,8 +57,8 @@ func NewUser(
 		UpdatedAt:      updatedAt,
 		PrivateKey:     privateKey,
 		PublicKey:      publicKey,
-		FollowerCount:  followerCount,
-		FollowingCount: followingCount,
+		WatcherCount:   watcherCount,
+		WatchingCount:  watchingCount,
 		PostsCount:     postsCount,
 		HeaderImageURL: headerImageURL,
 		IconImageURL:   iconImageURL,
@@ -89,22 +89,22 @@ func (u *User) PostsCountDown() {
 
 // FollowerCountUp ユーザーの被フォロー数を増やす
 func (u *User) FollowerCountUp() {
-	u.FollowerCount++
+	u.WatcherCount++
 }
 
 // FollowerCountDown ユーザーのフォロワー数を減らす
 func (u *User) FollowerCountDown() {
-	u.FollowerCount--
+	u.WatcherCount--
 }
 
 // FollowingCountUp ユーザーのフォロー数を増やす
 func (u *User) FollowingCountUp() {
-	u.FollowingCount++
+	u.WatchingCount++
 }
 
 // FollowingCountDown ユーザーのフォロー数を減らす
 func (u *User) FollowingCountDown() {
-	u.FollowingCount--
+	u.WatchingCount--
 }
 
 // UpdateUserSummary ユーザーの自己紹介を更新

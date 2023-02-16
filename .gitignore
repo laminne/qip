@@ -1,4 +1,4 @@
-pkg/activitypub/raw
+raw
 *.pem
 .idea
 *.exe
