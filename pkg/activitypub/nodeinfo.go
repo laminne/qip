@@ -1,20 +1,28 @@
 package activitypub
 
-import "fmt"
+import (
+	"fmt"
 
-const nodeinfo = `{
+	"github.com/approvers/qip/pkg/utils/config"
+)
+
+func NodeInfo() string {
+	return fmt.Sprintf(`{
 		"links": [
-		  {
-			"rel": "http://nodeinfo.diaspora.software/ns/schema/2.0",
-			"href": "https://%v/nodeinfo/2.0"
-		  }
+			{
+				"rel": "http://nodeinfo.diaspora.software/ns/schema/2.0",
+				"href": "https://%v/nodeinfo/2.0"
+			}
 		]
-}`
+	}`,
+		config.QipConfig.FQDN)
+}
 
-const nodeinfo2 = `{
+func NodeInfo2() string {
+	return fmt.Sprintf(`{
 	"version": "2.0",
 	"software": {
-	  "name": "qip",
+	  "name": "Qip",
 	  "version": "0.0.1"
 	},
 	"protocols": [
@@ -38,15 +46,15 @@ const nodeinfo2 = `{
 	  "localComments": 0
 	},
 	"metadata": {
-	  "nodeName": "qip Dev",
-	  "nodeDescription": "qip",
+	  "nodeName": "%s",
+	  "nodeDescription": "%s",
 	  "maintainer": {
-		"name": "test",
-		"email": "test@example.com"
+		"name": "%s",
+		"email": "%s"
 	  },
 	  "langs": [],
 	  "tosUrl": "",
-	  "repositoryUrl": "",
+	  "repositoryUrl": "https://github.com/approvers/qip",
 	  "feedbackUrl": "",
 	  "disableRegistration": true,
 	  "disableLocalTimeline": false,
@@ -60,8 +68,10 @@ const nodeinfo2 = `{
 	  "proxyAccountName": "Ghost",
 	  "themeColor": "#8b819a"
 	}
-  }`
-const ServerFQDN = "np.test.laminne33569.net"
-
-func NodeInfo() string  { return fmt.Sprintf(nodeinfo, ServerFQDN) }
-func NodeInfo2() string { return nodeinfo2 }
+  }`,
+		config.QipConfig.Meta.Name,
+		config.QipConfig.Meta.Description,
+		config.QipConfig.Meta.Maintainer.Name,
+		config.QipConfig.Meta.Maintainer.Email,
+	)
+}

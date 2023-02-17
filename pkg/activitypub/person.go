@@ -3,6 +3,8 @@ package activitypub
 import (
 	"fmt"
 
+	"github.com/approvers/qip/pkg/utils/config"
+
 	"github.com/approvers/qip/pkg/activitypub/types"
 )
 
@@ -13,19 +15,19 @@ func Person(args types.PersonResponseArgs) types.PersonResponseJSONLD {
 			"https://w3id.org/security/v1",
 		},
 		Type:        "Person",
-		ID:          fmt.Sprintf("https://%s/users/%s", InstanceFQDN, args.ID),
-		Inbox:       fmt.Sprintf("https://%s/inbox", InstanceFQDN),
-		Outbox:      fmt.Sprintf("https://%s/users/%s/outbox", InstanceFQDN, args.ID),
-		Followers:   fmt.Sprintf("https://%s/users/%s/followers", InstanceFQDN, args.ID),
-		Following:   fmt.Sprintf("https://%s/users/%s/following", InstanceFQDN, args.ID),
-		Featured:    fmt.Sprintf("https://%s/users/%s/collections/featured", InstanceFQDN, args.ID),
-		SharedInbox: fmt.Sprintf("https://%s/inbox", InstanceFQDN),
+		ID:          fmt.Sprintf("https://%s/users/%s", config.QipConfig.FQDN, args.ID),
+		Inbox:       fmt.Sprintf("https://%s/inbox", config.QipConfig.FQDN),
+		Outbox:      fmt.Sprintf("https://%s/users/%s/outbox", config.QipConfig.FQDN, args.ID),
+		Followers:   fmt.Sprintf("https://%s/users/%s/followers", config.QipConfig.FQDN, args.ID),
+		Following:   fmt.Sprintf("https://%s/users/%s/following", config.QipConfig.FQDN, args.ID),
+		Featured:    fmt.Sprintf("https://%s/users/%s/collections/featured", config.QipConfig.FQDN, args.ID),
+		SharedInbox: fmt.Sprintf("https://%s/inbox", config.QipConfig.FQDN),
 		Endpoints: struct {
 			SharedInbox string `json:"sharedInbox"`
 		}{
-			SharedInbox: fmt.Sprintf("https://%s/inbox", InstanceFQDN),
+			SharedInbox: fmt.Sprintf("https://%s/inbox", config.QipConfig.FQDN),
 		},
-		Url:               fmt.Sprintf("https://%s/@%s", InstanceFQDN, args.UserName),
+		Url:               fmt.Sprintf("https://%s/@%s", config.QipConfig.FQDN, args.UserName),
 		PreferredUsername: args.UserName,
 		Name:              args.UserScreenName,
 		Summary:           args.Summary,
@@ -64,9 +66,9 @@ func Person(args types.PersonResponseArgs) types.PersonResponseJSONLD {
 			Owner        string `json:"owner"`
 			PublicKeyPem string `json:"publicKeyPem"`
 		}{
-			ID:           fmt.Sprintf("https://%s/users/%s#main-key", InstanceFQDN, args.ID),
+			ID:           fmt.Sprintf("https://%s/users/%s#main-key", config.QipConfig.FQDN, args.ID),
 			Type:         "Key",
-			Owner:        fmt.Sprintf("https://%s/users/%s", InstanceFQDN, args.ID),
+			Owner:        fmt.Sprintf("https://%s/users/%s", config.QipConfig.FQDN, args.ID),
 			PublicKeyPem: args.PublicKey,
 		},
 		IsCat:        false,
