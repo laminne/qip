@@ -52,6 +52,7 @@ func StartServer(port int) {
 
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	e.HTTPErrorHandler = ErrorHandler
 
 	wk := e.Group("/.well-known")
 	wk.GET("/nodeinfo", nodeInfoHandler)
@@ -64,4 +65,15 @@ func StartServer(port int) {
 	api.POST("/users", createUserHandler)
 
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", port)))
+}
+
+func ErrorHandler(err error, c echo.Context) {
+	if h, ok := err.(*echo.HTTPError); ok {
+		if h.Code == 404 {
+			c.JSON(404, notFoundErrorResponseJSON)
+		}
+		if h.Code == 503 {
+			c.JSON(503, internalErrorResponseJSON)
+		}
+	}
 }
