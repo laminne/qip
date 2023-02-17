@@ -12,27 +12,27 @@ import (
 func nodeInfoHandler(c echo.Context) error {
 	nodeinfo := activitypub.NodeInfo()
 
-	return c.Blob(http.StatusAccepted, "application/json+activity", []byte(nodeinfo))
+	return c.Blob(http.StatusAccepted, ActivityJSONLDContentsType, []byte(nodeinfo))
 }
 
 func nodeInfo2Handler(c echo.Context) error {
 	data := activitypub.NodeInfo2()
-	return c.Blob(http.StatusAccepted, "application/json+activity", []byte(data))
+	return c.Blob(http.StatusAccepted, ActivityJSONLDContentsType, []byte(data))
 }
 
 func webFingerHandler(c echo.Context) error {
 	acct := c.QueryParam("resource")
 
 	if acct == "" {
-		return c.Blob(http.StatusBadRequest, "plain/text", []byte(""))
+		return c.Blob(http.StatusBadRequest, PlainTextContentsType, []byte(""))
 	}
 
 	r, err := activitypub.WebFinger(acct)
 	if err != nil {
-		return c.Blob(http.StatusUnprocessableEntity, "plain/text", []byte(""))
+		return c.Blob(http.StatusUnprocessableEntity, PlainTextContentsType, []byte(""))
 	}
 
-	return c.Blob(http.StatusAccepted, "application/jrd+json; charset=utf-8", []byte(r))
+	return c.Blob(http.StatusAccepted, JSONLDContentsType, []byte(r))
 }
 
 func userAcctHandler(c echo.Context) error {
@@ -53,5 +53,5 @@ func userAcctHandler(c echo.Context) error {
 		j, _ := json.Marshal(res)
 		return c.JSONBlob(200, j)
 	}
-	return c.String(404, ``)
+	return c.String(404, "")
 }
