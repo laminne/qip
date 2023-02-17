@@ -3,7 +3,7 @@ package controller
 import (
 	"time"
 
-	"github.com/approvers/qip/pkg/activitypub"
+	"github.com/approvers/qip/pkg/utils/config"
 
 	"github.com/approvers/qip/pkg/controller/models"
 	"github.com/approvers/qip/pkg/models/domain"
@@ -53,7 +53,7 @@ func (u UserController) CreateUser(q models.CreateUserRequestJSON) (models.Creat
 
 	// 自インスタンスのユーザーである場合はInstanceFQDNで置き換える
 	if user.Host == nil {
-		f := activitypub.InstanceFQDN
+		f := config.QipConfig.FQDN
 		user.Host = &f
 	}
 

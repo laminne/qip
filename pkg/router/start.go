@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 
+	"github.com/approvers/qip/pkg/utils/config"
+
 	"github.com/approvers/qip/pkg/controller"
 
 	"github.com/approvers/qip/pkg/repository"
@@ -25,11 +27,18 @@ var apController controller.ActivityPubController
 var userController controller.UserController
 
 func StartServer(port int) {
-	// ToDo: ここのハードコーディングをやめる
+	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
+		config.QipConfig.DB.User,
+		config.QipConfig.DB.Password,
+		config.QipConfig.DB.Host,
+		config.QipConfig.DB.Port,
+		config.QipConfig.DB.DBName,
+	)
+
 	db := bun.NewDB(
 		sql.OpenDB(
 			pgdriver.NewConnector(
-				pgdriver.WithDSN("postgres://postgres:qip@localhost:5432/qip?sslmode=disable"),
+				pgdriver.WithDSN(dsn),
 			),
 		),
 		pgdialect.New(),

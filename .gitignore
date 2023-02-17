@@ -3,3 +3,4 @@ raw
 .idea
 *.exe
 *.log
+config.yml

@@ -1,0 +1,23 @@
+# Qip Configuration
+
+# instance FQDN
+# e.g example.jp
+fqdn: example.jp
+
+# Port Setting
+port: 7000
+
+# PostgreSQL Configuration
+db:
+  host: localhost
+  port: 5432
+  user: postgres
+  password: postgres
+
+# Metadata
+meta:
+    name: InstanceName
+    description: Instance_Description
+    maintainer:
+        name: Maintainer_Name
+        email: test@example.jp
