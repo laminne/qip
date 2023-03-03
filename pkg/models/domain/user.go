@@ -2,137 +2,199 @@ package domain
 
 import (
 	"errors"
-	"time"
+	"unicode/utf8"
 
 	"github.com/approvers/qip/pkg/utils/id"
 )
 
+const (
+	NormalUserRole = iota
+	AdminUserRole
+)
+
+type UserRole = int
+
 type User struct {
-	ID             id.SnowFlakeID
-	Host           *string
-	Name           string
-	ScreenName     string
-	Summary        string
-	Password       string
-	CreatedAt      time.Time
-	UpdatedAt      *time.Time
-	PrivateKey     string
-	PublicKey      string
-	WatcherCount   int
-	WatchingCount  int
-	PostsCount     int
-	HeaderImageURL *string
-	IconImageURL   *string
+	ID            id.SnowFlakeID
+	Name          string
+	DisplayName   string
+	Role          UserRole
+	InstanceID    id.SnowFlakeID
+	Bio           *string
+	HeaderImageID *id.SnowFlakeID
+	IconImageID   *id.SnowFlakeID
+	IsFroze       bool
+	InboxURL      string
+	OutboxURL     string
+	FollowURL     string
+	FollowersURL  string
+	SecretKey     *string
+	PublicKey     string
+	Password      *string
+	IsLocalUser   bool
 }
 
-func NewUser(
-	ID id.SnowFlakeID,
-	host *string,
-	name string,
-	screenName string,
-	summary string,
-	password string,
-	createdAt time.Time,
-	updatedAt *time.Time,
-	privateKey string,
-	publicKey string,
-	watcherCount int,
-	watchingCount int,
-	postsCount int,
-	headerImageURL *string,
-	iconImageURL *string) (*User, error) {
-
-	if err := validateUserName(name); err != nil {
-		return nil, errors.New("username validation failed")
+func NewUser(id id.SnowFlakeID, name string, instanceID id.SnowFlakeID, isLocalUser bool) (*User, error) {
+	if utf8.RuneCountInString(name) > 64 || utf8.RuneCountInString(name) < 0 {
+		return nil, errors.New("ユーザー名の長さが制限を超えています")
 	}
 
 	return &User{
-		ID:             ID,
-		Host:           host,
-		Name:           name,
-		ScreenName:     screenName,
-		Summary:        summary,
-		Password:       password,
-		CreatedAt:      createdAt,
-		UpdatedAt:      updatedAt,
-		PrivateKey:     privateKey,
-		PublicKey:      publicKey,
-		WatcherCount:   watcherCount,
-		WatchingCount:  watchingCount,
-		PostsCount:     postsCount,
-		HeaderImageURL: headerImageURL,
-		IconImageURL:   iconImageURL,
+		ID:          id,
+		Name:        name,
+		InstanceID:  instanceID,
+		Role:        NormalUserRole, // デフォルトは一般ユーザー
+		IsLocalUser: isLocalUser,
+		IsFroze:     false,
 	}, nil
 }
 
-func validateUserName(n string) error {
-	if len(n) > 64 || len(n) <= 0 {
-		return errors.New("username validation failed")
-	}
-	return nil
-}
-
-// UpdatePassword ユーザーのパスワードを変更
-func (u *User) UpdatePassword(p string) {
-	u.Password = p
-}
-
-// PostsCountUp ユーザーのノート数を増やす
-func (u *User) PostsCountUp() {
-	u.PostsCount++
-}
-
-// PostsCountDown ユーザーのノート数を減らす
-func (u *User) PostsCountDown() {
-	u.PostsCount--
-}
-
-// FollowerCountUp ユーザーの被フォロー数を増やす
-func (u *User) FollowerCountUp() {
-	u.WatcherCount++
-}
-
-// FollowerCountDown ユーザーのフォロワー数を減らす
-func (u *User) FollowerCountDown() {
-	u.WatcherCount--
-}
-
-// FollowingCountUp ユーザーのフォロー数を増やす
-func (u *User) FollowingCountUp() {
-	u.WatchingCount++
-}
-
-// FollowingCountDown ユーザーのフォロー数を減らす
-func (u *User) FollowingCountDown() {
-	u.WatchingCount--
-}
-
-// UpdateUserSummary ユーザーの自己紹介を更新
-func (u *User) UpdateUserSummary(s string) error {
-	if len(s) > 256 {
-		return errors.New("user summary too long")
+// SetDisplayName ユーザーの表示名を設定
+func (u *User) SetDisplayName(displayName string) *User {
+	if utf8.RuneCountInString(displayName) > 64 {
+		// 切り捨てる
+		u.DisplayName = displayName[:64]
 	}
 
-	u.Summary = s
-	return nil
-}
-
-// UpdateUserScreenName ユーザーの表示名を更新
-func (u *User) UpdateUserScreenName(s string) error {
-	if len(s) > 32 || len(s) == 0 {
-		return errors.New("username too short or too long")
+	if utf8.RuneCountInString(displayName) == 0 {
+		// 指定がない場合はユーザー名にフォールバック
+		u.DisplayName = u.Name
 	}
 
-	u.ScreenName = s
-	return nil
+	return u
 }
 
-// UpdateUserHeaderImage ヘッダー画像を更新
-func (u *User) UpdateUserHeaderImage(url string) {
-	u.HeaderImageURL = &url
+// SetRole ユーザーのロールを設定
+func (u *User) SetRole(role UserRole) (*User, error) {
+	// ローカルユーザーである場合のみ設定できる
+	if !u.IsLocalUser {
+		return nil, errors.New("リモートユーザーのロールは変更できません")
+	}
+
+	u.Role = role
+	return u, nil
 }
 
-// UpdateUserIconImage アイコン画像を更新
-func (u *User) UpdateUserIconImage(url string) {
-	u.IconImageURL = &url
+// SetBio ユーザーの自己紹介文を設定
+func (u *User) SetBio(bio *string) *User {
+	if utf8.RuneCountInString(*bio) > 2000 {
+		b := (*bio)[:2000]
+		u.Bio = &b
+		return u
+	}
+
+	u.Bio = bio
+	return u
+}
+
+// SetHeader ユーザーのヘッダー画像を設定
+func (u *User) SetHeader(id id.SnowFlakeID) *User {
+	u.HeaderImageID = &id
+	return u
+}
+
+// SetIcon ユーザーのアイコン画像を設定
+func (u *User) SetIcon(id id.SnowFlakeID) *User {
+	u.IconImageID = &id
+	return u
+}
+
+// Freeze ユーザーを凍結
+func (u *User) Freeze() (*User, error) {
+	if u.IsFroze {
+		return nil, errors.New("すでにユーザーは凍結されています")
+	}
+
+	u.IsFroze = true
+	return u, nil
+}
+
+// Unfreeze ユーザーを解凍(凍結解除)
+func (u *User) Unfreeze() (*User, error) {
+	if !u.IsFroze {
+		return nil, errors.New("ユーザーは凍結されていません")
+	}
+
+	u.IsFroze = false
+	return u, nil
+}
+
+// SetInboxURL ユーザーのInboxURLを設定
+func (u *User) SetInboxURL(url string) (*User, error) {
+	if len(url) <= 0 {
+		return nil, errors.New("URLが短すぎます")
+	}
+
+	u.InboxURL = url
+	return u, nil
+}
+
+// SetOutboxURL ユーザーのOutboxURLを設定
+func (u *User) SetOutboxURL(url string) (*User, error) {
+	if len(url) <= 0 {
+		return nil, errors.New("URLが短すぎます")
+	}
+
+	u.OutboxURL = url
+	return u, nil
+}
+
+// SetFollowURL ユーザーのフォローURLを設定
+func (u *User) SetFollowURL(url string) (*User, error) {
+	if len(url) <= 0 {
+		return nil, errors.New("URLが短すぎます")
+	}
+
+	u.FollowURL = url
+	return u, nil
+}
+
+// SetFollowerURL ユーザーのフォロワーURLを設定
+func (u *User) SetFollowerURL(url string) (*User, error) {
+	if len(url) <= 0 {
+		return nil, errors.New("URLが短すぎます")
+	}
+
+	u.FollowersURL = url
+	return u, nil
+}
+
+// SetSecretKey ユーザーの秘密鍵を設定
+func (u *User) SetSecretKey(key string) (*User, error) {
+	// ローカルユーザーにしか設定できない
+	if !u.IsLocalUser {
+		return nil, errors.New("リモートユーザーに秘密鍵は設定できません")
+	}
+
+	if len(key) <= 0 {
+		return nil, errors.New("鍵が短すぎます")
+	}
+
+	u.SecretKey = &key
+	return u, nil
+}
+
+// SetPublicKey ユーザーの公開鍵を設定
+func (u *User) SetPublicKey(key string) (*User, error) {
+	if len(key) <= 0 {
+		return nil, errors.New("鍵が短すぎます")
+	}
+
+	u.PublicKey = key
+	return u, nil
+}
+
+// SetPassword ユーザーのパスワードを設定
+func (u *User) SetPassword(pass string) (*User, error) {
+	// ローカルユーザーにしか設定できない
+	if !u.IsLocalUser {
+		return nil, errors.New("リモートユーザーにパスワードは設定できません")
+	}
+
+	if len(pass) <= 0 {
+		return nil, errors.New("パスワードの文字数が短すぎます")
+	}
+
+	u.Password = &pass
+	return u, nil
 }
