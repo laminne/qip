@@ -49,13 +49,13 @@ func (c UserUseCase) FindLocalByUserName(name string) (*domain.User, error) {
 }
 
 func (c UserUseCase) Create(u domain.User) (domain.User, error) {
-	encodedPassword, err := c.encoder.EncodePassword(u.Password)
+	encodedPassword, err := c.encoder.EncodePassword(u.password)
 	if err != nil {
 		return domain.User{}, err
 	}
 
-	u.Password = string(encodedPassword)
-	fmt.Println(u.Password)
+	u.password = string(encodedPassword)
+	fmt.Println(u.password)
 
 	r, err := c.repo.Create(u)
 	if err != nil {

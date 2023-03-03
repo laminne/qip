@@ -57,8 +57,8 @@ func (c ActivityPubController) GetUser(uid string) *types.PersonResponseJSONLD {
 	}
 
 	arg := types.PersonResponseArgs{
-		ID:             string(user.ID),
-		UserName:       user.Name,
+		ID:             string(user.id),
+		UserName:       user.name,
 		UserScreenName: user.ScreenName,
 		Summary:        user.Summary,
 		Icon: struct {
@@ -77,7 +77,7 @@ func (c ActivityPubController) GetUser(uid string) *types.PersonResponseJSONLD {
 		},
 		Tag:                       nil,
 		ManuallyApprovesFollowers: false,
-		PublicKey:                 user.PublicKey,
+		PublicKey:                 user.publicKey,
 	}
 
 	res := activitypub.Person(arg)
