@@ -2,6 +2,7 @@ package domain
 
 import (
 	"errors"
+	"time"
 	"unicode/utf8"
 
 	"github.com/approvers/qip/pkg/utils/id"
@@ -32,9 +33,11 @@ type User struct {
 	publicKey     string
 	password      *string
 	isLocalUser   bool
+	createdAt     time.Time
+	updatedAt     *time.Time
 }
 
-func NewUser(id id.SnowFlakeID, name string, instanceID id.SnowFlakeID, isLocalUser bool) (*User, error) {
+func NewUser(id id.SnowFlakeID, name string, instanceID id.SnowFlakeID, isLocalUser bool, now time.Time) (*User, error) {
 	if utf8.RuneCountInString(name) > 64 || utf8.RuneCountInString(name) < 0 {
 		return nil, errors.New("ユーザー名の長さが制限を超えています")
 	}
@@ -46,6 +49,7 @@ func NewUser(id id.SnowFlakeID, name string, instanceID id.SnowFlakeID, isLocalU
 		role:        NormalUserRole, // デフォルトは一般ユーザー
 		isLocalUser: isLocalUser,
 		isFroze:     false,
+		createdAt:   now,
 	}, nil
 }
 
@@ -199,6 +203,11 @@ func (u *User) SetPassword(pass string) (*User, error) {
 	return u, nil
 }
 
+func (u *User) SetUpdatedAt(now time.Time) (*User, error) {
+	u.updatedAt = &now
+	return u, nil
+}
+
 func (u *User) GetID() id.SnowFlakeID {
 	return u.id
 }
@@ -265,4 +274,12 @@ func (u *User) GetPassword() *string {
 
 func (u *User) IsLocalUser() bool {
 	return u.isLocalUser
+}
+
+func (u *User) GetCreatedAt() time.Time {
+	return u.createdAt
+}
+
+func (u *User) GetUpdatedAt() *time.Time {
+	return u.updatedAt
 }

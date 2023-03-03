@@ -2,6 +2,7 @@ package domain
 
 import (
 	"errors"
+	"time"
 	"unicode/utf8"
 
 	"github.com/approvers/qip/pkg/utils/id"
@@ -22,9 +23,10 @@ type Post struct {
 	visibility       PostVisibility
 	authorID         id.SnowFlakeID
 	attachmentFileID []id.SnowFlakeID
+	createdAt        time.Time
 }
 
-func NewPost(id id.SnowFlakeID, body string, visibility PostVisibility, authorID id.SnowFlakeID) *Post {
+func NewPost(id id.SnowFlakeID, body string, visibility PostVisibility, authorID id.SnowFlakeID, now time.Time) *Post {
 	if utf8.RuneCountInString(body) > 2000 {
 		body = string(([]rune(body))[:2000])
 	}
@@ -34,6 +36,7 @@ func NewPost(id id.SnowFlakeID, body string, visibility PostVisibility, authorID
 		body:       body,
 		visibility: visibility,
 		authorID:   authorID,
+		createdAt:  now,
 	}
 }
 
@@ -69,4 +72,8 @@ func (p *Post) GetBody() string {
 
 func (p *Post) GetAttachmentFileID() []id.SnowFlakeID {
 	return p.attachmentFileID
+}
+
+func (p *Post) GetCreatedAt() time.Time {
+	return p.createdAt
 }
