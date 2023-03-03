@@ -15,23 +15,23 @@ const (
 type UserRole = int
 
 type User struct {
-	ID            id.SnowFlakeID
-	Name          string
-	DisplayName   string
-	Role          UserRole
-	InstanceID    id.SnowFlakeID
-	Bio           *string
-	HeaderImageID *id.SnowFlakeID
-	IconImageID   *id.SnowFlakeID
-	IsFroze       bool
-	InboxURL      string
-	OutboxURL     string
-	FollowURL     string
-	FollowersURL  string
-	SecretKey     *string
-	PublicKey     string
-	Password      *string
-	IsLocalUser   bool
+	id            id.SnowFlakeID
+	name          string
+	displayName   string
+	role          UserRole
+	instanceID    id.SnowFlakeID
+	bio           *string
+	headerImageID *id.SnowFlakeID
+	iconImageID   *id.SnowFlakeID
+	isFroze       bool
+	inboxURL      string
+	outboxURL     string
+	followURL     string
+	followersURL  string
+	secretKey     *string
+	publicKey     string
+	password      *string
+	isLocalUser   bool
 }
 
 func NewUser(id id.SnowFlakeID, name string, instanceID id.SnowFlakeID, isLocalUser bool) (*User, error) {
@@ -40,12 +40,12 @@ func NewUser(id id.SnowFlakeID, name string, instanceID id.SnowFlakeID, isLocalU
 	}
 
 	return &User{
-		ID:          id,
-		Name:        name,
-		InstanceID:  instanceID,
-		Role:        NormalUserRole, // デフォルトは一般ユーザー
-		IsLocalUser: isLocalUser,
-		IsFroze:     false,
+		id:          id,
+		name:        name,
+		instanceID:  instanceID,
+		role:        NormalUserRole, // デフォルトは一般ユーザー
+		isLocalUser: isLocalUser,
+		isFroze:     false,
 	}, nil
 }
 
@@ -53,12 +53,12 @@ func NewUser(id id.SnowFlakeID, name string, instanceID id.SnowFlakeID, isLocalU
 func (u *User) SetDisplayName(displayName string) *User {
 	if utf8.RuneCountInString(displayName) > 64 {
 		// 切り捨てる
-		u.DisplayName = displayName[:64]
+		u.displayName = displayName[:64]
 	}
 
 	if utf8.RuneCountInString(displayName) == 0 {
 		// 指定がない場合はユーザー名にフォールバック
-		u.DisplayName = u.Name
+		u.displayName = u.name
 	}
 
 	return u
@@ -67,11 +67,11 @@ func (u *User) SetDisplayName(displayName string) *User {
 // SetRole ユーザーのロールを設定
 func (u *User) SetRole(role UserRole) (*User, error) {
 	// ローカルユーザーである場合のみ設定できる
-	if !u.IsLocalUser {
+	if !u.isLocalUser {
 		return nil, errors.New("リモートユーザーのロールは変更できません")
 	}
 
-	u.Role = role
+	u.role = role
 	return u, nil
 }
 
@@ -79,43 +79,43 @@ func (u *User) SetRole(role UserRole) (*User, error) {
 func (u *User) SetBio(bio *string) *User {
 	if utf8.RuneCountInString(*bio) > 2000 {
 		b := (*bio)[:2000]
-		u.Bio = &b
+		u.bio = &b
 		return u
 	}
 
-	u.Bio = bio
+	u.bio = bio
 	return u
 }
 
 // SetHeader ユーザーのヘッダー画像を設定
 func (u *User) SetHeader(id id.SnowFlakeID) *User {
-	u.HeaderImageID = &id
+	u.headerImageID = &id
 	return u
 }
 
 // SetIcon ユーザーのアイコン画像を設定
 func (u *User) SetIcon(id id.SnowFlakeID) *User {
-	u.IconImageID = &id
+	u.iconImageID = &id
 	return u
 }
 
 // Freeze ユーザーを凍結
 func (u *User) Freeze() (*User, error) {
-	if u.IsFroze {
+	if u.isFroze {
 		return nil, errors.New("すでにユーザーは凍結されています")
 	}
 
-	u.IsFroze = true
+	u.isFroze = true
 	return u, nil
 }
 
 // Unfreeze ユーザーを解凍(凍結解除)
 func (u *User) Unfreeze() (*User, error) {
-	if !u.IsFroze {
+	if !u.isFroze {
 		return nil, errors.New("ユーザーは凍結されていません")
 	}
 
-	u.IsFroze = false
+	u.isFroze = false
 	return u, nil
 }
 
@@ -125,7 +125,7 @@ func (u *User) SetInboxURL(url string) (*User, error) {
 		return nil, errors.New("URLが短すぎます")
 	}
 
-	u.InboxURL = url
+	u.inboxURL = url
 	return u, nil
 }
 
@@ -135,7 +135,7 @@ func (u *User) SetOutboxURL(url string) (*User, error) {
 		return nil, errors.New("URLが短すぎます")
 	}
 
-	u.OutboxURL = url
+	u.outboxURL = url
 	return u, nil
 }
 
@@ -145,7 +145,7 @@ func (u *User) SetFollowURL(url string) (*User, error) {
 		return nil, errors.New("URLが短すぎます")
 	}
 
-	u.FollowURL = url
+	u.followURL = url
 	return u, nil
 }
 
@@ -155,14 +155,14 @@ func (u *User) SetFollowerURL(url string) (*User, error) {
 		return nil, errors.New("URLが短すぎます")
 	}
 
-	u.FollowersURL = url
+	u.followersURL = url
 	return u, nil
 }
 
 // SetSecretKey ユーザーの秘密鍵を設定
 func (u *User) SetSecretKey(key string) (*User, error) {
 	// ローカルユーザーにしか設定できない
-	if !u.IsLocalUser {
+	if !u.isLocalUser {
 		return nil, errors.New("リモートユーザーに秘密鍵は設定できません")
 	}
 
@@ -170,7 +170,7 @@ func (u *User) SetSecretKey(key string) (*User, error) {
 		return nil, errors.New("鍵が短すぎます")
 	}
 
-	u.SecretKey = &key
+	u.secretKey = &key
 	return u, nil
 }
 
@@ -180,14 +180,14 @@ func (u *User) SetPublicKey(key string) (*User, error) {
 		return nil, errors.New("鍵が短すぎます")
 	}
 
-	u.PublicKey = key
+	u.publicKey = key
 	return u, nil
 }
 
 // SetPassword ユーザーのパスワードを設定
 func (u *User) SetPassword(pass string) (*User, error) {
 	// ローカルユーザーにしか設定できない
-	if !u.IsLocalUser {
+	if !u.isLocalUser {
 		return nil, errors.New("リモートユーザーにパスワードは設定できません")
 	}
 
@@ -195,6 +195,74 @@ func (u *User) SetPassword(pass string) (*User, error) {
 		return nil, errors.New("パスワードの文字数が短すぎます")
 	}
 
-	u.Password = &pass
+	u.password = &pass
 	return u, nil
+}
+
+func (u *User) GetID() id.SnowFlakeID {
+	return u.id
+}
+
+func (u *User) GetName() string {
+	return u.name
+}
+
+func (u *User) GetDisplayName() string {
+	return u.displayName
+}
+
+func (u *User) IsAdmin() bool {
+	return u.role == AdminUserRole
+}
+
+func (u *User) GetInstanceID() id.SnowFlakeID {
+	return u.instanceID
+}
+
+func (u *User) GetBio() *string {
+	return u.bio
+}
+
+func (u *User) GetHeaderImageID() *id.SnowFlakeID {
+	return u.headerImageID
+}
+
+func (u *User) GetIconImageID() *id.SnowFlakeID {
+	return u.iconImageID
+}
+
+func (u *User) IsFroze() bool {
+	return u.isFroze
+}
+
+func (u *User) GetInboxURL() string {
+	return u.inboxURL
+}
+
+func (u *User) GetOutboxURL() string {
+	return u.outboxURL
+}
+
+func (u *User) GetFollowURL() string {
+	return u.followURL
+}
+
+func (u *User) GetFollowersURL() string {
+	return u.followersURL
+}
+
+func (u *User) GetSecretKey() *string {
+	return u.secretKey
+}
+
+func (u *User) GetPublicKey() string {
+	return u.publicKey
+}
+
+func (u *User) GetPassword() *string {
+	return u.password
+}
+
+func (u *User) IsLocalUser() bool {
+	return u.isLocalUser
 }

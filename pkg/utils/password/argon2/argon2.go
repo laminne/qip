@@ -36,7 +36,7 @@ func (e *PasswordEncoder) EncodePassword(rawPassword string) (password.EncodedPa
 	hashedPassword := e.createHashedPassword(rawPassword, salt)
 	// ハッシュ済みパスワードをhexにエンコード
 	encodedHexedPassword := hex.EncodeToString(hashedPassword)
-	//<hash algorithm>.<hashed Password as hex string>.<salt as hex string>
+	//<hash algorithm>.<hashed password as hex string>.<salt as hex string>
 	combinatedAlgoAndHashAndPassword := fmt.Sprintf("%s.%s.%s", hashAlgorithm, encodedHexedPassword, salt)
 
 	return password.EncodedPassword(combinatedAlgoAndHashAndPassword), nil

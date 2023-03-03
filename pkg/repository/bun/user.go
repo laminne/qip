@@ -21,16 +21,16 @@ func NewUserRepository(db *bun.DB) *UserRepository {
 
 func (r UserRepository) dtoe(u domain.User) entity.User {
 	return entity.User{
-		ID:             string(u.ID),
+		ID:             string(u.id),
 		Host:           u.Host,
-		Name:           u.Name,
+		Name:           u.name,
 		ScreenName:     u.ScreenName,
 		Summary:        u.Summary,
-		Password:       &u.Password,
+		Password:       &u.password,
 		CreatedAt:      u.CreatedAt,
 		UpdatedAt:      u.UpdatedAt,
 		PrivateKey:     u.PrivateKey,
-		PublicKey:      u.PublicKey,
+		PublicKey:      u.publicKey,
 		WatcherCount:   u.WatcherCount,
 		WatchingCount:  u.WatchingCount,
 		PostsCount:     u.PostsCount,
@@ -41,16 +41,16 @@ func (r UserRepository) dtoe(u domain.User) entity.User {
 
 func (r UserRepository) etod(e entity.User) domain.User {
 	return domain.User{
-		ID:             id.SnowFlakeID(e.ID),
+		id:             id.SnowFlakeID(e.ID),
 		Host:           e.Host,
-		Name:           e.Name,
+		name:           e.Name,
 		ScreenName:     e.ScreenName,
 		Summary:        e.Summary,
-		Password:       *e.Password,
+		password:       *e.Password,
 		CreatedAt:      e.CreatedAt,
 		UpdatedAt:      e.UpdatedAt,
 		PrivateKey:     e.PrivateKey,
-		PublicKey:      e.PublicKey,
+		publicKey:      e.PublicKey,
 		WatcherCount:   e.WatcherCount,
 		WatchingCount:  e.WatchingCount,
 		PostsCount:     e.PostsCount,

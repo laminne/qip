@@ -29,16 +29,16 @@ func NewUserController(r repository.UserRepository) *UserController {
 
 func (u UserController) CreateUser(q models.CreateUserRequestJSON) (models.CreateUserResponseJSON, error) {
 	a := domain.User{
-		ID:             u.idGenerator.NewID(time.Now()),
+		id:             u.idGenerator.NewID(time.Now()),
 		Host:           nil,
-		Name:           q.Name,
+		name:           q.Name,
 		ScreenName:     q.ScreenName,
 		Summary:        "",
-		Password:       q.Password,
+		password:       q.Password,
 		CreatedAt:      time.Now(),
 		UpdatedAt:      nil,
 		PrivateKey:     "",
-		PublicKey:      "",
+		publicKey:      "",
 		WatcherCount:   0,
 		WatchingCount:  0,
 		PostsCount:     0,
@@ -58,8 +58,8 @@ func (u UserController) CreateUser(q models.CreateUserRequestJSON) (models.Creat
 	}
 
 	res := models.CreateUserResponseJSON{
-		Id:         string(user.ID),
-		Name:       user.Name,
+		Id:         string(user.id),
+		Name:       user.name,
 		Host:       *user.Host,
 		ScreenName: user.ScreenName,
 		CreatedAt:  user.CreatedAt,
