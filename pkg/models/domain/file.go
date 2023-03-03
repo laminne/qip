@@ -1,6 +1,9 @@
 package domain
 
 import (
+	"errors"
+	"fmt"
+	"path/filepath"
 	"time"
 
 	"github.com/approvers/qip/pkg/utils/id"
@@ -8,14 +11,117 @@ import (
 
 // File ファイル
 type File struct {
-	ID        id.SnowFlakeID
-	UserID    id.SnowFlakeID // 投稿したユーザーのID
-	Host      string         // 投稿したユーザーのホスト
-	MD5Hash   string         // ファイルのMD5ハッシュ値
-	MimeType  string         // mimeタイプ
-	FileSize  uint           // ファイルサイズ
-	URL       string
-	IsNSFW    bool   // 閲覧注意フラグがついているか
-	BlurHash  string // ブラーハッシュ
-	CreatedAt time.Time
+	id           id.SnowFlakeID
+	uploaderID   id.SnowFlakeID
+	postID       *id.SnowFlakeID
+	fileName     string
+	fileURL      string
+	thumbnailURL *string
+	blurhash     string
+	isNSFW       bool
+	mimeType     string
+	createdAt    time.Time
+	updatedAt    *time.Time
+}
+
+func NewFile(id id.SnowFlakeID, fileName string, uploaderID id.SnowFlakeID, mimeType string, now time.Time) *File {
+	fileName = fmt.Sprintf("%s.%s", id, filepath.Ext(fileName))
+
+	return &File{
+		id:         id,
+		uploaderID: uploaderID,
+		fileName:   fileName,
+		mimeType:   mimeType,
+		isNSFW:     false,
+		createdAt:  now,
+	}
+}
+
+func (f *File) SetFileURL(url string) (*File, error) {
+	if len(url) <= 0 {
+		return nil, errors.New("URLが短すぎます")
+	}
+	f.fileURL = url
+	return f, nil
+}
+
+func (f *File) SetThumbnailURL(url string) (*File, error) {
+	if len(url) <= 0 {
+		return nil, errors.New("URLが短すぎます")
+	}
+	f.thumbnailURL = &url
+	return f, nil
+}
+
+func (f *File) SetBlurhash(hash string) *File {
+	f.blurhash = hash
+	return f
+}
+
+func (f *File) SetNSFW() (*File, error) {
+	if f.isNSFW {
+		return nil, errors.New("すでにNSFWに設定されています")
+	}
+
+	f.isNSFW = true
+	return f, nil
+}
+
+func (f *File) UnsetNSFW() (*File, error) {
+	if !f.isNSFW {
+		return nil, errors.New("すでにNSFWが解除されています")
+	}
+
+	f.isNSFW = false
+	return f, nil
+}
+
+func (f *File) SetMimeType(mime string) (*File, error) {
+	f.mimeType = mime
+	return f, nil
+}
+
+func (f *File) SetUpdatedAt(t time.Time) (*File, error) {
+	f.updatedAt = &t
+	return f, nil
+}
+
+func (f *File) GetID() id.SnowFlakeID {
+	return f.id
+}
+
+func (f *File) GetUploaderID() id.SnowFlakeID {
+	return f.uploaderID
+}
+
+func (f *File) GetFileName() string {
+	return f.fileName
+}
+
+func (f *File) GetFileURL() string {
+	return f.fileURL
+}
+
+func (f *File) GetThumbnailURL() *string {
+	return f.thumbnailURL
+}
+
+func (f *File) GetBlurhash() string {
+	return f.blurhash
+}
+
+func (f *File) IsNSFW() bool {
+	return f.isNSFW
+}
+
+func (f *File) GetMimeType() string {
+	return f.mimeType
+}
+
+func (f *File) GetCreatedAt() time.Time {
+	return f.createdAt
+}
+
+func (f *File) GetUpdatedAt() *time.Time {
+	return f.updatedAt
 }
