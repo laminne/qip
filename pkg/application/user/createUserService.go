@@ -4,6 +4,8 @@ import (
 	"errors"
 	"time"
 
+	"github.com/approvers/qip/pkg/repository"
+
 	"github.com/approvers/qip/pkg/domain/service"
 
 	"github.com/approvers/qip/pkg/domain"
@@ -23,7 +25,8 @@ type ICreateUserService interface {
 }
 
 type CreateUserService struct {
-	userService service.UserService
+	userService    service.UserService
+	userRepository repository.UserRepository
 }
 
 func NewCreateUserService(userService service.UserService) *CreateUserService {
@@ -35,9 +38,14 @@ func (s *CreateUserService) Handle(c CreateUserCommand) error {
 	now := time.Now()
 
 	u, _ := domain.NewUser(c.Id, c.Name, c.InstanceID, c.IsLocal, now)
-	// ToDo: 重複確認する
+
 	if s.userService.Exists(u) {
 		return errors.New("")
+	}
+
+	err := s.userRepository.CreateUser(*u)
+	if err != nil {
+		return err
 	}
 
 	return nil
