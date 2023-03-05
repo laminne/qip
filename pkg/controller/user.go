@@ -3,26 +3,29 @@ package controller
 import (
 	"time"
 
+	"github.com/approvers/qip/pkg/domain"
+
+	"github.com/approvers/qip/pkg/application/user"
+
 	"github.com/approvers/qip/pkg/utils/config"
 
+	"github.com/approvers/qip/pkg/application"
 	"github.com/approvers/qip/pkg/controller/models"
-	"github.com/approvers/qip/pkg/models/domain"
 	"github.com/approvers/qip/pkg/repository"
-	"github.com/approvers/qip/pkg/usecase"
 	"github.com/approvers/qip/pkg/utils/id"
 )
 
 // UserController ユーザー関連のAPI
 type UserController struct {
 	repo        repository.UserRepository
-	usecase     usecase.UserUseCase
+	usecase     user.UserUseCase
 	idGenerator id.Generator
 }
 
 func NewUserController(r repository.UserRepository) *UserController {
 	return &UserController{
 		repo:        r,
-		usecase:     *usecase.NewUserUseCase(r),
+		usecase:     *application.NewUserUseCase(r),
 		idGenerator: id.NewSnowFlakeIDGenerator(),
 	}
 }

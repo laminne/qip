@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/approvers/qip/pkg/router"
 	"github.com/approvers/qip/pkg/utils/config"
-	"os"
 )
 
 func main() {

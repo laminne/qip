@@ -3,25 +3,28 @@ package controller
 import (
 	"strconv"
 
+	"github.com/approvers/qip/pkg/domain"
+
+	"github.com/approvers/qip/pkg/application/user"
+
 	"github.com/approvers/qip/pkg/utils/id"
 
 	"github.com/approvers/qip/pkg/activitypub"
 	"github.com/approvers/qip/pkg/activitypub/types"
-	"github.com/approvers/qip/pkg/models/domain"
+	"github.com/approvers/qip/pkg/application"
 	"github.com/approvers/qip/pkg/repository"
-	"github.com/approvers/qip/pkg/usecase"
 )
 
 // ActivityPubController ActivityPubの通信に応答する部分
 type ActivityPubController struct {
 	repo    repository.UserRepository
-	usecase usecase.UserUseCase
+	usecase user.UserUseCase
 }
 
 func NewActivityPubController(r repository.UserRepository) *ActivityPubController {
 	return &ActivityPubController{
 		repo:    r,
-		usecase: *usecase.NewUserUseCase(r),
+		usecase: *application.NewUserUseCase(r),
 	}
 }
 
