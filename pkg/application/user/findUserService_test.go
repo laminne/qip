@@ -35,7 +35,7 @@ func init() {
 func TestFindUserService_FindByID(t *testing.T) {
 	// 成功するとき
 	a, _ := findUserService.FindByID("123")
-	assert.Equal(t, &data[0], a)
+	assert.Equal(t, NewUserData(data[0]), a)
 
 	// 失敗するとき
 	_, err := findUserService.FindByID("000")
@@ -43,7 +43,7 @@ func TestFindUserService_FindByID(t *testing.T) {
 }
 
 func TestFindUserService_FindByInstanceID(t *testing.T) {
-	ex := []domain.User{data[1]}
+	ex := []UserData{*NewUserData(data[1])}
 	// 成功するとき
 	a, _ := findUserService.FindByInstanceID("789")
 	assert.Equal(t, ex, a)
@@ -53,7 +53,7 @@ func TestFindUserService_FindByInstanceID(t *testing.T) {
 }
 
 func TestFindUserService_FindByName(t *testing.T) {
-	ex := []domain.User{data[0], data[1]}
+	ex := []UserData{*NewUserData(data[0]), *NewUserData(data[1])}
 
 	// 成功するとき
 	a, _ := findUserService.FindByName("test1")
