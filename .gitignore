@@ -4,3 +4,4 @@ raw
 *.exe
 *.log
 config.yml
+*.txt
