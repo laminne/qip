@@ -1,72 +1,45 @@
 package controller
 
 import (
-	"time"
+	"errors"
 
-	"github.com/approvers/qip/pkg/domain"
+	"github.com/approvers/qip/pkg/utils"
+
+	"github.com/approvers/qip/pkg/controller/models"
 
 	"github.com/approvers/qip/pkg/application/user"
-
-	"github.com/approvers/qip/pkg/utils/config"
-
-	"github.com/approvers/qip/pkg/application"
-	"github.com/approvers/qip/pkg/controller/models"
 	"github.com/approvers/qip/pkg/repository"
 	"github.com/approvers/qip/pkg/utils/id"
 )
 
 // UserController ユーザー関連のAPI
 type UserController struct {
-	repo        repository.UserRepository
-	usecase     user.UserUseCase
-	idGenerator id.Generator
+	repo            repository.UserRepository
+	findUserService user.FindUserService
 }
 
 func NewUserController(r repository.UserRepository) *UserController {
 	return &UserController{
-		repo:        r,
-		usecase:     *application.NewUserUseCase(r),
-		idGenerator: id.NewSnowFlakeIDGenerator(),
+		repo:            r,
+		findUserService: *user.NewFindUserService(r),
 	}
 }
 
-func (u UserController) CreateUser(q models.CreateUserRequestJSON) (models.CreateUserResponseJSON, error) {
-	a := domain.User{
-		id:             u.idGenerator.NewID(time.Now()),
-		Host:           nil,
-		name:           q.Name,
-		ScreenName:     q.ScreenName,
-		Summary:        "",
-		password:       q.Password,
-		CreatedAt:      time.Now(),
-		UpdatedAt:      nil,
-		PrivateKey:     "",
-		publicKey:      "",
-		WatcherCount:   0,
-		WatchingCount:  0,
-		PostsCount:     0,
-		HeaderImageURL: nil,
-		IconImageURL:   nil,
-	}
-
-	user, err := u.usecase.Create(a)
+func (u *UserController) FindUserByID(id id.SnowFlakeID) (models.GetUserResponseJSON, error) {
+	user, err := u.findUserService.FindByID(id)
 	if err != nil {
-		return models.CreateUserResponseJSON{}, err
+		return models.GetUserResponseJSON{}, errors.New("")
 	}
 
-	// 自インスタンスのユーザーである場合はInstanceFQDNで置き換える
-	if user.Host == nil {
-		f := config.QipConfig.FQDN
-		user.Host = &f
-	}
+	n := utils.NilFiller((*string)(user.HeaderImageID()), (*string)(user.IconImageID()), user.Bio())
 
-	res := models.CreateUserResponseJSON{
-		Id:         string(user.id),
-		Name:       user.name,
-		Host:       *user.Host,
-		ScreenName: user.ScreenName,
-		CreatedAt:  user.CreatedAt,
-	}
-
-	return res, nil
+	return models.GetUserResponseJSON{
+		Id:             string(user.Id()),
+		Name:           user.Name(), // ToDo: Host情報も返却する
+		ScreenName:     user.DisplayName(),
+		HeaderImageUrl: n[0],
+		IconImageUrl:   n[1],
+		Bio:            n[2],
+		CreatedAt:      user.CreatedAt(),
+	}, nil
 }

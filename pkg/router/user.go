@@ -1,25 +1,26 @@
 package router
 
 import (
-	"encoding/json"
-	"io"
-
-	"github.com/approvers/qip/pkg/controller/models"
+	"github.com/approvers/qip/pkg/controller"
+	"github.com/approvers/qip/pkg/repository"
+	"github.com/approvers/qip/pkg/utils/id"
 	"github.com/labstack/echo/v4"
 )
 
-func createUserHandler(c echo.Context) error {
-	b := models.CreateUserRequestJSON{}
-	body, _ := io.ReadAll(c.Request().Body)
-	err := json.Unmarshal(body, &b)
-	if err != nil {
-		return err
-	}
+type UserHandler struct {
+	controller controller.UserController
+}
 
-	res, err := userController.CreateUser(b)
-	if err != nil {
-		return err
-	}
+func NewUserHandler(userRepository repository.UserRepository) *UserHandler {
+	c := controller.NewUserController(userRepository)
+	return &UserHandler{controller: *c}
+}
 
+func (h *UserHandler) findUserByIDHandler(c echo.Context) error {
+	uid := c.Param("id")
+	res, err := h.controller.FindUserByID(id.SnowFlakeID(uid))
+	if err != nil {
+		return c.String(500, "Internal error")
+	}
 	return c.JSON(200, res)
 }
