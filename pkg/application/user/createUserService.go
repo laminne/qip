@@ -14,7 +14,6 @@ import (
 )
 
 type CreateUserCommand struct {
-	Id         id.SnowFlakeID
 	Name       string
 	InstanceID id.SnowFlakeID
 	IsLocal    bool
@@ -27,17 +26,20 @@ type ICreateUserService interface {
 type CreateUserService struct {
 	userService    service.UserService
 	userRepository repository.UserRepository
+	idGenerator    id.Generator
 }
 
-func NewCreateUserService(userService service.UserService) *CreateUserService {
-	return &CreateUserService{userService: userService}
+func NewCreateUserService(userService service.UserService, repository repository.UserRepository) *CreateUserService {
+	idGenerator := id.NewSnowFlakeIDGenerator()
+	return &CreateUserService{userService: userService, idGenerator: idGenerator, userRepository: repository}
 }
 
 func (s *CreateUserService) Handle(c CreateUserCommand) error {
 	// ToDo: ここでCreatedAtを作っていいのか？
 	now := time.Now()
 
-	u, _ := domain.NewUser(c.Id, c.Name, c.InstanceID, c.IsLocal, now)
+	uID := s.idGenerator.NewID(now)
+	u, _ := domain.NewUser(uID, c.Name, c.InstanceID, c.IsLocal, now)
 
 	if s.userService.Exists(u) {
 		return errors.New("")
