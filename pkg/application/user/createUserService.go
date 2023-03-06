@@ -4,6 +4,10 @@ import (
 	"errors"
 	"time"
 
+	"github.com/approvers/qip/pkg/utils/password/argon2"
+
+	"github.com/approvers/qip/pkg/utils/password"
+
 	"github.com/approvers/qip/pkg/repository"
 
 	"github.com/approvers/qip/pkg/domain/service"
@@ -17,6 +21,7 @@ type CreateUserCommand struct {
 	Name       string
 	InstanceID id.SnowFlakeID
 	IsLocal    bool
+	Password   string
 }
 
 type ICreateUserService interface {
@@ -24,14 +29,16 @@ type ICreateUserService interface {
 }
 
 type CreateUserService struct {
-	userService    service.UserService
-	userRepository repository.UserRepository
-	idGenerator    id.Generator
+	userService     service.UserService
+	userRepository  repository.UserRepository
+	idGenerator     id.Generator
+	passwordEncoder password.Encoder
 }
 
 func NewCreateUserService(userService service.UserService, repository repository.UserRepository) *CreateUserService {
 	idGenerator := id.NewSnowFlakeIDGenerator()
-	return &CreateUserService{userService: userService, idGenerator: idGenerator, userRepository: repository}
+	encoder := argon2.NewArgon2PasswordEncoder()
+	return &CreateUserService{userService: userService, idGenerator: idGenerator, userRepository: repository, passwordEncoder: encoder}
 }
 
 func (s *CreateUserService) Handle(c CreateUserCommand) error {
@@ -43,6 +50,19 @@ func (s *CreateUserService) Handle(c CreateUserCommand) error {
 
 	if s.userService.Exists(u) {
 		return errors.New("")
+	}
+
+	if u.IsLocalUser() {
+		if len(c.Password) == 0 {
+			return errors.New("ローカルユーザーにパスワードは必須です")
+		}
+
+		pw := c.Password
+		encoded, _ := s.passwordEncoder.EncodePassword(pw)
+		_, err := u.SetPassword(string(encoded))
+		if err != nil {
+			return err
+		}
 	}
 
 	err := s.userRepository.CreateUser(*u)

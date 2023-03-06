@@ -16,11 +16,25 @@ func TestCreateUserService_Handle(t *testing.T) {
 	userService := service.NewUserService(repository)
 	createUserService := NewCreateUserService(*userService, repository)
 
+	// 成功するとき
 	arg := CreateUserCommand{
 		Name:       "test",
 		InstanceID: "123123123",
-		IsLocal:    false,
+		IsLocal:    true,
+		Password:   "password@123",
 	}
 	err := createUserService.Handle(arg)
 	assert.Equal(t, nil, err)
+
+	// 失敗するとき
+	// ローカルユーザーでパスワードを設定しないことはできない
+	arg2 := CreateUserCommand{
+		Name:       "test3",
+		InstanceID: "123123123",
+		IsLocal:    true,
+		Password:   "",
+	}
+	err2 := createUserService.Handle(arg2)
+	assert.NotEqual(t, nil, err2)
+
 }
