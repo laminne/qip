@@ -7,9 +7,9 @@ import (
 )
 
 type IFindUserService interface {
-	FindByID(id id.SnowFlakeID) (*domain.User, error)
-	FindByInstanceID(instanceID id.SnowFlakeID) ([]domain.User, error)
-	FindByName(name string) ([]domain.User, error)
+	FindByID(id id.SnowFlakeID) (*UserData, error)
+	FindByInstanceID(instanceID id.SnowFlakeID) ([]UserData, error)
+	FindByName(name string) ([]UserData, error)
 }
 
 type FindUserService struct {
@@ -20,29 +20,38 @@ func NewFindUserService(repo repository.UserRepository) *FindUserService {
 	return &FindUserService{userRepository: repo}
 }
 
-func (f *FindUserService) FindByID(id id.SnowFlakeID) (*domain.User, error) {
+func (f *FindUserService) convert(u []domain.User) []UserData {
+	d := make([]UserData, len(u))
+
+	for i, v := range u {
+		d[i] = *NewUserData(v)
+	}
+	return d
+}
+
+func (f *FindUserService) FindByID(id id.SnowFlakeID) (*UserData, error) {
 	u, err := f.userRepository.FindUserByID(id)
 	if err != nil {
 		return nil, err
 	}
 
-	return u, nil
+	return NewUserData(*u), nil
 }
 
-func (f *FindUserService) FindByInstanceID(instanceID id.SnowFlakeID) ([]domain.User, error) {
+func (f *FindUserService) FindByInstanceID(instanceID id.SnowFlakeID) ([]UserData, error) {
 	u, err := f.userRepository.FindUsersByInstanceID(instanceID)
 	if err != nil {
 		return nil, err
 	}
 
-	return u, nil
+	return f.convert(u), nil
 }
 
-func (f *FindUserService) FindByName(name string) ([]domain.User, error) {
+func (f *FindUserService) FindByName(name string) ([]UserData, error) {
 	u, err := f.userRepository.FindUsersByName(name)
 	if err != nil {
 		return nil, err
 	}
 
-	return u, nil
+	return f.convert(u), nil
 }
