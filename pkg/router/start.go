@@ -3,6 +3,8 @@ package router
 import (
 	"fmt"
 
+	"go.uber.org/zap"
+
 	"github.com/approvers/qip/pkg/repository/dummy"
 
 	"github.com/labstack/echo/v4"
@@ -15,7 +17,26 @@ func StartServer(port int) {
 
 	e := echo.New()
 
-	e.Use(middleware.Logger())
+	logger, _ := zap.NewDevelopment()
+	e.Use(middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
+		LogURI:       true,
+		LogStatus:    true,
+		LogUserAgent: true,
+		LogMethod:    true,
+		LogLatency:   true,
+		LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error {
+			logger.Info("request",
+				zap.String("URI", v.URI),
+				zap.Int("status", v.Status),
+				zap.Durationp("Latency", &v.Latency),
+				zap.String("method", v.Method),
+				zap.String("ua", v.UserAgent),
+			)
+
+			return nil
+		},
+	}))
+
 	e.Use(middleware.Recover())
 	e.HTTPErrorHandler = ErrorHandler
 

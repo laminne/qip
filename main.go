@@ -1,15 +1,14 @@
 package main
 
-import (
-	"fmt"
-	"os"
+import "github.com/approvers/qip/cmd"
 
-	"github.com/approvers/qip/pkg/router"
-	"github.com/approvers/qip/pkg/utils/config"
-)
+/*
+	Qip
+
+	Copyright 2023 Tatsuto Yamamoto
+	MIT License
+*/
 
 func main() {
-	f, _ := os.Open("config.yml")
-	fmt.Println(config.LoadConfig(f))
-	router.StartServer(7000)
+	cmd.Start()
 }
