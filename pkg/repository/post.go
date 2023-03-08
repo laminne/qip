@@ -6,5 +6,7 @@ import (
 )
 
 type PostRepository interface {
+	Create(p domain.Post) error
 	FindByID(id id.SnowFlakeID) (*domain.Post, error)
+	FindByAuthorID(id id.SnowFlakeID) ([]domain.Post, error)
 }
