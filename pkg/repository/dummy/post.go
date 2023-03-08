@@ -34,3 +34,13 @@ func (p *PostRepository) Create(post domain.Post) error {
 	p.data = append(p.data, post)
 	return nil
 }
+
+func (p *PostRepository) FindByAuthorID(id id.SnowFlakeID) ([]domain.Post, error) {
+	res := make([]domain.Post, 0)
+	for _, v := range p.data {
+		if v.GetAuthorID() == id {
+			res = append(res, v)
+		}
+	}
+	return res, nil
+}
