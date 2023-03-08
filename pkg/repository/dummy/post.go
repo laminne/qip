@@ -23,3 +23,14 @@ func (p *PostRepository) FindByID(id id.SnowFlakeID) (*domain.Post, error) {
 	}
 	return nil, errors.New("PostNotFound")
 }
+
+func (p *PostRepository) Create(post domain.Post) error {
+	for _, v := range p.data {
+		if v.GetID() == post.GetID() {
+			return errors.New("PostExists")
+		}
+	}
+
+	p.data = append(p.data, post)
+	return nil
+}
