@@ -62,10 +62,14 @@ func StartServer(port int) {
 func ErrorHandler(err error, c echo.Context) {
 	if h, ok := err.(*echo.HTTPError); ok {
 		if h.Code == 404 {
-			c.JSON(404, serverErrors.NotFoundErrorResponseJSON)
+			if err := c.JSON(404, serverErrors.NotFoundErrorResponseJSON); err != nil {
+				c.Logger().Error(err)
+			}
 		}
 		if h.Code == 503 {
-			c.JSON(503, serverErrors.InternalErrorResponseJSON)
+			if err := c.JSON(503, serverErrors.InternalErrorResponseJSON); err != nil {
+				c.Logger().Error(err)
+			}
 		}
 	}
 }
