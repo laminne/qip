@@ -1,4 +1,4 @@
-package router
+package serverErrors
 
 // Qip API Error Definition
 /*
@@ -21,32 +21,37 @@ type commonAPIErrorResponseJSON struct {
 	Message string `json:"message"`
 }
 
-var unAuthorizedErrorResponseJSON = commonAPIErrorResponseJSON{
+var UnAuthorizedErrorResponseJSON = commonAPIErrorResponseJSON{
 	Type:    "UnAuthorized",
 	Message: "認証情報がありません",
 }
-var failedValidationErrorResponseJSON = commonAPIErrorResponseJSON{
+var FailedValidationErrorResponseJSON = commonAPIErrorResponseJSON{
 	Type:    "FailedValidation",
 	Message: "バリデーションに失敗しました",
 }
-var notFoundErrorResponseJSON = commonAPIErrorResponseJSON{
+var NotFoundErrorResponseJSON = commonAPIErrorResponseJSON{
 	Type:    "NotFound",
 	Message: "エンドポイントが存在しません",
 }
-var internalErrorResponseJSON = commonAPIErrorResponseJSON{
+var InternalErrorResponseJSON = commonAPIErrorResponseJSON{
 	Type:    "InternalError",
 	Message: "内部エラーが発生しました",
 }
 
-var postTooLongErrorResponseJSON = commonAPIErrorResponseJSON{
+var PostTooLongErrorResponseJSON = commonAPIErrorResponseJSON{
 	Type:    "PostTooLong",
 	Message: "投稿が長すぎます",
 }
-var invalidTargetErrorResponseJSON = commonAPIErrorResponseJSON{
+var InvalidTargetErrorResponseJSON = commonAPIErrorResponseJSON{
 	Type:    "InvalidTarget",
 	Message: "ターゲット先が正しく指定されていません",
 }
-var alreadyWatchedErrorResponseJSON = commonAPIErrorResponseJSON{
+var AlreadyWatchedErrorResponseJSON = commonAPIErrorResponseJSON{
 	Type:    "AlreadyWatched",
 	Message: "すでにウォッチしています",
+}
+
+var InvalidRequestErrorResponseJSON = commonAPIErrorResponseJSON{
+	Type:    "InvalidRequest",
+	Message: "リクエストボディの内容が間違っています",
 }

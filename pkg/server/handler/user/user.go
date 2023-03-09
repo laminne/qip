@@ -1,4 +1,4 @@
-package router
+package user
 
 import (
 	"github.com/approvers/qip/pkg/controller"
@@ -7,16 +7,16 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type UserHandler struct {
+type Handler struct {
 	controller controller.UserController
 }
 
-func NewUserHandler(userRepository repository.UserRepository) *UserHandler {
+func NewUserHandler(userRepository repository.UserRepository) *Handler {
 	c := controller.NewUserController(userRepository)
-	return &UserHandler{controller: *c}
+	return &Handler{controller: *c}
 }
 
-func (h *UserHandler) findUserByIDHandler(c echo.Context) error {
+func (h *Handler) FindByID(c echo.Context) error {
 	uid := c.Param("id")
 	res, err := h.controller.FindUserByID(id.SnowFlakeID(uid))
 	if err != nil {

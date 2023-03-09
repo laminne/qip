@@ -1,13 +1,14 @@
 package utils
 
-// NilFiller Stringのポインタを渡すとnilだった場合空文字列にして返却する
-func NilFiller(in ...*string) []string {
-	t := make([]string, 0)
-	for _, v := range in {
+// NilFiller ポインタを渡すとnilだった場合空にして返却する
+func NilFiller[T any](in ...*T) []T {
+	t := make([]T, len(in))
+	for i, v := range in {
 		if v == nil {
-			t = append(t, "")
+			n := new(T)
+			t[i] = *n
 		} else {
-			t = append(t, *v)
+			t[i] = *v
 		}
 	}
 
