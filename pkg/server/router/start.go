@@ -1,16 +1,20 @@
 package router
 
 import (
+	"context"
 	"fmt"
+	"net/http"
+	"os"
+	"os/signal"
+	"time"
+
+	"go.uber.org/zap"
 
 	"github.com/approvers/qip/pkg/server/serverErrors"
 
-	"github.com/approvers/qip/pkg/domain"
 	"github.com/approvers/qip/pkg/server/handler/post"
 
 	"github.com/approvers/qip/pkg/server/handler/user"
-
-	"go.uber.org/zap"
 
 	"github.com/approvers/qip/pkg/repository/dummy"
 
@@ -20,7 +24,7 @@ import (
 
 func StartServer(port int) {
 	userRepository := dummy.NewUserRepository(UserMockData)
-	postRepository := dummy.NewPostRepository([]domain.Post{})
+	postRepository := dummy.NewPostRepository(PostMockData)
 	userHandler := user.NewUserHandler(userRepository)
 	postHandler := post.NewPostHandler(postRepository)
 
@@ -34,14 +38,7 @@ func StartServer(port int) {
 		LogMethod:    true,
 		LogLatency:   true,
 		LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error {
-			logger.Info("request",
-				zap.String("URI", v.URI),
-				zap.Int("status", v.Status),
-				zap.Durationp("Latency", &v.Latency),
-				zap.String("method", v.Method),
-				zap.String("ua", v.UserAgent),
-			)
-
+			logger.Sugar().Infof("[API] %v %v %v %v %v", v.URI, v.Status, v.Latency, v.Method, v.UserAgent)
 			return nil
 		},
 	}))
@@ -51,12 +48,26 @@ func StartServer(port int) {
 
 	api := e.Group("/api/v1")
 	{
-		api.POST("/post", postHandler.Post)
+		api.POST("/posts", postHandler.Post)
+		api.GET("/posts/:id", postHandler.FindByID)
 
 		api.GET("/users/:id", userHandler.FindByID)
 	}
 
-	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", port)))
+	go func() {
+		if err := e.Start(fmt.Sprintf(":%d", port)); err != nil && err != http.ErrServerClosed {
+			e.Logger.Fatal("Shutting down server")
+		}
+	}()
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	if err := e.Shutdown(ctx); err != nil {
+		e.Logger.Fatal(err)
+	}
 }
 
 func ErrorHandler(err error, c echo.Context) {
