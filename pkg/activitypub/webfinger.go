@@ -5,14 +5,12 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/approvers/qip/pkg/utils/config"
-
 	"github.com/approvers/qip/pkg/activitypub/types"
 )
 
-func WebFinger(acct string) (string, error) {
+func WebFinger(acct string, fqdn string) (string, error) {
 	u := AcctParser(acct)
-	if *u.Host != config.QipConfig.FQDN {
+	if *u.Host != fqdn {
 		return "", errors.New("acct is not local user")
 	}
 
@@ -32,16 +30,16 @@ func WebFinger(acct string) (string, error) {
 			{
 				Rel:  "self",
 				Type: "application/activity+json",
-				Href: fmt.Sprintf("https://%s/users/%s", config.QipConfig.FQDN, u.UserName),
+				Href: fmt.Sprintf("https://%s/users/%s", fqdn, u.UserName),
 			},
 			{
 				Rel:  "http://webfinger.net/rel/profile-page",
 				Type: "text/html",
-				Href: fmt.Sprintf("https://%s/@%s", config.QipConfig.FQDN, u.UserName),
+				Href: fmt.Sprintf("https://%s/@%s", fqdn, u.UserName),
 			},
 			{
 				Rel:      "http://ostatus.org/schema/1.0/subscribe",
-				Template: fmt.Sprintf("https://%s/authorize-follow?acct={uri}", config.QipConfig.FQDN),
+				Template: fmt.Sprintf("https://%s/authorize-follow?acct={uri}", fqdn),
 			},
 		}),
 	}
