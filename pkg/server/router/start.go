@@ -8,7 +8,7 @@ import (
 	"os/signal"
 	"time"
 
-	"go.uber.org/zap"
+	"github.com/approvers/qip/pkg/utils/logger"
 
 	"github.com/approvers/qip/pkg/server/serverErrors"
 
@@ -23,14 +23,15 @@ import (
 )
 
 func StartServer(port int) {
+	zapLogger := logger.NewZapLogger(nil)
 	userRepository := dummy.NewUserRepository(UserMockData)
 	postRepository := dummy.NewPostRepository(PostMockData)
 	userHandler := user.NewUserHandler(userRepository)
 	postHandler := post.NewPostHandler(postRepository)
 
 	e := echo.New()
+	e.HideBanner = true
 
-	logger, _ := zap.NewDevelopment()
 	e.Use(middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
 		LogURI:       true,
 		LogStatus:    true,
@@ -38,7 +39,7 @@ func StartServer(port int) {
 		LogMethod:    true,
 		LogLatency:   true,
 		LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error {
-			logger.Sugar().Infof("[API] %v %v %v %v %v", v.URI, v.Status, v.Latency, v.Method, v.UserAgent)
+			zapLogger.Debug(fmt.Sprintf("[API] %v %v %v %v %v", v.URI, v.Status, v.Latency, v.Method, v.UserAgent))
 			return nil
 		},
 	}))
