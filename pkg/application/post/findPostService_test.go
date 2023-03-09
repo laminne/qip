@@ -4,6 +4,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/approvers/qip/pkg/utils/logger"
+
 	"github.com/approvers/qip/pkg/repository/dummy"
 	"github.com/stretchr/testify/assert"
 
@@ -24,7 +26,7 @@ func init() {
 	data = append(data, *c)
 
 	repo := dummy.NewPostRepository(data)
-	findPostService = *NewFindPostService(repo)
+	findPostService = *NewFindPostService(repo, logger.NewZapLogger(nil))
 }
 
 func TestFindPostService_FindByID(t *testing.T) {

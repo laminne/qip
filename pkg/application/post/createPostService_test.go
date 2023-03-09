@@ -3,6 +3,8 @@ package post
 import (
 	"testing"
 
+	"github.com/approvers/qip/pkg/utils/logger"
+
 	"github.com/approvers/qip/pkg/domain"
 	"github.com/approvers/qip/pkg/domain/service"
 	"github.com/approvers/qip/pkg/repository/dummy"
@@ -11,9 +13,10 @@ import (
 
 func TestCreatePostService_Handle(t *testing.T) {
 	d := new([]domain.Post)
+
 	repository := dummy.NewPostRepository(*d)
 	postService := service.NewPostService(repository)
-	createPostService := NewCreatePostService(*postService, repository)
+	createPostService := NewCreatePostService(*postService, repository, logger.NewZapLogger(nil))
 
 	// 成功するとき
 	arg := CreatePostCommand{

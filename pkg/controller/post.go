@@ -6,6 +6,7 @@ import (
 	"github.com/approvers/qip/pkg/domain/service"
 	"github.com/approvers/qip/pkg/repository"
 	"github.com/approvers/qip/pkg/utils/id"
+	"github.com/approvers/qip/pkg/utils/logger"
 )
 
 type PostController struct {
@@ -14,12 +15,12 @@ type PostController struct {
 	findPostService   post.IFindPostService
 }
 
-func NewPostController(r repository.PostRepository) *PostController {
-	ps := post.NewCreatePostService(*service.NewPostService(r), r)
+func NewPostController(r repository.PostRepository, log logger.Logger) *PostController {
+	ps := post.NewCreatePostService(*service.NewPostService(r), r, log)
 	return &PostController{
 		repo:              r,
 		createPostService: ps,
-		findPostService:   post.NewFindPostService(r),
+		findPostService:   post.NewFindPostService(r, log),
 	}
 }
 

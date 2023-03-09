@@ -3,6 +3,8 @@ package dummy
 import (
 	"errors"
 
+	"github.com/approvers/qip/pkg/repository"
+
 	"github.com/approvers/qip/pkg/domain"
 	"github.com/approvers/qip/pkg/utils/id"
 )
@@ -21,7 +23,7 @@ func (p *PostRepository) FindByID(id id.SnowFlakeID) (*domain.Post, error) {
 			return &v, nil
 		}
 	}
-	return nil, errors.New("PostNotFound")
+	return nil, repository.NotFound
 }
 
 func (p *PostRepository) Create(post domain.Post) error {

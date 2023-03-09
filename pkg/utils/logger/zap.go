@@ -21,7 +21,7 @@ func (l ZapLogger) Warn(s string) {
 }
 
 func (l ZapLogger) Error(s string) {
-	l.logger.Sugar().Error()
+	l.logger.Sugar().Error(s)
 }
 
 func (l ZapLogger) Panic(s string) {

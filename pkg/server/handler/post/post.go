@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/approvers/qip/pkg/utils/logger"
+
 	"github.com/approvers/qip/pkg/server/serverErrors"
 
 	"github.com/approvers/qip/pkg/controller"
@@ -16,8 +18,8 @@ type Handler struct {
 	controller controller.PostController
 }
 
-func NewPostHandler(repo repository.PostRepository) *Handler {
-	return &Handler{controller: *controller.NewPostController(repo)}
+func NewPostHandler(repo repository.PostRepository, log logger.Logger) *Handler {
+	return &Handler{controller: *controller.NewPostController(repo, log)}
 }
 
 func (h *Handler) Post(c echo.Context) error {

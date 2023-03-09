@@ -2,7 +2,10 @@ package post
 
 import (
 	"errors"
+	"fmt"
 	"time"
+
+	"github.com/approvers/qip/pkg/utils/logger"
 
 	"github.com/approvers/qip/pkg/domain"
 	"github.com/approvers/qip/pkg/domain/service"
@@ -24,11 +27,12 @@ type CreatePostService struct {
 	postService    service.PostService
 	postRepository repository.PostRepository
 	idGenerator    id.Generator
+	logger         logger.Logger
 }
 
-func NewCreatePostService(postService service.PostService, repository repository.PostRepository) *CreatePostService {
+func NewCreatePostService(postService service.PostService, repository repository.PostRepository, log logger.Logger) *CreatePostService {
 	idGenerator := id.NewSnowFlakeIDGenerator()
-	return &CreatePostService{postService: postService, postRepository: repository, idGenerator: idGenerator}
+	return &CreatePostService{postService: postService, postRepository: repository, idGenerator: idGenerator, logger: log}
 }
 
 func (s *CreatePostService) Handle(c CreatePostCommand) (*PostData, error) {
@@ -38,6 +42,7 @@ func (s *CreatePostService) Handle(c CreatePostCommand) (*PostData, error) {
 	p := domain.NewPost(pID, c.Body, c.Visibility, c.AuthorID, now)
 
 	if s.postService.Exists(p) {
+		s.logger.Error(fmt.Sprintf("[CreatePostService] PostID Duplicated ID: %v", p.GetID()))
 		return nil, errors.New("IDが重複しています")
 	}
 

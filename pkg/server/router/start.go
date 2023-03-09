@@ -27,7 +27,7 @@ func StartServer(port int) {
 	userRepository := dummy.NewUserRepository(UserMockData)
 	postRepository := dummy.NewPostRepository(PostMockData)
 	userHandler := user.NewUserHandler(userRepository)
-	postHandler := post.NewPostHandler(postRepository)
+	postHandler := post.NewPostHandler(postRepository, zapLogger)
 
 	e := echo.New()
 	e.HideBanner = true
