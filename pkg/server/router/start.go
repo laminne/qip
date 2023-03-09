@@ -3,6 +3,13 @@ package router
 import (
 	"fmt"
 
+	"github.com/approvers/qip/pkg/server/serverErrors"
+
+	"github.com/approvers/qip/pkg/domain"
+	"github.com/approvers/qip/pkg/server/handler/post"
+
+	"github.com/approvers/qip/pkg/server/handler/user"
+
 	"go.uber.org/zap"
 
 	"github.com/approvers/qip/pkg/repository/dummy"
@@ -12,8 +19,10 @@ import (
 )
 
 func StartServer(port int) {
-	repo := dummy.NewUserRepository(UserMockData)
-	userHandler := NewUserHandler(repo)
+	userRepository := dummy.NewUserRepository(UserMockData)
+	postRepository := dummy.NewPostRepository([]domain.Post{})
+	userHandler := user.NewUserHandler(userRepository)
+	postHandler := post.NewPostHandler(postRepository)
 
 	e := echo.New()
 
@@ -41,7 +50,11 @@ func StartServer(port int) {
 	e.HTTPErrorHandler = ErrorHandler
 
 	api := e.Group("/api/v1")
-	api.GET("/users/:id", userHandler.findUserByIDHandler)
+	{
+		api.POST("/post", postHandler.Post)
+
+		api.GET("/users/:id", userHandler.FindByID)
+	}
 
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", port)))
 }
@@ -49,10 +62,14 @@ func StartServer(port int) {
 func ErrorHandler(err error, c echo.Context) {
 	if h, ok := err.(*echo.HTTPError); ok {
 		if h.Code == 404 {
-			c.JSON(404, notFoundErrorResponseJSON)
+			if err := c.JSON(404, serverErrors.NotFoundErrorResponseJSON); err != nil {
+				c.Logger().Error(err)
+			}
 		}
 		if h.Code == 503 {
-			c.JSON(503, internalErrorResponseJSON)
+			if err := c.JSON(503, serverErrors.InternalErrorResponseJSON); err != nil {
+				c.Logger().Error(err)
+			}
 		}
 	}
 }

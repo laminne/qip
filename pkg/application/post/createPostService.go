@@ -17,7 +17,7 @@ type CreatePostCommand struct {
 }
 
 type ICreatePostService interface {
-	Handle(c CreatePostCommand) error
+	Handle(c CreatePostCommand) (*PostData, error)
 }
 
 type CreatePostService struct {
@@ -31,20 +31,20 @@ func NewCreatePostService(postService service.PostService, repository repository
 	return &CreatePostService{postService: postService, postRepository: repository, idGenerator: idGenerator}
 }
 
-func (s *CreatePostService) Handle(c CreatePostCommand) error {
+func (s *CreatePostService) Handle(c CreatePostCommand) (*PostData, error) {
 	now := time.Now()
 
 	pID := s.idGenerator.NewID(now)
 	p := domain.NewPost(pID, c.Body, c.Visibility, c.AuthorID, now)
 
 	if s.postService.Exists(p) {
-		return errors.New("IDが重複しています")
+		return nil, errors.New("IDが重複しています")
 	}
 
 	err := s.postRepository.Create(*p)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	return nil
+	return NewPostData(*p), nil
 }

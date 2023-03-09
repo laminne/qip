@@ -31,7 +31,7 @@ func (u *UserController) FindUserByID(id id.SnowFlakeID) (models.GetUserResponse
 		return models.GetUserResponseJSON{}, errors.New("")
 	}
 
-	n := utils.NilFiller((*string)(user.HeaderImageID()), (*string)(user.IconImageID()), user.Bio())
+	n := utils.NilFiller[string]((*string)(user.HeaderImageID()), (*string)(user.IconImageID()), user.Bio())
 
 	return models.GetUserResponseJSON{
 		Id:             string(user.Id()),

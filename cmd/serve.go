@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/approvers/qip/pkg/router"
+	"github.com/approvers/qip/pkg/server/router"
 	"github.com/spf13/cobra"
 )
 

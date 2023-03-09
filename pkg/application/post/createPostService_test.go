@@ -21,7 +21,7 @@ func TestCreatePostService_Handle(t *testing.T) {
 		AuthorID:   "112233",
 		Visibility: domain.Global,
 	}
-	err := createPostService.Handle(arg)
+	_, err := createPostService.Handle(arg)
 	assert.Equal(t, nil, err)
 
 	// 失敗するとき
@@ -30,6 +30,6 @@ func TestCreatePostService_Handle(t *testing.T) {
 		AuthorID:   "112233",
 		Visibility: domain.Global,
 	}
-	err2 := createPostService.Handle(arg2)
+	_, err2 := createPostService.Handle(arg2)
 	assert.NotEqual(t, nil, err2)
 }
