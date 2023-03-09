@@ -1,6 +1,7 @@
 package post
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/approvers/qip/pkg/server/serverErrors"
@@ -28,6 +29,16 @@ func (h *Handler) Post(c echo.Context) error {
 
 	// ToDo: Authorを正しく指定する
 	res, err := h.controller.Create(req.Body, "123", req.Visibility)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, serverErrors.InternalErrorResponseJSON)
+	}
+	fmt.Println(res)
+	return c.JSON(http.StatusOK, res)
+}
+
+func (h *Handler) FindByID(c echo.Context) error {
+	id := c.Param("id")
+	res, err := h.controller.FindByID(id)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, serverErrors.InternalErrorResponseJSON)
 	}
