@@ -4,6 +4,8 @@ import (
 	"errors"
 	"time"
 
+	"github.com/approvers/qip/pkg/utils/key"
+
 	"github.com/approvers/qip/pkg/utils/password/argon2"
 
 	"github.com/approvers/qip/pkg/utils/password"
@@ -60,6 +62,21 @@ func (s *CreateUserService) Handle(c CreateUserCommand) error {
 		pw := c.Password
 		encoded, _ := s.passwordEncoder.EncodePassword(pw)
 		_, err := u.SetPassword(string(encoded))
+		if err != nil {
+			return err
+		}
+
+		keys, err := key.GenRSAKey()
+		if err != nil {
+			return err
+		}
+
+		_, err = u.SetPublicKey(string(keys.PublicKey))
+		if err != nil {
+			return err
+		}
+
+		_, err = u.SetSecretKey(string(keys.PrivateKey))
 		if err != nil {
 			return err
 		}
