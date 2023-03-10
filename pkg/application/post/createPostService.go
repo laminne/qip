@@ -1,8 +1,9 @@
 package post
 
 import (
-	"errors"
 	"time"
+
+	"github.com/approvers/qip/pkg/errorType"
 
 	"github.com/approvers/qip/pkg/domain"
 	"github.com/approvers/qip/pkg/domain/service"
@@ -38,7 +39,7 @@ func (s *CreatePostService) Handle(c CreatePostCommand) (*PostData, error) {
 	p := domain.NewPost(pID, c.Body, c.Visibility, c.AuthorID, now)
 
 	if s.postService.Exists(p) {
-		return nil, errors.New("IDが重複しています")
+		return nil, errorType.NewErrExists("CreatePostService", "post exists")
 	}
 
 	err := s.postRepository.Create(*p)

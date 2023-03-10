@@ -1,8 +1,6 @@
 package controller
 
 import (
-	"errors"
-
 	"github.com/approvers/qip/pkg/utils"
 
 	"github.com/approvers/qip/pkg/controller/models"
@@ -28,7 +26,7 @@ func NewUserController(r repository.UserRepository) *UserController {
 func (u *UserController) FindUserByID(id id.SnowFlakeID) (models.GetUserResponseJSON, error) {
 	user, err := u.findUserService.FindByID(id)
 	if err != nil {
-		return models.GetUserResponseJSON{}, errors.New("")
+		return models.GetUserResponseJSON{}, err
 	}
 
 	n := utils.NilFiller[string]((*string)(user.HeaderImageID()), (*string)(user.IconImageID()), user.Bio())

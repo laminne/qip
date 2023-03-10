@@ -2,6 +2,7 @@ package user
 
 import (
 	"github.com/approvers/qip/pkg/domain"
+	"github.com/approvers/qip/pkg/errorType"
 	"github.com/approvers/qip/pkg/repository"
 	"github.com/approvers/qip/pkg/utils/id"
 )
@@ -32,7 +33,7 @@ func (f *FindUserService) convert(u []domain.User) []UserData {
 func (f *FindUserService) FindByID(id id.SnowFlakeID) (*UserData, error) {
 	u, err := f.userRepository.FindUserByID(id)
 	if err != nil {
-		return nil, err
+		return nil, errorType.NewErrNotFound("FindUserService", "user not found")
 	}
 
 	return NewUserData(*u), nil
@@ -41,7 +42,7 @@ func (f *FindUserService) FindByID(id id.SnowFlakeID) (*UserData, error) {
 func (f *FindUserService) FindByInstanceID(instanceID id.SnowFlakeID) ([]UserData, error) {
 	u, err := f.userRepository.FindUsersByInstanceID(instanceID)
 	if err != nil {
-		return nil, err
+		return nil, errorType.NewErrNotFound("FindUserService", "no such instance")
 	}
 
 	return f.convert(u), nil
@@ -50,7 +51,7 @@ func (f *FindUserService) FindByInstanceID(instanceID id.SnowFlakeID) ([]UserDat
 func (f *FindUserService) FindByName(name string) ([]UserData, error) {
 	u, err := f.userRepository.FindUsersByName(name)
 	if err != nil {
-		return nil, err
+		return nil, errorType.NewErrNotFound("FindUserService", "user not found")
 	}
 
 	return f.convert(u), nil

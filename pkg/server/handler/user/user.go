@@ -1,8 +1,12 @@
 package user
 
 import (
+	"net/http"
+
 	"github.com/approvers/qip/pkg/controller"
+	"github.com/approvers/qip/pkg/errorType"
 	"github.com/approvers/qip/pkg/repository"
+	"github.com/approvers/qip/pkg/server/serverErrors"
 	"github.com/approvers/qip/pkg/utils/id"
 	"github.com/labstack/echo/v4"
 )
@@ -20,7 +24,19 @@ func (h *Handler) FindByID(c echo.Context) error {
 	uid := c.Param("id")
 	res, err := h.controller.FindUserByID(id.SnowFlakeID(uid))
 	if err != nil {
-		return c.String(500, "Internal error")
+		e, code := errorConverter(err)
+		return c.JSON(code, e)
 	}
 	return c.JSON(200, res)
+}
+
+func errorConverter(e error) (serverErrors.CommonAPIErrorResponseJSON, int) {
+	switch e.(type) {
+	case *errorType.ErrNotFound:
+		return serverErrors.UserNotFoundErrorResponseJSON, http.StatusNotFound
+	case *errorType.ErrExists:
+		return serverErrors.InternalErrorResponseJSON, http.StatusConflict
+	default:
+		return serverErrors.InternalErrorResponseJSON, http.StatusInternalServerError
+	}
 }
