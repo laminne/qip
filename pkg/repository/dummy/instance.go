@@ -35,3 +35,12 @@ func (r *InstanceRepository) FindByID(id id.SnowFlakeID) (*domain.Instance, erro
 
 	return nil, errorType.NewErrNotFound("DummyInstanceRepository", "Instance Not Found")
 }
+
+func (r *InstanceRepository) FindByHost(host string) (*domain.Instance, error) {
+	for _, v := range r.data {
+		if host == v.GetHost() {
+			return &v, nil
+		}
+	}
+	return nil, errorType.NewErrNotFound("DummyInstanceRepository", "Instance Not Found")
+}
