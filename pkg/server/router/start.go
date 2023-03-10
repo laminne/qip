@@ -8,6 +8,10 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/approvers/qip/pkg/utils/token"
+
+	"github.com/approvers/qip/pkg/server/handler/auth"
+
 	"go.uber.org/zap"
 
 	"github.com/approvers/qip/pkg/server/serverErrors"
@@ -27,6 +31,8 @@ func StartServer(port int) {
 	postRepository := dummy.NewPostRepository(PostMockData)
 	userHandler := user.NewUserHandler(userRepository)
 	postHandler := post.NewPostHandler(postRepository)
+	key := token.SecureRandom(512)
+	authHandler := auth.NewHandler(userRepository, key)
 
 	e := echo.New()
 
@@ -46,8 +52,10 @@ func StartServer(port int) {
 	e.Use(middleware.Recover())
 	e.HTTPErrorHandler = ErrorHandler
 
+	e.POST("/api/v1/login", authHandler.LoginHandler)
 	api := e.Group("/api/v1")
 	{
+		api.Use(authHandler.TokenMiddlewareHandlerFunc)
 		api.POST("/posts", postHandler.Post)
 		api.GET("/posts/:id", postHandler.FindByID)
 

@@ -1,6 +1,7 @@
 package argon2
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -13,6 +14,7 @@ func TestIsMatchPassword(t *testing.T) {
 	if err != nil {
 		assert.Error(t, err, "パスワードハッシュに失敗")
 	}
+	fmt.Println(encodedPassword)
 
 	var result bool
 	result = matcher.IsMatchPassword(password, encodedPassword)

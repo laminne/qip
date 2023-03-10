@@ -15,6 +15,8 @@ func init() {
 		b, _ := domain.NewUser("777", "test1", "789", false, time.Now())
 		c, _ := domain.NewUser("888", "test3", "012", true, time.Now())
 
+		_, _ = c.SetPassword("Argon2.36861cacfd0197139119336a706ac7e2b8f49456.305[0]")
+
 		UserMockData = append(UserMockData, *a)
 		UserMockData = append(UserMockData, *b)
 		UserMockData = append(UserMockData, *c)
