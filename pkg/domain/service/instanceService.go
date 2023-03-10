@@ -14,14 +14,8 @@ func NewInstanceService(repo repository.InstanceRepository) *InstanceService {
 }
 
 func (s *InstanceService) Exists(i domain.Instance) bool {
-	r, err := s.repository.FindByID(i.GetID())
-	if err != nil {
-		return false
-	}
-	r2, er := s.repository.FindByHost(i.GetHost())
-	if er != nil {
-		return false
-	}
+	r, _ := s.repository.FindByID(i.GetID())
+	r2, _ := s.repository.FindByHost(i.GetHost())
 	if r == nil && r2 == nil {
 		return false
 	}
