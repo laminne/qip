@@ -125,3 +125,11 @@ func (f *File) GetCreatedAt() time.Time {
 func (f *File) GetUpdatedAt() *time.Time {
 	return f.updatedAt
 }
+
+func (f *File) GetPostID() *id.SnowFlakeID {
+	return f.postID
+}
+
+func (f *File) SetPostID(postID *id.SnowFlakeID) {
+	f.postID = postID
+}
