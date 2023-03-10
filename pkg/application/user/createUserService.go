@@ -4,6 +4,8 @@ import (
 	"errors"
 	"time"
 
+	"github.com/approvers/qip/pkg/errorType"
+
 	"github.com/approvers/qip/pkg/utils/key"
 
 	"github.com/approvers/qip/pkg/utils/password/argon2"
@@ -56,7 +58,7 @@ func (s *CreateUserService) Handle(c CreateUserCommand) error {
 
 	if u.IsLocalUser() {
 		if len(c.Password) == 0 {
-			return errors.New("ローカルユーザーにパスワードは必須です")
+			return errorType.NewErrMissingPassword("CreateUserService", "password required")
 		}
 
 		pw := c.Password

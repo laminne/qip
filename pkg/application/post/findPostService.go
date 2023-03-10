@@ -2,6 +2,7 @@ package post
 
 import (
 	"github.com/approvers/qip/pkg/domain"
+	"github.com/approvers/qip/pkg/errorType"
 	"github.com/approvers/qip/pkg/repository"
 	"github.com/approvers/qip/pkg/utils/id"
 )
@@ -31,7 +32,7 @@ func (f *FindPostService) convert(p []domain.Post) []PostData {
 func (f *FindPostService) FindByID(id id.SnowFlakeID) (*PostData, error) {
 	p, err := f.postRepository.FindByID(id)
 	if err != nil {
-		return nil, err
+		return nil, errorType.NewErrNotFound("FindPostService", "post not found")
 	}
 
 	return NewPostData(*p), nil

@@ -16,42 +16,34 @@ InvalidTarget/(マージやウォッチ、リアクション)ターゲット先�
 AlreadyWatched/すでにウォッチしています
 */
 
-type commonAPIErrorResponseJSON struct {
+type CommonAPIErrorResponseJSON struct {
 	Type    string `json:"type"`
 	Message string `json:"message"`
 }
 
-var UnAuthorizedErrorResponseJSON = commonAPIErrorResponseJSON{
-	Type:    "UnAuthorized",
-	Message: "認証情報がありません",
-}
-var FailedValidationErrorResponseJSON = commonAPIErrorResponseJSON{
-	Type:    "FailedValidation",
-	Message: "バリデーションに失敗しました",
-}
-var NotFoundErrorResponseJSON = commonAPIErrorResponseJSON{
+var NotFoundErrorResponseJSON = CommonAPIErrorResponseJSON{
 	Type:    "NotFound",
 	Message: "エンドポイントが存在しません",
 }
-var InternalErrorResponseJSON = commonAPIErrorResponseJSON{
+var InternalErrorResponseJSON = CommonAPIErrorResponseJSON{
 	Type:    "InternalError",
 	Message: "内部エラーが発生しました",
 }
-
-var PostTooLongErrorResponseJSON = commonAPIErrorResponseJSON{
-	Type:    "PostTooLong",
-	Message: "投稿が長すぎます",
-}
-var InvalidTargetErrorResponseJSON = commonAPIErrorResponseJSON{
-	Type:    "InvalidTarget",
-	Message: "ターゲット先が正しく指定されていません",
-}
-var AlreadyWatchedErrorResponseJSON = commonAPIErrorResponseJSON{
-	Type:    "AlreadyWatched",
-	Message: "すでにウォッチしています",
-}
-
-var InvalidRequestErrorResponseJSON = commonAPIErrorResponseJSON{
+var InvalidRequestErrorResponseJSON = CommonAPIErrorResponseJSON{
 	Type:    "InvalidRequest",
 	Message: "リクエストボディの内容が間違っています",
+}
+
+// Post
+
+var PostNotFoundErrorResponseJSON = CommonAPIErrorResponseJSON{
+	Type:    "PostNotFound",
+	Message: "投稿が存在しません",
+}
+
+// User
+
+var UserNotFoundErrorResponseJSON = CommonAPIErrorResponseJSON{
+	Type:    "UserNotFound",
+	Message: "ユーザーが存在しません",
 }
