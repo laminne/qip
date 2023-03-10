@@ -33,6 +33,10 @@ var InvalidRequestErrorResponseJSON = CommonAPIErrorResponseJSON{
 	Type:    "InvalidRequest",
 	Message: "リクエストボディの内容が間違っています",
 }
+var UnAuthorizedRequestErrorResponseJSON = CommonAPIErrorResponseJSON{
+	Type:    "UnAuthorized",
+	Message: "ログインしていません",
+}
 
 // Post
 

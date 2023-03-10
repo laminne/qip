@@ -10,7 +10,7 @@ import (
 )
 
 func TestJWTTokenParser_Parse(t *testing.T) {
-	key := secureRandom(32)
+	key := SecureRandom(32)
 	g := NewJWTTokenGenerator(key)
 	p := NewJWTTokenParser(key)
 

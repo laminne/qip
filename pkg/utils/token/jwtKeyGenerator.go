@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func secureRandom(keyLength int) string {
+func SecureRandom(keyLength int) string {
 	key := make([]byte, keyLength)
 	if _, err := rand.Read(key); err != nil {
 		return ""
