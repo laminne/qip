@@ -23,5 +23,4 @@ func TestCreateInstanceService_Handle(t *testing.T) {
 
 	// 失敗するとき
 	// FIXME: #58で修正
-
 }
