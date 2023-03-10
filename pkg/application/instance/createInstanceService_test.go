@@ -22,5 +22,7 @@ func TestCreateInstanceService_Handle(t *testing.T) {
 	assert.Equal(t, nil, err)
 
 	// 失敗するとき
-	// FIXME: #58で修正
+	arg2 := CreateInstanceCommand{Host: "example.jp"}
+	_, er := create.Handle(arg2)
+	assert.NotEqual(t, nil, er)
 }

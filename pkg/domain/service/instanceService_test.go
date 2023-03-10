@@ -21,6 +21,9 @@ func TestInstanceService_Exists(t *testing.T) {
 	notExist, _ := domain.NewInstance("999", "example.net", time.Now())
 	assert.Equal(t, false, instanceService.Exists(*notExist))
 
-	// 存在するとき
+	// 存在するとき ホストとidが使用済みのとき
 	assert.Equal(t, true, instanceService.Exists(*testData))
+	// 存在するとき ホストが使用済みのとき
+	ex, _ := domain.NewInstance("9999999", "example.jp", time.Now())
+	assert.Equal(t, true, instanceService.Exists(*ex))
 }
