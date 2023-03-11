@@ -1,9 +1,9 @@
 package file
 
 import (
-	"github.com/approvers/qip/pkg/domain"
 	"time"
 
+	"github.com/approvers/qip/pkg/domain"
 	"github.com/approvers/qip/pkg/utils/id"
 )
 
