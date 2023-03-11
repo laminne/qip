@@ -3,6 +3,9 @@ package file
 import (
 	"io"
 	"testing"
+	"time"
+
+	"github.com/approvers/qip/pkg/application/user"
 
 	"github.com/approvers/qip/pkg/domain"
 	"github.com/approvers/qip/pkg/domain/service"
@@ -13,8 +16,13 @@ import (
 
 func TestCreateFileService_Handle(t *testing.T) {
 	repo := dummy.NewFileRepository(*new([]domain.File))
+	u, _ := domain.NewUser("123", "test", "222", true, time.Now())
+	users := make([]domain.User, 1)
+	users[0] = *u
+	uRepo := dummy.NewUserRepository(users)
 	fileService := *service.NewFileService(repo)
-	s := NewCreateFileService(fileService, repo, local.NewStorageManager())
+	userService := *user.NewFindUserService(uRepo)
+	s := NewCreateFileService(fileService, repo, local.NewStorageManager(), userService)
 
 	// 成功するか
 	d := newDummyReader([]byte("test"))

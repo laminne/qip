@@ -13,6 +13,7 @@ type FileData struct {
 	postID       *id.SnowFlakeID
 	fileName     string
 	fileURL      string
+	filePath     *string
 	thumbnailURL *string
 	blurhash     string
 	isNSFW       bool
@@ -28,6 +29,7 @@ func NewFileData(f domain.File) *FileData {
 		postID:       f.GetPostID(),
 		fileName:     f.GetFileName(),
 		fileURL:      f.GetFileURL(),
+		filePath:     f.GetFilePath(),
 		thumbnailURL: f.GetThumbnailURL(),
 		blurhash:     f.GetBlurhash(),
 		isNSFW:       f.IsNSFW(),
@@ -55,6 +57,10 @@ func (f FileData) FileName() string {
 
 func (f FileData) FileURL() string {
 	return f.fileURL
+}
+
+func (f FileData) FilePath() *string {
+	return f.filePath
 }
 
 func (f FileData) ThumbnailURL() *string {
