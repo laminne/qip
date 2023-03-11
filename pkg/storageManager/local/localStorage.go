@@ -9,6 +9,15 @@ import (
 type StorageManager struct {
 }
 
+func (s StorageManager) Get(path string) (io.Reader, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return nil, err
+	}
+
+	return f, err
+}
+
 func NewStorageManager() *StorageManager {
 	return &StorageManager{}
 }
