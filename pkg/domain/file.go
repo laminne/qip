@@ -15,6 +15,7 @@ type File struct {
 	uploaderID   id.SnowFlakeID
 	postID       *id.SnowFlakeID
 	fileName     string
+	filePath     *string
 	fileURL      string
 	thumbnailURL *string
 	blurhash     string
@@ -55,6 +56,11 @@ func (f *File) SetThumbnailURL(url string) (*File, error) {
 
 func (f *File) SetBlurhash(hash string) *File {
 	f.blurhash = hash
+	return f
+}
+
+func (f *File) SetFilePath(p string) *File {
+	f.filePath = &p
 	return f
 }
 
@@ -102,6 +108,10 @@ func (f *File) GetFileURL() string {
 	return f.fileURL
 }
 
+func (f *File) GetFilePath() *string {
+	return f.filePath
+}
+
 func (f *File) GetThumbnailURL() *string {
 	return f.thumbnailURL
 }
@@ -124,4 +134,12 @@ func (f *File) GetCreatedAt() time.Time {
 
 func (f *File) GetUpdatedAt() *time.Time {
 	return f.updatedAt
+}
+
+func (f *File) GetPostID() *id.SnowFlakeID {
+	return f.postID
+}
+
+func (f *File) SetPostID(postID *id.SnowFlakeID) {
+	f.postID = postID
 }
