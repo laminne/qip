@@ -65,7 +65,7 @@ func (s *CreateFileService) Handle(c CreateFileCommand) (*FileData, error) {
 
 	if u.IsLocalUser() {
 		// ローカルユーザーがアップロードしたファイルは保存する
-		p, err := s.storageManager.Create(c.FileURL, c.FileName, c.File)
+		p, err := s.storageManager.Create(c.FileName, c.File)
 		if err != nil {
 			return nil, err
 		}
