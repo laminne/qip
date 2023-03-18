@@ -34,7 +34,7 @@ func (r UserRepository) FindUserByID(id id.SnowFlakeID) (*domain.User, error) {
 	if res.Error != nil {
 		return nil, res.Error
 	}
-	return r.eToD(*&u), nil
+	return r.eToD(u), nil
 }
 
 func (r UserRepository) FindUsersByInstanceID(id id.SnowFlakeID) ([]domain.User, error) {
