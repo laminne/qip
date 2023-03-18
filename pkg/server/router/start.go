@@ -60,6 +60,7 @@ func StartServer(port int) {
 			config.QipConfig.DB.Port,
 			config.QipConfig.DB.DBName)
 		userRepository = gormRepository.NewUserRepository(db)
+		postRepository = gormRepository.NewPostRepository(db)
 	} else {
 		userRepository = dummy.NewUserRepository(UserMockData)
 		postRepository = dummy.NewPostRepository(PostMockData)
