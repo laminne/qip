@@ -1,5 +1,7 @@
 # Qip Configuration
 
+mode: "development"
+
 # instance FQDN
 # e.g example.jp
 fqdn: example.jp

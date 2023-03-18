@@ -58,11 +58,11 @@ func (u *User) SetDisplayName(displayName string) *User {
 	if utf8.RuneCountInString(displayName) > 64 {
 		// 切り捨てる
 		u.displayName = displayName[:64]
-	}
-
-	if utf8.RuneCountInString(displayName) == 0 {
+	} else if utf8.RuneCountInString(displayName) == 0 {
 		// 指定がない場合はユーザー名にフォールバック
 		u.displayName = u.name
+	} else {
+		u.displayName = displayName
 	}
 
 	return u
