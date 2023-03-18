@@ -8,11 +8,21 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/approvers/qip/pkg/repository/dummy"
+
+	"github.com/approvers/qip/pkg/repository"
+	"github.com/approvers/qip/pkg/repository/gormRepository"
+	"github.com/approvers/qip/pkg/utils/config"
+
 	"github.com/approvers/qip/pkg/utils/token"
 
 	"github.com/approvers/qip/pkg/server/handler/auth"
 
 	"go.uber.org/zap"
+
+	"gorm.io/driver/postgres"
+
+	"gorm.io/gorm"
 
 	"github.com/approvers/qip/pkg/server/serverErrors"
 
@@ -20,15 +30,40 @@ import (
 
 	"github.com/approvers/qip/pkg/server/handler/user"
 
-	"github.com/approvers/qip/pkg/repository/dummy"
-
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
 func StartServer(port int) {
-	userRepository := dummy.NewUserRepository(UserMockData)
-	postRepository := dummy.NewPostRepository(PostMockData)
+	var userRepository repository.UserRepository
+	var postRepository repository.PostRepository
+
+	if config.QipConfig.Mode != "development" {
+		db, err := gorm.Open(postgres.Open(
+			fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
+				config.QipConfig.DB.User,
+				config.QipConfig.DB.Password,
+				config.QipConfig.DB.Host,
+				config.QipConfig.DB.Port,
+				config.QipConfig.DB.DBName,
+			),
+		),
+			&gorm.Config{},
+		)
+		if err != nil {
+			panic("failed to connect database")
+		}
+
+		fmt.Printf("[Root] Successfully connect to database\n\tDatabase User: %s\n\tDatabase Host: %s\n\tDatabase Post: %s\n\tDatabase Name: %s\n",
+			config.QipConfig.DB.User,
+			config.QipConfig.DB.Host,
+			config.QipConfig.DB.Port,
+			config.QipConfig.DB.DBName)
+		userRepository = gormRepository.NewUserRepository(db)
+	} else {
+		userRepository = dummy.NewUserRepository(UserMockData)
+		postRepository = dummy.NewPostRepository(PostMockData)
+	}
 	userHandler := user.NewUserHandler(userRepository)
 	postHandler := post.NewPostHandler(postRepository)
 	key := token.SecureRandom(512)
