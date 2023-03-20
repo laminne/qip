@@ -105,6 +105,12 @@ func (r UserRepository) eToD(e entity.User) *domain.User {
 		_, _ = u.SetPassword(*e.Password)
 	}
 	_, _ = u.SetPublicKey(e.PublicKey)
+	if e.IconImageID != nil {
+		u.SetIcon(id.SnowFlakeID(*e.IconImageID))
+	}
+	if e.HeaderImageID != nil {
+		u.SetHeader(id.SnowFlakeID(*e.HeaderImageID))
+	}
 
 	return u
 }

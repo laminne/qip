@@ -20,6 +20,12 @@ type User struct {
 	CreatedAt    time.Time  `gorm:"column:createdat"`
 	UpdatedAt    *time.Time `gorm:"column:updatedat"`
 
-	InstanceID string
-	Instance   Instance
+	InstanceID string   `gorm:"column:instanceid"`
+	Instance   Instance `gorm:"foreignKey:InstanceID"`
+
+	HeaderImageID *string `gorm:"column:headerimageid"`
+	HeaderImage   File    `gorm:"foreignKey:HeaderImageID"`
+
+	IconImageID *string `gorm:"column:iconimageid"`
+	IconImage   File    `gotm:"foreignKey:IconImageID"`
 }
