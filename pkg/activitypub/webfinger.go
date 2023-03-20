@@ -10,7 +10,6 @@ import (
 )
 
 func WebFinger(acct Acct, fqdn string, userID id.SnowFlakeID) string {
-
 	wf := types.WebFingerResponseJSON{
 		Subject: fmt.Sprintf("acct:%s@%s", acct.UserName, *acct.Host),
 		Links: []struct {
