@@ -18,7 +18,16 @@ func AcctParser(acct string) Acct {
 		return Acct{Host: &sp[1], UserName: sp[0]}
 	}
 
-	sp := strings.Split(acct, "@")
+	ac := Acct{}
 
-	return Acct{Host: &sp[1], UserName: sp[0]}
+	s := strings.Split(acct, "@")
+	ac.Host = &s[1]
+
+	t := strings.Split(s[0], ":")
+	ac.UserName = t[0]
+	if len(t) != 1 {
+		ac.UserName = t[1]
+	}
+
+	return ac
 }
