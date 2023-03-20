@@ -37,6 +37,8 @@ import (
 func StartServer(port int) {
 	var userRepository repository.UserRepository
 	var postRepository repository.PostRepository
+	var fileRepository repository.FileRepository
+	var instanceRepository repository.InstanceRepository
 
 	if config.QipConfig.Mode != "development" {
 		db, err := gorm.Open(postgres.Open(
@@ -61,11 +63,13 @@ func StartServer(port int) {
 			config.QipConfig.DB.DBName)
 		userRepository = gormRepository.NewUserRepository(db)
 		postRepository = gormRepository.NewPostRepository(db)
+		fileRepository = gormRepository.NewFileRepository(db)
+		instanceRepository = gormRepository.NewInstanceRepository(db)
 	} else {
 		userRepository = dummy.NewUserRepository(UserMockData)
 		postRepository = dummy.NewPostRepository(PostMockData)
 	}
-	userHandler := user.NewUserHandler(userRepository)
+	userHandler := user.NewUserHandler(userRepository, fileRepository, instanceRepository)
 	key := token.SecureRandom(512)
 	postHandler := post.NewPostHandler(postRepository, key)
 	authHandler := auth.NewHandler(userRepository, key)
@@ -100,7 +104,7 @@ func StartServer(port int) {
 
 	go func() {
 		if err := e.Start(fmt.Sprintf(":%d", port)); err != nil && err != http.ErrServerClosed {
-			e.Logger.Fatal("Shutting down server")
+			e.Logger.Fatal("Shutting down server", err)
 		}
 	}()
 

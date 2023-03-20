@@ -15,8 +15,8 @@ type Handler struct {
 	controller controller.UserController
 }
 
-func NewUserHandler(userRepository repository.UserRepository) *Handler {
-	c := controller.NewUserController(userRepository)
+func NewUserHandler(userRepository repository.UserRepository, fileRepository repository.FileRepository, instanceRepository repository.InstanceRepository) *Handler {
+	c := controller.NewUserController(userRepository, fileRepository, instanceRepository)
 	return &Handler{controller: *c}
 }
 

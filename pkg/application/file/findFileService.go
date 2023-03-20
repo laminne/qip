@@ -1,6 +1,8 @@
 package file
 
 import (
+	"fmt"
+
 	"github.com/approvers/qip/pkg/domain"
 	"github.com/approvers/qip/pkg/errorType"
 	"github.com/approvers/qip/pkg/repository"
@@ -31,6 +33,7 @@ func (f FindFileService) convert(fi []domain.File) []FileData {
 
 func (f FindFileService) FindByID(id id.SnowFlakeID) (*FileData, error) {
 	file, err := f.fileRepository.FindByID(id)
+	fmt.Printf("%#+v", file)
 	if err != nil {
 		return nil, errorType.NewErrNotFound("FindFileService", "file not found")
 	}
