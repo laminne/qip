@@ -3,6 +3,9 @@ package post
 import (
 	"fmt"
 	"net/http"
+	"strings"
+
+	"github.com/approvers/qip/pkg/utils/token"
 
 	"github.com/approvers/qip/pkg/errorType"
 
@@ -15,11 +18,15 @@ import (
 )
 
 type Handler struct {
-	controller controller.PostController
+	controller  controller.PostController
+	tokenParser token.JWTTokenParser
 }
 
-func NewPostHandler(repo repository.PostRepository) *Handler {
-	return &Handler{controller: *controller.NewPostController(repo)}
+func NewPostHandler(repo repository.PostRepository, key string) *Handler {
+	return &Handler{
+		controller:  *controller.NewPostController(repo),
+		tokenParser: *token.NewJWTTokenParser(key),
+	}
 }
 
 func (h *Handler) Post(c echo.Context) error {
@@ -28,9 +35,13 @@ func (h *Handler) Post(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, serverErrors.InvalidRequestErrorResponseJSON)
 	}
+	token := strings.Split(c.Request().Header.Get("authorization"), " ")[1]
+	uID, err := h.tokenParser.Parse(token)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, serverErrors.InternalErrorResponseJSON)
+	}
 
-	// ToDo: Authorを正しく指定する
-	res, err := h.controller.Create(req.Body, "123", req.Visibility)
+	res, err := h.controller.Create(req.Body, uID, req.Visibility)
 	if err != nil {
 		e, code := errorConverter(err)
 		return c.JSON(code, e)
