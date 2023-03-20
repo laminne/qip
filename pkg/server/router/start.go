@@ -35,6 +35,7 @@ var (
 	postRepository     repository.PostRepository
 	fileRepository     repository.FileRepository
 	instanceRepository repository.InstanceRepository
+	followRepository   repository.FollowRepository
 	userHandler        *user.Handler
 	postHandler        *post.Handler
 	authHandler        *auth.Handler
@@ -67,6 +68,7 @@ func initServer() {
 		postRepository = gormRepository.NewPostRepository(db)
 		fileRepository = gormRepository.NewFileRepository(db)
 		instanceRepository = gormRepository.NewInstanceRepository(db)
+		followRepository = gormRepository.NewFollowRepository(db)
 	} else {
 		userRepository = dummy.NewUserRepository(UserMockData)
 		postRepository = dummy.NewPostRepository(PostMockData)
