@@ -8,6 +8,8 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/approvers/qip/pkg/server/handler/activitypub"
+
 	"github.com/approvers/qip/pkg/repository/dummy"
 	"github.com/approvers/qip/pkg/repository/gormRepository"
 	"github.com/approvers/qip/pkg/utils/config"
@@ -36,6 +38,7 @@ var (
 	userHandler        *user.Handler
 	postHandler        *post.Handler
 	authHandler        *auth.Handler
+	apHandler          *activitypub.ApHandler
 )
 
 func initServer() {
@@ -72,6 +75,7 @@ func initServer() {
 	userHandler = user.NewUserHandler(userRepository, fileRepository, instanceRepository)
 	postHandler = post.NewPostHandler(postRepository, key)
 	authHandler = auth.NewHandler(userRepository, key)
+	apHandler = activitypub.NewApHandler()
 
 }
 

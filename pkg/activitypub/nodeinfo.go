@@ -2,11 +2,9 @@ package activitypub
 
 import (
 	"fmt"
-
-	"github.com/approvers/qip/pkg/utils/config"
 )
 
-func NodeInfo() string {
+func NodeInfo(fqdn string) string {
 	return fmt.Sprintf(`{
 		"links": [
 			{
@@ -15,10 +13,10 @@ func NodeInfo() string {
 			}
 		]
 	}`,
-		config.QipConfig.FQDN)
+		fqdn)
 }
 
-func NodeInfo2() string {
+func NodeInfo2(name string, description string, maintainerName string, email string) string {
 	return fmt.Sprintf(`{
 	"version": "2.0",
 	"software": {
@@ -30,10 +28,7 @@ func NodeInfo2() string {
 	],
 	"services": {
 	  "inbound": [],
-	  "outbound": [
-		"atom1.0",
-		"rss2.0"
-	  ]
+	  "outbound": []
 	},
 	"openRegistrations": false,
 	"usage": {
@@ -42,8 +37,7 @@ func NodeInfo2() string {
 		"activeHalfyear": null,
 		"activeMonth": null
 	  },
-	  "localPosts": 0,
-	  "localComments": 0
+	  "localPosts": 0
 	},
 	"metadata": {
 	  "nodeName": "%s",
@@ -55,23 +49,12 @@ func NodeInfo2() string {
 	  "langs": [],
 	  "tosUrl": "",
 	  "repositoryUrl": "https://github.com/approvers/qip",
-	  "feedbackUrl": "",
-	  "disableRegistration": true,
-	  "disableLocalTimeline": false,
-	  "disableGlobalTimeline": false,
-	  "emailRequiredForSignup": true,
-	  "enableHcaptcha": false,
-	  "enableRecaptcha": false,
-	  "maxNoteTextLength": 3000,
-	  "enableEmail": true,
-	  "enableServiceWorker": true,
-	  "proxyAccountName": "Ghost",
 	  "themeColor": "#8b819a"
 	}
   }`,
-		config.QipConfig.Meta.Name,
-		config.QipConfig.Meta.Description,
-		config.QipConfig.Meta.Maintainer.Name,
-		config.QipConfig.Meta.Maintainer.Email,
+		name,
+		description,
+		maintainerName,
+		email,
 	)
 }

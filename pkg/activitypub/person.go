@@ -88,13 +88,6 @@ func Person(args types.PersonResponseArgs) types.PersonResponseJSONLD {
 		Schema:                    "http://schema.org#",
 		PropertyValue:             "schema:PropertyValue",
 		Value:                     "schema:value",
-		Misskey:                   "https://misskey-hub.net/ns#",
-		MisskeyContent:            "misskey:_misskey_content",
-		MisskeyQuote:              "misskey:_misskey_quote",
-		MisskeyReaction:           "misskey:_misskey_reaction",
-		MisskeyVotes:              "misskey:_misskey_votes",
-		MisskeyTalk:               "misskey:_misskey_talk",
-		IsCat:                     "misskey:isCat",
 		Vcard:                     "http://www.w3.org/2006/vcard/ns#",
 	}
 
