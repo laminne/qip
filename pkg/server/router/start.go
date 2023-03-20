@@ -75,7 +75,7 @@ func initServer() {
 	userHandler = user.NewUserHandler(userRepository, fileRepository, instanceRepository)
 	postHandler = post.NewPostHandler(postRepository, key)
 	authHandler = auth.NewHandler(userRepository, key)
-	apHandler = activitypub.NewApHandler()
+	apHandler = activitypub.NewApHandler(userRepository, fileRepository)
 
 }
 

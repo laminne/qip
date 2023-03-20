@@ -2,20 +2,17 @@ package activitypub
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
+
+	"github.com/approvers/qip/pkg/utils/id"
 
 	"github.com/approvers/qip/pkg/activitypub/types"
 )
 
-func WebFinger(acct string, fqdn string) (string, error) {
-	u := AcctParser(acct)
-	if *u.Host != fqdn {
-		return "", errors.New("acct is not local user")
-	}
+func WebFinger(acct Acct, fqdn string, userID id.SnowFlakeID) string {
 
 	wf := types.WebFingerResponseJSON{
-		Subject: fmt.Sprintf("acct:%s", acct),
+		Subject: fmt.Sprintf("acct:%s@%s", acct.UserName, *acct.Host),
 		Links: []struct {
 			Rel      string `json:"rel"`
 			Type     string `json:"type,omitempty"`
@@ -30,12 +27,12 @@ func WebFinger(acct string, fqdn string) (string, error) {
 			{
 				Rel:  "self",
 				Type: "application/activity+json",
-				Href: fmt.Sprintf("https://%s/users/%s", fqdn, u.UserName),
+				Href: fmt.Sprintf("https://%s/users/%s", fqdn, userID),
 			},
 			{
 				Rel:  "http://webfinger.net/rel/profile-page",
 				Type: "text/html",
-				Href: fmt.Sprintf("https://%s/@%s", fqdn, u.UserName),
+				Href: fmt.Sprintf("https://%s/@%s", fqdn, acct.UserName),
 			},
 			{
 				Rel:      "http://ostatus.org/schema/1.0/subscribe",
@@ -46,5 +43,5 @@ func WebFinger(acct string, fqdn string) (string, error) {
 
 	j, _ := json.Marshal(wf)
 
-	return string(j), nil
+	return string(j)
 }

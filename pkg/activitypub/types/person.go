@@ -1,6 +1,7 @@
 package types
 
 type PersonResponseArgs struct {
+	FQDN           string
 	ID             string
 	UserName       string
 	UserScreenName string

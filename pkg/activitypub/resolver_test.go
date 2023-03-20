@@ -1,8 +1,9 @@
 package activitypub
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestAcctParser(t *testing.T) {
@@ -15,6 +16,12 @@ func TestAcctParser(t *testing.T) {
 	}, a)
 
 	a = AcctParser("test@example.jp")
+	assert.Equal(t, Acct{
+		Host:     &(host),
+		UserName: "test",
+	}, a)
+
+	a = AcctParser("acct:test@example.jp")
 	assert.Equal(t, Acct{
 		Host:     &(host),
 		UserName: "test",
