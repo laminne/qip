@@ -66,8 +66,8 @@ func StartServer(port int) {
 		postRepository = dummy.NewPostRepository(PostMockData)
 	}
 	userHandler := user.NewUserHandler(userRepository)
-	postHandler := post.NewPostHandler(postRepository)
 	key := token.SecureRandom(512)
+	postHandler := post.NewPostHandler(postRepository, key)
 	authHandler := auth.NewHandler(userRepository, key)
 
 	e := echo.New()

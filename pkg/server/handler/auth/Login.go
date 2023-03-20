@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -20,6 +21,7 @@ func NewHandler(r repository.UserRepository, key string) *Handler {
 	return &Handler{authController: *controller.NewAuthController(r, key)}
 }
 
+// TokenMiddlewareHandlerFunc 認証用ミドルウェア
 func (t *Handler) TokenMiddlewareHandlerFunc(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		// トークンを取り出す
@@ -33,6 +35,7 @@ func (t *Handler) TokenMiddlewareHandlerFunc(next echo.HandlerFunc) echo.Handler
 		if t.authController.CheckToken(token) {
 			return next(c)
 		}
+		fmt.Println("検証に失敗しました")
 		return c.JSON(http.StatusUnauthorized, serverErrors.UnAuthorizedRequestErrorResponseJSON)
 	}
 }
