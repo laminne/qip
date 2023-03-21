@@ -8,6 +8,8 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/approvers/qip/pkg/server/handler/follow"
+
 	"github.com/approvers/qip/pkg/server/handler/activitypub"
 
 	"github.com/approvers/qip/pkg/repository/dummy"
@@ -35,10 +37,12 @@ var (
 	postRepository     repository.PostRepository
 	fileRepository     repository.FileRepository
 	instanceRepository repository.InstanceRepository
+	followRepository   repository.FollowRepository
 	userHandler        *user.Handler
 	postHandler        *post.Handler
 	authHandler        *auth.Handler
 	apHandler          *activitypub.ApHandler
+	followHandler      *follow.Handler
 )
 
 func initServer() {
@@ -67,6 +71,7 @@ func initServer() {
 		postRepository = gormRepository.NewPostRepository(db)
 		fileRepository = gormRepository.NewFileRepository(db)
 		instanceRepository = gormRepository.NewInstanceRepository(db)
+		followRepository = gormRepository.NewFollowRepository(db)
 	} else {
 		userRepository = dummy.NewUserRepository(UserMockData)
 		postRepository = dummy.NewPostRepository(PostMockData)
@@ -76,7 +81,7 @@ func initServer() {
 	postHandler = post.NewPostHandler(postRepository, key)
 	authHandler = auth.NewHandler(userRepository, key)
 	apHandler = activitypub.NewApHandler(userRepository, fileRepository)
-
+	followHandler = follow.NewFollowHandler(followRepository, key)
 }
 
 func StartServer(port int) {
