@@ -8,6 +8,8 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/approvers/qip/pkg/server/handler/follow"
+
 	"github.com/approvers/qip/pkg/server/handler/activitypub"
 
 	"github.com/approvers/qip/pkg/repository/dummy"
@@ -40,6 +42,7 @@ var (
 	postHandler        *post.Handler
 	authHandler        *auth.Handler
 	apHandler          *activitypub.ApHandler
+	followHandler      *follow.Handler
 )
 
 func initServer() {
@@ -78,7 +81,7 @@ func initServer() {
 	postHandler = post.NewPostHandler(postRepository, key)
 	authHandler = auth.NewHandler(userRepository, key)
 	apHandler = activitypub.NewApHandler(userRepository, fileRepository)
-
+	followHandler = follow.NewFollowHandler(followRepository, key)
 }
 
 func StartServer(port int) {
