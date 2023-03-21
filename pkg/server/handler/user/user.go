@@ -30,6 +30,16 @@ func (h *Handler) FindByID(c echo.Context) error {
 	return c.JSON(200, res)
 }
 
+func (h *Handler) FindByAcct(c echo.Context) error {
+	acct := c.Param("acct")
+	res, err := h.controller.FindUserByAcct(acct)
+	if err != nil {
+		e, code := errorConverter(err)
+		return c.JSON(code, e)
+	}
+	return c.JSON(200, res)
+}
+
 func errorConverter(e error) (serverErrors.CommonAPIErrorResponseJSON, int) {
 	switch e.(type) {
 	case *errorType.ErrNotFound:

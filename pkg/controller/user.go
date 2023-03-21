@@ -3,6 +3,8 @@ package controller
 import (
 	"fmt"
 
+	"github.com/approvers/qip/pkg/activitypub"
+
 	"github.com/approvers/qip/pkg/application/file"
 	"github.com/approvers/qip/pkg/application/instance"
 	"github.com/approvers/qip/pkg/utils"
@@ -73,4 +75,28 @@ func (u *UserController) FindUserByID(id id.SnowFlakeID) (models.GetUserResponse
 		Bio:            n[0],
 		CreatedAt:      user.CreatedAt(),
 	}, nil
+}
+
+func (u *UserController) FindUserByAcct(acct string) (models.GetUserResponseJSON, error) {
+	// acctParserでacctを分解
+	a := activitypub.AcctParser(acct)
+	// ユーザー名で検索
+	us, err := u.findUserService.FindByName(a.UserName)
+	if err != nil {
+		return models.GetUserResponseJSON{}, err
+	}
+	// acctのホストをInstanceから検索
+	in, err := u.findInstanceService.FindByHost(utils.NilFiller[string](a.Host)[0])
+	if err != nil {
+		return models.GetUserResponseJSON{}, err
+	}
+
+	// ユーザーのInstanceIDでマッチするユーザーを検索
+	for _, v := range us {
+		if v.InstanceID() == in.Id() {
+			return u.FindUserByID(v.Id())
+		}
+	}
+
+	return models.GetUserResponseJSON{}, nil
 }
