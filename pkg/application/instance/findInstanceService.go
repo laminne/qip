@@ -8,6 +8,7 @@ import (
 
 type IFindInstanceService interface {
 	FindByID(id id.SnowFlakeID) (*InstanceData, error)
+	FindByHost(host string) (*InstanceData, error)
 }
 
 type FindInstanceService struct {
@@ -20,6 +21,15 @@ func NewFindInstanceService(repo repository.InstanceRepository) *FindInstanceSer
 
 func (s FindInstanceService) FindByID(id id.SnowFlakeID) (*InstanceData, error) {
 	i, err := s.repository.FindByID(id)
+	if err != nil {
+		return nil, errorType.NewErrNotFound("FindInstanceService", "no such instance")
+	}
+
+	return NewInstanceData(*i), nil
+}
+
+func (s FindInstanceService) FindByHost(host string) (*InstanceData, error) {
+	i, err := s.repository.FindByHost(host)
 	if err != nil {
 		return nil, errorType.NewErrNotFound("FindInstanceService", "no such instance")
 	}
