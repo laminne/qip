@@ -87,6 +87,7 @@ func initServer() {
 func StartServer(port int) {
 	initServer()
 	e := echo.New()
+	e.Use(middleware.CORS())
 
 	logger, _ := zap.NewDevelopment()
 	e.Use(middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
