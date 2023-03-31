@@ -72,3 +72,24 @@ func (p *PostController) FindByID(pID string) (models.GetPostResponseJSON, error
 		CreatedAt:  res.GetCreatedAt(),
 	}, nil
 }
+
+func (p *PostController) FindByAuthorID(uID string) ([]models.GetPostResponseJSON, error) {
+	res, err := p.findPostService.FindByAuthorID(id.SnowFlakeID(uID))
+	if err != nil {
+		return []models.GetPostResponseJSON{}, err
+	}
+
+	resp := make([]models.GetPostResponseJSON, len(res))
+
+	for i, v := range res {
+		resp[i] = models.GetPostResponseJSON{
+			ID:         string(v.GetID()),
+			Body:       v.GetBody(),
+			AuthorID:   string(v.GetAuthorID()),
+			Visibility: p.visibilityConverter(v.GetVisibility()),
+			CreatedAt:  v.GetCreatedAt(),
+		}
+	}
+
+	return resp, nil
+}

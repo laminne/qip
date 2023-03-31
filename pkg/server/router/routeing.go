@@ -21,6 +21,7 @@ func rootRouter(e *echo.Echo) {
 		api.POST("/users/:id/follow", followHandler.Create)
 		api.GET("/users/:id/follow", followHandler.FindUserFollow)
 		api.GET("/users/:id/follower", followHandler.FindUserFollower)
+		api.GET("/users/:id/posts", postHandler.FindByAuthor)
 		api.GET("/users/@:acct", userHandler.FindByAcct)
 		api.GET("/users/:id", userHandler.FindByID)
 	}
