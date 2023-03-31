@@ -61,6 +61,17 @@ func (h *Handler) FindByID(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
+func (h *Handler) FindByAuthor(c echo.Context) error {
+	id := c.Param("id")
+	res, err := h.controller.FindByAuthorID(id)
+	if err != nil {
+		e, code := errorConverter(err)
+		return c.JSON(code, e)
+	}
+
+	return c.JSON(http.StatusOK, res)
+}
+
 func errorConverter(e error) (serverErrors.CommonAPIErrorResponseJSON, int) {
 	switch e.(type) {
 	case *errorType.ErrNotFound:
