@@ -1,7 +1,10 @@
 package controller
 
 import (
+	"errors"
 	"fmt"
+
+	"github.com/approvers/qip/pkg/errorType"
 
 	"github.com/approvers/qip/pkg/activitypub"
 
@@ -85,18 +88,20 @@ func (u *UserController) FindUserByAcct(acct string) (models.GetUserResponseJSON
 	if err != nil {
 		return models.GetUserResponseJSON{}, err
 	}
+	if a.Host == nil {
+		return models.GetUserResponseJSON{}, errors.New("failed to parse acct")
+	}
 	// acctのホストをInstanceから検索
-	in, err := u.findInstanceService.FindByHost(utils.NilFiller[string](a.Host)[0])
+	in, err := u.findInstanceService.FindByHost(*a.Host)
 	if err != nil {
 		return models.GetUserResponseJSON{}, err
 	}
-
 	// ユーザーのInstanceIDでマッチするユーザーを検索
 	for _, v := range us {
-		if v.InstanceID() == in.Id() {
+		if v.InstanceID() == in.Id() && in.Host() == *a.Host {
 			return u.FindUserByID(v.Id())
 		}
 	}
 
-	return models.GetUserResponseJSON{}, nil
+	return models.GetUserResponseJSON{}, errorType.NewErrNotFound("UserController", "user not found")
 }
