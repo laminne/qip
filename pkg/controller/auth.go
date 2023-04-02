@@ -3,12 +3,12 @@ package controller
 import (
 	"errors"
 
-	"github.com/approvers/qip/pkg/utils/password/argon2"
+	"github.com/laminne/qip/pkg/utils/password/argon2"
 
-	"github.com/approvers/qip/pkg/application/user"
-	"github.com/approvers/qip/pkg/repository"
-	"github.com/approvers/qip/pkg/utils/password"
-	"github.com/approvers/qip/pkg/utils/token"
+	"github.com/laminne/qip/pkg/application/user"
+	"github.com/laminne/qip/pkg/repository"
+	"github.com/laminne/qip/pkg/utils/password"
+	"github.com/laminne/qip/pkg/utils/token"
 )
 
 type AuthController struct {

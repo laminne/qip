@@ -1,8 +1,8 @@
 package follow
 
 import (
-	"github.com/approvers/qip/pkg/repository"
-	"github.com/approvers/qip/pkg/utils/id"
+	"github.com/laminne/qip/pkg/repository"
+	"github.com/laminne/qip/pkg/utils/id"
 )
 
 type IFindFollowService interface {

@@ -4,8 +4,8 @@ import (
 	"errors"
 	"time"
 
-	"github.com/approvers/qip/pkg/utils/id"
 	jwt "github.com/golang-jwt/jwt/v5"
+	"github.com/laminne/qip/pkg/utils/id"
 )
 
 type JWTTokenGenerator struct {

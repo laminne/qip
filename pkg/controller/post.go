@@ -1,12 +1,12 @@
 package controller
 
 import (
-	"github.com/approvers/qip/pkg/application/post"
-	"github.com/approvers/qip/pkg/application/user"
-	"github.com/approvers/qip/pkg/controller/models"
-	"github.com/approvers/qip/pkg/domain/service"
-	"github.com/approvers/qip/pkg/repository"
-	"github.com/approvers/qip/pkg/utils/id"
+	"github.com/laminne/qip/pkg/application/post"
+	"github.com/laminne/qip/pkg/application/user"
+	"github.com/laminne/qip/pkg/controller/models"
+	"github.com/laminne/qip/pkg/domain/service"
+	"github.com/laminne/qip/pkg/repository"
+	"github.com/laminne/qip/pkg/utils/id"
 )
 
 type PostController struct {

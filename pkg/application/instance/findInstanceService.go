@@ -1,9 +1,9 @@
 package instance
 
 import (
-	"github.com/approvers/qip/pkg/errorType"
-	"github.com/approvers/qip/pkg/repository"
-	"github.com/approvers/qip/pkg/utils/id"
+	"github.com/laminne/qip/pkg/errorType"
+	"github.com/laminne/qip/pkg/repository"
+	"github.com/laminne/qip/pkg/utils/id"
 )
 
 type IFindInstanceService interface {

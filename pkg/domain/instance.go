@@ -5,7 +5,7 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/approvers/qip/pkg/utils/id"
+	"github.com/laminne/qip/pkg/utils/id"
 )
 
 type InstanceState = int

@@ -3,7 +3,7 @@ package router
 import (
 	"time"
 
-	"github.com/approvers/qip/pkg/domain"
+	"github.com/laminne/qip/pkg/domain"
 )
 
 var UserMockData []domain.User

@@ -4,21 +4,21 @@ import (
 	"errors"
 	"time"
 
-	"github.com/approvers/qip/pkg/errorType"
+	"github.com/laminne/qip/pkg/errorType"
 
-	"github.com/approvers/qip/pkg/utils/key"
+	"github.com/laminne/qip/pkg/utils/key"
 
-	"github.com/approvers/qip/pkg/utils/password/argon2"
+	"github.com/laminne/qip/pkg/utils/password/argon2"
 
-	"github.com/approvers/qip/pkg/utils/password"
+	"github.com/laminne/qip/pkg/utils/password"
 
-	"github.com/approvers/qip/pkg/repository"
+	"github.com/laminne/qip/pkg/repository"
 
-	"github.com/approvers/qip/pkg/domain/service"
+	"github.com/laminne/qip/pkg/domain/service"
 
-	"github.com/approvers/qip/pkg/domain"
+	"github.com/laminne/qip/pkg/domain"
 
-	"github.com/approvers/qip/pkg/utils/id"
+	"github.com/laminne/qip/pkg/utils/id"
 )
 
 type CreateUserCommand struct {

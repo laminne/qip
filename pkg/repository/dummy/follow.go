@@ -1,8 +1,8 @@
 package dummy
 
 import (
-	"github.com/approvers/qip/pkg/domain"
-	"github.com/approvers/qip/pkg/utils/id"
+	"github.com/laminne/qip/pkg/domain"
+	"github.com/laminne/qip/pkg/utils/id"
 )
 
 type FollowRepository struct {

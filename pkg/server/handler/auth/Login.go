@@ -5,12 +5,12 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/approvers/qip/pkg/repository"
+	"github.com/laminne/qip/pkg/repository"
 
-	"github.com/approvers/qip/pkg/controller"
-	"github.com/approvers/qip/pkg/controller/models"
-	"github.com/approvers/qip/pkg/server/serverErrors"
 	"github.com/labstack/echo/v4"
+	"github.com/laminne/qip/pkg/controller"
+	"github.com/laminne/qip/pkg/controller/models"
+	"github.com/laminne/qip/pkg/server/serverErrors"
 )
 
 type Handler struct {

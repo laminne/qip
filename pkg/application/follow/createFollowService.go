@@ -3,12 +3,12 @@ package follow
 import (
 	"time"
 
-	"github.com/approvers/qip/pkg/errorType"
+	"github.com/laminne/qip/pkg/errorType"
 
-	"github.com/approvers/qip/pkg/domain"
-	"github.com/approvers/qip/pkg/domain/service"
-	"github.com/approvers/qip/pkg/repository"
-	"github.com/approvers/qip/pkg/utils/id"
+	"github.com/laminne/qip/pkg/domain"
+	"github.com/laminne/qip/pkg/domain/service"
+	"github.com/laminne/qip/pkg/repository"
+	"github.com/laminne/qip/pkg/utils/id"
 )
 
 type CreateFollowCommand struct {

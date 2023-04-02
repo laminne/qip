@@ -3,7 +3,7 @@ package activitypub
 import (
 	"fmt"
 
-	"github.com/approvers/qip/pkg/activitypub/types"
+	"github.com/laminne/qip/pkg/activitypub/types"
 )
 
 func Person(args types.PersonResponseArgs) types.PersonResponseJSONLD {

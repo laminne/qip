@@ -3,10 +3,10 @@ package activitypub
 import (
 	"net/http"
 
-	"github.com/approvers/qip/pkg/repository"
+	"github.com/laminne/qip/pkg/repository"
 
-	"github.com/approvers/qip/pkg/controller"
 	"github.com/labstack/echo/v4"
+	"github.com/laminne/qip/pkg/controller"
 )
 
 type ApHandler struct {

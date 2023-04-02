@@ -1,4 +1,4 @@
-module github.com/approvers/qip
+module github.com/laminne/qip
 
 go 1.19
 

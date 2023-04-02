@@ -1,12 +1,12 @@
 package post
 
 import (
-	"github.com/approvers/qip/pkg/application/file"
-	"github.com/approvers/qip/pkg/application/user"
-	"github.com/approvers/qip/pkg/domain"
-	"github.com/approvers/qip/pkg/errorType"
-	"github.com/approvers/qip/pkg/repository"
-	"github.com/approvers/qip/pkg/utils/id"
+	"github.com/laminne/qip/pkg/application/file"
+	"github.com/laminne/qip/pkg/application/user"
+	"github.com/laminne/qip/pkg/domain"
+	"github.com/laminne/qip/pkg/errorType"
+	"github.com/laminne/qip/pkg/repository"
+	"github.com/laminne/qip/pkg/utils/id"
 )
 
 type IFindPostService interface {

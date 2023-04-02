@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/approvers/qip/pkg/utils/id"
+	"github.com/laminne/qip/pkg/utils/id"
 
 	"github.com/stretchr/testify/assert"
 )

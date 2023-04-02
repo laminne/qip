@@ -7,10 +7,10 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/approvers/qip/pkg/repository"
-	"github.com/approvers/qip/pkg/repository/dummy"
+	"github.com/laminne/qip/pkg/repository"
+	"github.com/laminne/qip/pkg/repository/dummy"
 
-	"github.com/approvers/qip/pkg/domain"
+	"github.com/laminne/qip/pkg/domain"
 )
 
 var (

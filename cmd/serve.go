@@ -3,8 +3,8 @@ package cmd
 import (
 	"os"
 
-	"github.com/approvers/qip/pkg/server/router"
-	"github.com/approvers/qip/pkg/utils/config"
+	"github.com/laminne/qip/pkg/server/router"
+	"github.com/laminne/qip/pkg/utils/config"
 	"github.com/spf13/cobra"
 )
 
