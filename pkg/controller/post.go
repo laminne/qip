@@ -10,8 +10,6 @@ import (
 )
 
 type PostController struct {
-	repo              repository.PostRepository
-	userRepository    repository.UserRepository
 	createPostService post.ICreatePostService
 	findPostService   post.IFindPostService
 	findUserService   user.IFindUserService
@@ -20,7 +18,6 @@ type PostController struct {
 func NewPostController(r repository.PostRepository, rp repository.UserRepository) *PostController {
 	ps := post.NewCreatePostService(*service.NewPostService(r), r)
 	return &PostController{
-		repo:              r,
 		createPostService: ps,
 		findPostService:   post.NewFindPostService(r),
 		findUserService:   user.NewFindUserService(rp),
