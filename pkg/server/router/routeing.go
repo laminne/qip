@@ -14,7 +14,7 @@ func rootRouter(e *echo.Echo) {
 	e.POST("/api/v1/login", authHandler.LoginHandler)
 	api := e.Group("/api/v1")
 	{
-		requireAuth := api.Group("/")
+		requireAuth := api.Group("")
 		requireAuth.Use(authHandler.TokenMiddlewareHandlerFunc)
 
 		requireAuth.POST("/posts", postHandler.Post)
