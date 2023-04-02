@@ -14,11 +14,13 @@ func rootRouter(e *echo.Echo) {
 	e.POST("/api/v1/login", authHandler.LoginHandler)
 	api := e.Group("/api/v1")
 	{
-		api.Use(authHandler.TokenMiddlewareHandlerFunc)
-		api.POST("/posts", postHandler.Post)
+		requireAuth := api.Group("/")
+		requireAuth.Use(authHandler.TokenMiddlewareHandlerFunc)
+
+		requireAuth.POST("/posts", postHandler.Post)
 		api.GET("/posts/:id", postHandler.FindByID)
 
-		api.POST("/users/:id/follow", followHandler.Create)
+		requireAuth.POST("/users/:id/follow", followHandler.Create)
 		api.GET("/users/:id/follow", followHandler.FindUserFollow)
 		api.GET("/users/:id/follower", followHandler.FindUserFollower)
 		api.GET("/users/:id/posts", postHandler.FindByAuthor)
