@@ -2,7 +2,6 @@ package controller
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/laminne/qip/pkg/errorType"
 
@@ -51,7 +50,6 @@ func (u *UserController) FindUserByID(id id.SnowFlakeID) (models.GetUserResponse
 			return models.GetUserResponseJSON{}, err
 		}
 		headerURL = data.FileURL()
-		fmt.Println("Set", headerURL)
 	}
 	if user.IconImageID() != nil {
 		data, err := u.findFileService.FindByID(*user.IconImageID())
@@ -59,7 +57,6 @@ func (u *UserController) FindUserByID(id id.SnowFlakeID) (models.GetUserResponse
 			return models.GetUserResponseJSON{}, err
 		}
 		iconURL = data.FileURL()
-		fmt.Println("Set", iconURL)
 	}
 	i, err := u.findInstanceService.FindByID(user.InstanceID())
 	if err != nil {

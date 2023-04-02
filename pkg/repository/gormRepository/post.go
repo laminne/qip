@@ -24,9 +24,9 @@ func (r *PostRepository) FindByIDWithUserIcon(id id.SnowFlakeID) (*repository.Po
 
 func (r *PostRepository) FindByAuthorIDWithUserIcon(id id.SnowFlakeID) ([]repository.PostUserFileJoinedData, error) {
 	var re []entity.PostUserIconJoined
-	r.db.Table("posts").
+	r.db.Debug().Table("posts").
 		Select([]string{"*"}).
-		Joins("inner join users on posts.authorid = users.id inner join files on posts.id = files.postid and files.id = users.iconimageid").
+		Joins("inner join users on posts.authorid = users.id inner join files on files.uploaderid = posts.authorid and files.id = users.iconimageid").
 		Where("posts.authorid = ?", string(id)).
 		Scan(&re)
 
