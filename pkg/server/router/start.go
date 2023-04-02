@@ -3,12 +3,12 @@ package router
 import (
 	"context"
 	"fmt"
-	"github.com/laminne/qip/pkg/domain"
 	"net/http"
 	"os"
 	"os/signal"
 	"time"
 
+	"github.com/laminne/qip/pkg/domain"
 	"github.com/laminne/qip/pkg/server/handler/follow"
 
 	"github.com/laminne/qip/pkg/server/handler/activitypub"
