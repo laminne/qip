@@ -17,7 +17,7 @@ type Handler struct {
 	tokenParser token.JWTTokenParser
 }
 
-func NewFollowHandler(repo repository.FollowRepository, key string) *Handler {
+func NewFollowHandler(repo repository.UserRepository, key string) *Handler {
 	return &Handler{controller: *controller.NewFollowController(repo), tokenParser: *token.NewJWTTokenParser(key)}
 }
 

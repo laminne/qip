@@ -10,4 +10,9 @@ type UserRepository interface {
 	FindUserByID(id id.SnowFlakeID) (*domain.User, error)
 	FindUsersByInstanceID(id id.SnowFlakeID) ([]domain.User, error)
 	CreateUser(u domain.User) error
+
+	CreateFollow(f domain.Follow) error
+	FindUserFollowers(i id.SnowFlakeID) ([]domain.Follow, error)
+	FindUserFollow(i id.SnowFlakeID) ([]domain.Follow, error)
+	UnFollow(from id.SnowFlakeID, target id.SnowFlakeID) error
 }

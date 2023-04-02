@@ -11,7 +11,7 @@ type IFindFollowService interface {
 }
 
 type FindFollowService struct {
-	repository repository.FollowRepository
+	repository repository.UserRepository
 }
 
 func (f *FindFollowService) FindUserFollow(i id.SnowFlakeID) ([]FollowData, error) {
@@ -42,6 +42,6 @@ func (f *FindFollowService) FindUserFollowers(i id.SnowFlakeID) ([]FollowData, e
 	return res, nil
 }
 
-func NewFindFollowService(repo repository.FollowRepository) *FindFollowService {
+func NewFindFollowService(repo repository.UserRepository) *FindFollowService {
 	return &FindFollowService{repository: repo}
 }

@@ -3,6 +3,7 @@ package router
 import (
 	"context"
 	"fmt"
+	"github.com/laminne/qip/pkg/domain"
 	"net/http"
 	"os"
 	"os/signal"
@@ -37,7 +38,6 @@ var (
 	postRepository     repository.PostRepository
 	fileRepository     repository.FileRepository
 	instanceRepository repository.InstanceRepository
-	followRepository   repository.FollowRepository
 	userHandler        *user.Handler
 	postHandler        *post.Handler
 	authHandler        *auth.Handler
@@ -71,9 +71,8 @@ func initServer() {
 		postRepository = gormRepository.NewPostRepository(db)
 		fileRepository = gormRepository.NewFileRepository(db)
 		instanceRepository = gormRepository.NewInstanceRepository(db)
-		followRepository = gormRepository.NewFollowRepository(db)
 	} else {
-		userRepository = dummy.NewUserRepository(UserMockData)
+		userRepository = dummy.NewUserRepository(UserMockData, *new([]domain.Follow))
 		postRepository = dummy.NewPostRepository(PostMockData)
 	}
 	key := token.SecureRandom(512)
@@ -81,7 +80,7 @@ func initServer() {
 	postHandler = post.NewPostHandler(postRepository, key, userRepository)
 	authHandler = auth.NewHandler(userRepository, key)
 	apHandler = activitypub.NewApHandler(userRepository, fileRepository)
-	followHandler = follow.NewFollowHandler(followRepository, key)
+	followHandler = follow.NewFollowHandler(userRepository, key)
 }
 
 func StartServer(port int) {
