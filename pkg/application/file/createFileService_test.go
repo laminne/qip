@@ -19,7 +19,7 @@ func TestCreateFileService_Handle(t *testing.T) {
 	u, _ := domain.NewUser("123", "test", "222", true, time.Now())
 	users := make([]domain.User, 1)
 	users[0] = *u
-	uRepo := dummy.NewUserRepository(users)
+	uRepo := dummy.NewUserRepository(users, *new([]domain.Follow))
 	fileService := *service.NewFileService(repo)
 	userService := *user.NewFindUserService(uRepo)
 	s := NewCreateFileService(fileService, repo, dummyManager.NewStorageManager("./"), userService)

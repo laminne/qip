@@ -28,7 +28,7 @@ func init() {
 	data = append(data, *b)
 	data = append(data, *c)
 
-	repo := dummy.NewUserRepository(data)
+	repo := dummy.NewUserRepository(data, *new([]domain.Follow))
 	findUserService = *NewFindUserService(repo)
 }
 
