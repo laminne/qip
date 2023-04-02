@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/approvers/qip/pkg/domain"
-	"github.com/approvers/qip/pkg/repository"
+	"github.com/laminne/qip/pkg/domain"
+	"github.com/laminne/qip/pkg/repository"
 )
 
 type FileService struct {

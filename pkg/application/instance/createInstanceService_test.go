@@ -5,9 +5,9 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/approvers/qip/pkg/domain"
-	"github.com/approvers/qip/pkg/domain/service"
-	"github.com/approvers/qip/pkg/repository/dummy"
+	"github.com/laminne/qip/pkg/domain"
+	"github.com/laminne/qip/pkg/domain/service"
+	"github.com/laminne/qip/pkg/repository/dummy"
 )
 
 func TestCreateInstanceService_Handle(t *testing.T) {

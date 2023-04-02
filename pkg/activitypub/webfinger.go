@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/approvers/qip/pkg/utils/id"
+	"github.com/laminne/qip/pkg/utils/id"
 
-	"github.com/approvers/qip/pkg/activitypub/types"
+	"github.com/laminne/qip/pkg/activitypub/types"
 )
 
 func WebFinger(acct Acct, fqdn string, userID id.SnowFlakeID) string {

@@ -1,6 +1,6 @@
 package main
 
-import "github.com/approvers/qip/cmd"
+import "github.com/laminne/qip/cmd"
 
 /*
 	Qip

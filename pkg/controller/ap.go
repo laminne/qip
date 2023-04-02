@@ -5,18 +5,18 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/approvers/qip/pkg/activitypub/types"
-	"github.com/approvers/qip/pkg/utils"
+	"github.com/laminne/qip/pkg/activitypub/types"
+	"github.com/laminne/qip/pkg/utils"
 
-	"github.com/approvers/qip/pkg/application/file"
+	"github.com/laminne/qip/pkg/application/file"
 
-	"github.com/approvers/qip/pkg/utils/id"
+	"github.com/laminne/qip/pkg/utils/id"
 
-	"github.com/approvers/qip/pkg/application/user"
-	"github.com/approvers/qip/pkg/repository"
+	"github.com/laminne/qip/pkg/application/user"
+	"github.com/laminne/qip/pkg/repository"
 
-	"github.com/approvers/qip/pkg/activitypub"
-	"github.com/approvers/qip/pkg/utils/config"
+	"github.com/laminne/qip/pkg/activitypub"
+	"github.com/laminne/qip/pkg/utils/config"
 )
 
 type ActivityPubController struct {

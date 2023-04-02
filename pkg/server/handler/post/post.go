@@ -5,16 +5,16 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/approvers/qip/pkg/utils/token"
+	"github.com/laminne/qip/pkg/utils/token"
 
-	"github.com/approvers/qip/pkg/errorType"
+	"github.com/laminne/qip/pkg/errorType"
 
-	"github.com/approvers/qip/pkg/server/serverErrors"
+	"github.com/laminne/qip/pkg/server/serverErrors"
 
-	"github.com/approvers/qip/pkg/controller"
-	"github.com/approvers/qip/pkg/controller/models"
-	"github.com/approvers/qip/pkg/repository"
 	"github.com/labstack/echo/v4"
+	"github.com/laminne/qip/pkg/controller"
+	"github.com/laminne/qip/pkg/controller/models"
+	"github.com/laminne/qip/pkg/repository"
 )
 
 type Handler struct {

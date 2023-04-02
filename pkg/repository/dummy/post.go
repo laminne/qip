@@ -3,10 +3,10 @@ package dummy
 import (
 	"errors"
 
-	"github.com/approvers/qip/pkg/repository"
+	"github.com/laminne/qip/pkg/repository"
 
-	"github.com/approvers/qip/pkg/domain"
-	"github.com/approvers/qip/pkg/utils/id"
+	"github.com/laminne/qip/pkg/domain"
+	"github.com/laminne/qip/pkg/utils/id"
 )
 
 type PostRepository struct {

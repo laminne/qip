@@ -3,12 +3,12 @@ package user
 import (
 	"net/http"
 
-	"github.com/approvers/qip/pkg/controller"
-	"github.com/approvers/qip/pkg/errorType"
-	"github.com/approvers/qip/pkg/repository"
-	"github.com/approvers/qip/pkg/server/serverErrors"
-	"github.com/approvers/qip/pkg/utils/id"
 	"github.com/labstack/echo/v4"
+	"github.com/laminne/qip/pkg/controller"
+	"github.com/laminne/qip/pkg/errorType"
+	"github.com/laminne/qip/pkg/repository"
+	"github.com/laminne/qip/pkg/server/serverErrors"
+	"github.com/laminne/qip/pkg/utils/id"
 )
 
 type Handler struct {

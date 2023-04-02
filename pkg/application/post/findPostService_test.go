@@ -4,10 +4,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/approvers/qip/pkg/repository/dummy"
+	"github.com/laminne/qip/pkg/repository/dummy"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/approvers/qip/pkg/domain"
+	"github.com/laminne/qip/pkg/domain"
 )
 
 var (

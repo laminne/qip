@@ -1,8 +1,8 @@
 package router
 
 import (
-	"github.com/approvers/qip/pkg/server/serverErrors"
 	"github.com/labstack/echo/v4"
+	"github.com/laminne/qip/pkg/server/serverErrors"
 )
 
 func ErrorHandler(err error, c echo.Context) {

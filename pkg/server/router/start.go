@@ -8,25 +8,25 @@ import (
 	"os/signal"
 	"time"
 
-	"github.com/approvers/qip/pkg/server/handler/follow"
+	"github.com/laminne/qip/pkg/server/handler/follow"
 
-	"github.com/approvers/qip/pkg/server/handler/activitypub"
+	"github.com/laminne/qip/pkg/server/handler/activitypub"
 
-	"github.com/approvers/qip/pkg/repository/dummy"
-	"github.com/approvers/qip/pkg/repository/gormRepository"
-	"github.com/approvers/qip/pkg/utils/config"
-	"github.com/approvers/qip/pkg/utils/token"
+	"github.com/laminne/qip/pkg/repository/dummy"
+	"github.com/laminne/qip/pkg/repository/gormRepository"
+	"github.com/laminne/qip/pkg/utils/config"
+	"github.com/laminne/qip/pkg/utils/token"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 
-	"github.com/approvers/qip/pkg/repository"
-	"github.com/approvers/qip/pkg/server/handler/auth"
+	"github.com/laminne/qip/pkg/repository"
+	"github.com/laminne/qip/pkg/server/handler/auth"
 
 	"go.uber.org/zap"
 
-	"github.com/approvers/qip/pkg/server/handler/post"
+	"github.com/laminne/qip/pkg/server/handler/post"
 
-	"github.com/approvers/qip/pkg/server/handler/user"
+	"github.com/laminne/qip/pkg/server/handler/user"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"

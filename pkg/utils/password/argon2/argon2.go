@@ -9,7 +9,7 @@ import (
 	"math/big"
 	"strings"
 
-	"github.com/approvers/qip/pkg/utils/password"
+	"github.com/laminne/qip/pkg/utils/password"
 	"golang.org/x/crypto/argon2"
 )
 

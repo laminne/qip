@@ -3,7 +3,7 @@ package token
 import (
 	"errors"
 
-	"github.com/approvers/qip/pkg/utils/id"
+	"github.com/laminne/qip/pkg/utils/id"
 
 	"github.com/golang-jwt/jwt/v5"
 )

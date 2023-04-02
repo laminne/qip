@@ -5,12 +5,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/approvers/qip/pkg/application/user"
+	"github.com/laminne/qip/pkg/application/user"
 
-	"github.com/approvers/qip/pkg/domain"
-	"github.com/approvers/qip/pkg/domain/service"
-	"github.com/approvers/qip/pkg/repository/dummy"
-	dummyManager "github.com/approvers/qip/pkg/storageManager/dummy"
+	"github.com/laminne/qip/pkg/domain"
+	"github.com/laminne/qip/pkg/domain/service"
+	"github.com/laminne/qip/pkg/repository/dummy"
+	dummyManager "github.com/laminne/qip/pkg/storageManager/dummy"
 	"github.com/stretchr/testify/assert"
 )
 

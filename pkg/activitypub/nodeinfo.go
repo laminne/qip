@@ -48,7 +48,7 @@ func NodeInfo2(name string, description string, maintainerName string, email str
 	  },
 	  "langs": [],
 	  "tosUrl": "",
-	  "repositoryUrl": "https://github.com/approvers/qip",
+	  "repositoryUrl": "https://github.com/laminne/qip",
 	  "themeColor": "#8b819a"
 	}
   }`,

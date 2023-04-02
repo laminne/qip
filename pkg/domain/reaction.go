@@ -3,7 +3,7 @@ package domain
 import (
 	"time"
 
-	"github.com/approvers/qip/pkg/utils/id"
+	"github.com/laminne/qip/pkg/utils/id"
 )
 
 // Reaction リアクション
