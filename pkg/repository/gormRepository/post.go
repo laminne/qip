@@ -3,12 +3,39 @@ package gormRepository
 import (
 	"github.com/approvers/qip/pkg/domain"
 	"github.com/approvers/qip/pkg/entity"
+	"github.com/approvers/qip/pkg/repository"
 	"github.com/approvers/qip/pkg/utils/id"
 	"gorm.io/gorm"
 )
 
 type PostRepository struct {
 	db *gorm.DB
+}
+
+func (r *PostRepository) FindByIDWithUserIcon(id id.SnowFlakeID) (*repository.PostUserFileJoinedData, error) {
+	re := entity.PostUserIconJoined{Post: entity.Post{ID: string(id)}}
+	r.db.Table("posts").
+		Select([]string{"*"}).
+		Joins("inner join users on posts.authorid = users.id inner join files on posts.id = files.postid and files.id = users.iconimageid").
+		Scan(&re)
+
+	return r.parseJoined(re), nil
+}
+
+func (r *PostRepository) FindByAuthorIDWithUserIcon(id id.SnowFlakeID) ([]repository.PostUserFileJoinedData, error) {
+	var re []entity.PostUserIconJoined
+	r.db.Table("posts").
+		Select([]string{"*"}).
+		Joins("inner join users on posts.authorid = users.id inner join files on posts.id = files.postid and files.id = users.iconimageid").
+		Where("posts.authorid = ?", string(id)).
+		Scan(&re)
+
+	res := make([]repository.PostUserFileJoinedData, len(re))
+	for j, k := range re {
+		res[j] = *r.parseJoined(k)
+	}
+
+	return res, nil
 }
 
 func NewPostRepository(d *gorm.DB) *PostRepository {
@@ -55,6 +82,61 @@ func (r *PostRepository) dToE(p domain.Post) entity.Post {
 		Visibility: p.GetVisibility(),
 		AuthorID:   string(p.GetAuthorID()),
 		CreatedAt:  p.GetCreatedAt(),
+	}
+}
+
+func (r *PostRepository) parseJoined(p entity.PostUserIconJoined) *repository.PostUserFileJoinedData {
+	u, _ := domain.NewUser(id.SnowFlakeID(p.User.ID), p.User.Name, id.SnowFlakeID(p.User.InstanceID), p.User.IsLocalUser, p.User.CreatedAt)
+
+	u.SetDisplayName(p.User.DisplayName)
+	_, _ = u.SetRole(p.User.Role)
+	if p.User.Bio != nil {
+		u.SetBio(p.User.Bio)
+	}
+	if p.User.IsFroze {
+		_, _ = u.Freeze()
+	}
+	_, _ = u.SetInboxURL(p.User.InboxURL)
+	_, _ = u.SetOutboxURL(p.User.OutboxURL)
+	_, _ = u.SetFollowerURL(p.User.FollowURL)
+	_, _ = u.SetFollowerURL(p.User.FollowersURL)
+	if p.User.IsLocalUser {
+		_, _ = u.SetSecretKey(*p.User.SecretKey)
+		_, _ = u.SetPassword(*p.User.Password)
+	}
+	_, _ = u.SetPublicKey(p.User.PublicKey)
+	if p.User.IconImageID != nil {
+		u.SetIcon(id.SnowFlakeID(*p.User.IconImageID))
+	}
+	if p.User.HeaderImageID != nil {
+		u.SetHeader(id.SnowFlakeID(*p.User.HeaderImageID))
+	}
+
+	f := domain.NewFile(id.SnowFlakeID(p.File.ID), p.File.FileName, id.SnowFlakeID(p.File.UploaderID), p.File.MimeType, p.File.CreatedAt)
+	if p.File.PostID != nil {
+		f.SetPostID((*id.SnowFlakeID)(p.File.PostID))
+	}
+	if p.File.FilePath != nil {
+		f.SetFilePath(*p.File.FilePath)
+	}
+	_, _ = f.SetFileURL(p.File.FileURL)
+	if p.File.ThumbnailURL != nil {
+		_, _ = f.SetThumbnailURL(*p.File.ThumbnailURL)
+	}
+	f.SetBlurhash(p.File.Blurhash)
+	if p.File.IsNSFW {
+		_, _ = f.SetNSFW()
+	}
+	if p.File.UpdatedAt != nil {
+		_, _ = f.SetUpdatedAt(*p.File.UpdatedAt)
+	}
+
+	post := r.eToD(p.Post)
+
+	return &repository.PostUserFileJoinedData{
+		User: u,
+		File: f,
+		Post: &post,
 	}
 }
 

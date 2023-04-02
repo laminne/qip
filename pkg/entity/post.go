@@ -9,3 +9,9 @@ type Post struct {
 	AuthorID   string    `gorm:"not null;column:authorid"`
 	CreatedAt  time.Time `gorm:"column:createdat"`
 }
+
+type PostUserIconJoined struct {
+	Post
+	User
+	File
+}

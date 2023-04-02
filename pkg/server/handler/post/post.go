@@ -22,9 +22,9 @@ type Handler struct {
 	tokenParser token.JWTTokenParser
 }
 
-func NewPostHandler(repo repository.PostRepository, key string) *Handler {
+func NewPostHandler(repo repository.PostRepository, key string, userRepository repository.UserRepository) *Handler {
 	return &Handler{
-		controller:  *controller.NewPostController(repo),
+		controller:  *controller.NewPostController(repo, userRepository),
 		tokenParser: *token.NewJWTTokenParser(key),
 	}
 }

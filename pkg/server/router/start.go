@@ -78,7 +78,7 @@ func initServer() {
 	}
 	key := token.SecureRandom(512)
 	userHandler = user.NewUserHandler(userRepository, fileRepository, instanceRepository)
-	postHandler = post.NewPostHandler(postRepository, key)
+	postHandler = post.NewPostHandler(postRepository, key, userRepository)
 	authHandler = auth.NewHandler(userRepository, key)
 	apHandler = activitypub.NewApHandler(userRepository, fileRepository)
 	followHandler = follow.NewFollowHandler(followRepository, key)
