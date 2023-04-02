@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/approvers/qip/pkg/application/post"
+	"github.com/approvers/qip/pkg/application/user"
 	"github.com/approvers/qip/pkg/controller/models"
 	"github.com/approvers/qip/pkg/domain/service"
 	"github.com/approvers/qip/pkg/repository"
@@ -9,17 +10,17 @@ import (
 )
 
 type PostController struct {
-	repo              repository.PostRepository
 	createPostService post.ICreatePostService
 	findPostService   post.IFindPostService
+	findUserService   user.IFindUserService
 }
 
-func NewPostController(r repository.PostRepository) *PostController {
+func NewPostController(r repository.PostRepository, rp repository.UserRepository) *PostController {
 	ps := post.NewCreatePostService(*service.NewPostService(r), r)
 	return &PostController{
-		repo:              r,
 		createPostService: ps,
 		findPostService:   post.NewFindPostService(r),
+		findUserService:   user.NewFindUserService(rp),
 	}
 }
 
@@ -59,22 +60,27 @@ func (p *PostController) visibilityConverter(v int) string {
 }
 
 func (p *PostController) FindByID(pID string) (models.GetPostResponseJSON, error) {
-	res, err := p.findPostService.FindByID(id.SnowFlakeID(pID))
+	res, err := p.findPostService.FindByIDWithUserIcon(id.SnowFlakeID(pID))
 	if err != nil {
 		return models.GetPostResponseJSON{}, err
 	}
 
 	return models.GetPostResponseJSON{
-		ID:         string(res.GetID()),
-		Body:       res.GetBody(),
-		AuthorID:   string(res.GetAuthorID()),
-		Visibility: p.visibilityConverter(res.GetVisibility()),
-		CreatedAt:  res.GetCreatedAt(),
+		ID:         string(res.PostData.GetID()),
+		Body:       res.PostData.GetBody(),
+		AuthorID:   string(res.PostData.GetAuthorID()),
+		Visibility: p.visibilityConverter(res.PostData.GetVisibility()),
+		CreatedAt:  res.PostData.GetCreatedAt(),
+		User: models.GetPostResponseAuthorData{
+			Name:       res.UserData.Name(),
+			ScreenName: res.UserData.DisplayName(),
+			IconURL:    res.FileData.FileURL(),
+		},
 	}, nil
 }
 
 func (p *PostController) FindByAuthorID(uID string) ([]models.GetPostResponseJSON, error) {
-	res, err := p.findPostService.FindByAuthorID(id.SnowFlakeID(uID))
+	res, err := p.findPostService.FindByAuthorIDWithUserIcon(id.SnowFlakeID(uID))
 	if err != nil {
 		return []models.GetPostResponseJSON{}, err
 	}
@@ -83,11 +89,16 @@ func (p *PostController) FindByAuthorID(uID string) ([]models.GetPostResponseJSO
 
 	for i, v := range res {
 		resp[i] = models.GetPostResponseJSON{
-			ID:         string(v.GetID()),
-			Body:       v.GetBody(),
-			AuthorID:   string(v.GetAuthorID()),
+			ID:         string(v.PostData.GetID()),
+			Body:       v.PostData.GetBody(),
+			AuthorID:   string(v.PostData.GetAuthorID()),
 			Visibility: p.visibilityConverter(v.GetVisibility()),
-			CreatedAt:  v.GetCreatedAt(),
+			CreatedAt:  v.PostData.GetCreatedAt(),
+			User: models.GetPostResponseAuthorData{
+				Name:       v.UserData.Name(),
+				ScreenName: v.UserData.DisplayName(),
+				IconURL:    v.FileData.FileURL(),
+			},
 		}
 	}
 

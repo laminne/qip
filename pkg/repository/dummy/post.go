@@ -3,12 +3,24 @@ package dummy
 import (
 	"errors"
 
+	"github.com/approvers/qip/pkg/repository"
+
 	"github.com/approvers/qip/pkg/domain"
 	"github.com/approvers/qip/pkg/utils/id"
 )
 
 type PostRepository struct {
 	data []domain.Post
+}
+
+func (p *PostRepository) FindByIDWithUserIcon(id id.SnowFlakeID) (*repository.PostUserFileJoinedData, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (p *PostRepository) FindByAuthorIDWithUserIcon(id id.SnowFlakeID) ([]repository.PostUserFileJoinedData, error) {
+	//TODO implement me
+	panic("implement me")
 }
 
 func NewPostRepository(data []domain.Post) *PostRepository {
