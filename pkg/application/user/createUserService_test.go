@@ -12,7 +12,7 @@ import (
 
 func TestCreateUserService_Handle(t *testing.T) {
 	d := new([]domain.User)
-	repository := dummy.NewUserRepository(*d)
+	repository := dummy.NewUserRepository(*d, *new([]domain.Follow))
 	userService := service.NewUserService(repository)
 	createUserService := NewCreateUserService(*userService, repository)
 

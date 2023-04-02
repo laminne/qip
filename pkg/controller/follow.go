@@ -9,12 +9,12 @@ import (
 )
 
 type FollowController struct {
-	repo                repository.FollowRepository
+	repo                repository.UserRepository
 	createFollowService follow.ICreateFollowService
 	findFollowService   follow.IFindFollowService
 }
 
-func NewFollowController(repo repository.FollowRepository) *FollowController {
+func NewFollowController(repo repository.UserRepository) *FollowController {
 	return &FollowController{
 		repo:                repo,
 		createFollowService: follow.NewCreateFollowService(*service.NewFollowService(repo), repo),

@@ -8,16 +8,17 @@ import (
 )
 
 type UserRepository struct {
-	data []domain.User
+	data       []domain.User
+	followData []domain.Follow
 }
 
-func NewUserRepository(data []domain.User) *UserRepository {
-	return &UserRepository{data: data}
+func NewUserRepository(data []domain.User, follows []domain.Follow) *UserRepository {
+	return &UserRepository{data: data, followData: follows}
 }
 
-func (u *UserRepository) FindUsersByName(name string) ([]domain.User, error) {
+func (r *UserRepository) FindUsersByName(name string) ([]domain.User, error) {
 	res := make([]domain.User, 0)
-	for _, v := range u.data {
+	for _, v := range r.data {
 		if v.GetName() == name {
 			res = append(res, v)
 		}
@@ -26,15 +27,15 @@ func (u *UserRepository) FindUsersByName(name string) ([]domain.User, error) {
 	return res, nil
 }
 
-func (u *UserRepository) CreateUser(user domain.User) error {
-	u.data = append(u.data, user)
+func (r *UserRepository) CreateUser(user domain.User) error {
+	r.data = append(r.data, user)
 
 	return nil
 }
 
-func (u *UserRepository) FindUsersByInstanceID(id id.SnowFlakeID) ([]domain.User, error) {
+func (r *UserRepository) FindUsersByInstanceID(id id.SnowFlakeID) ([]domain.User, error) {
 	res := make([]domain.User, 0)
-	for _, v := range u.data {
+	for _, v := range r.data {
 		if v.GetInstanceID() == id {
 			res = append(res, v)
 		}
@@ -43,12 +44,38 @@ func (u *UserRepository) FindUsersByInstanceID(id id.SnowFlakeID) ([]domain.User
 	return res, nil
 }
 
-func (u *UserRepository) FindUserByID(id id.SnowFlakeID) (*domain.User, error) {
-	for _, v := range u.data {
+func (r *UserRepository) FindUserByID(id id.SnowFlakeID) (*domain.User, error) {
+	for _, v := range r.data {
 		if v.GetID() == id {
 			return &v, nil
 		}
 	}
 
 	return nil, errors.New("NotFound")
+}
+
+func (r *UserRepository) CreateFollow(f domain.Follow) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (r *UserRepository) FindUserFollowers(i id.SnowFlakeID) ([]domain.Follow, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (r *UserRepository) UnFollow(from id.SnowFlakeID, target id.SnowFlakeID) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (r *UserRepository) FindUserFollow(i id.SnowFlakeID) ([]domain.Follow, error) {
+	res := make([]domain.Follow, 0)
+	for _, v := range r.followData {
+		if v.GetUserID() == i {
+			res = append(res, v)
+		}
+	}
+
+	return res, nil
 }

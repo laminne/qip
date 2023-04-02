@@ -6,10 +6,10 @@ import (
 )
 
 type FollowService struct {
-	repository repository.FollowRepository
+	repository repository.UserRepository
 }
 
-func NewFollowService(repo repository.FollowRepository) *FollowService {
+func NewFollowService(repo repository.UserRepository) *FollowService {
 	return &FollowService{repository: repo}
 }
 

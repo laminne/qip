@@ -14,7 +14,7 @@ func TestUserService_Exists(t *testing.T) {
 	testData, _ := domain.NewUser("112233", "test", "332211", false, time.Now())
 	testDataArray := make([]domain.User, 0)
 	testDataArray = append(testDataArray, *testData)
-	r := dummy.NewUserRepository(testDataArray)
+	r := dummy.NewUserRepository(testDataArray, *new([]domain.Follow))
 
 	userService := NewUserService(r)
 

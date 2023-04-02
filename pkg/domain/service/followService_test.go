@@ -13,7 +13,7 @@ func TestFollowService_Exists(t *testing.T) {
 	d, _ := domain.NewFollow("123", "456", time.Now())
 	a := make([]domain.Follow, 1)
 	a[0] = *d
-	repo := dummy.NewFollowRepository(a)
+	repo := dummy.NewUserRepository(*new([]domain.User), a)
 
 	followService := NewFollowService(repo)
 

@@ -23,14 +23,14 @@ type ICreateFollowService interface {
 }
 
 type CreateFollowService struct {
-	followService    service.FollowService
-	followRepository repository.FollowRepository
+	followService  service.FollowService
+	userRepository repository.UserRepository
 }
 
-func NewCreateFollowService(s service.FollowService, repo repository.FollowRepository) *CreateFollowService {
+func NewCreateFollowService(s service.FollowService, repo repository.UserRepository) *CreateFollowService {
 	return &CreateFollowService{
-		followService:    s,
-		followRepository: repo,
+		followService:  s,
+		userRepository: repo,
 	}
 }
 
@@ -40,7 +40,7 @@ func (s *CreateFollowService) Handle(c CreateFollowCommand) (*FollowData, error)
 		return nil, errorType.NewErrExists("CreateFollowService", "Already followed")
 	}
 
-	err := s.followRepository.Create(*f)
+	err := s.userRepository.CreateFollow(*f)
 	if err != nil {
 		return nil, err
 	}
