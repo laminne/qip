@@ -5,3 +5,7 @@ raw
 *.log
 config.yml
 *.txt
+.env
+tsconfig.tsbuildinfo
+node_modules
+build

@@ -1,0 +1,29 @@
+{
+  "name": "qip",
+  "version": "0.0.1",
+  "description": "",
+  "main": "main.js",
+  "author": "Tatsuto Yamamoto",
+  "license": "Apache-2.0",
+  "scripts": {
+    "start": "tsc -p . --noImplicitAny && node ./build/main.js",
+    "build": "tsc -p . --noImplicitAny",
+    "lint": "eslint --ignore-path .gitignore 'src/**/**.{ts}'",
+    "format": "prettier . --write",
+    "test": "vitest",
+    "prisma:format": "prisma format",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate"
+  },
+  "dependencies": {
+    "@prisma/client": "5.0.0",
+    "@types/node": "^20.4.1",
+    "date-fns": "^2.30.0",
+    "typescript": "^5.1.6"
+  },
+  "devDependencies": {
+    "prettier": "^3.0.0",
+    "prisma": "^5.0.0",
+    "vitest": "^0.33.0"
+  }
+}
