@@ -93,27 +93,27 @@ export class Server {
   // サーバーファビコンURL
   private _faviconURL: string;
 
-  constructor(
-    id: Snowflake,
-    host: string,
-    softwareName: string,
-    softwareVersion: string,
-    name: string,
-    description: string,
-    maintainer: string,
-    maintainerEmail: string,
-    iconURL: string,
-    faviconURL: string,
-  ) {
-    this._id = id;
-    this._host = host;
-    this._softwareName = softwareName;
-    this._softwareVersion = softwareVersion;
-    this._name = name;
-    this._description = description;
-    this._maintainer = maintainer;
-    this._maintainerEmail = maintainerEmail;
-    this._iconURL = iconURL;
-    this._faviconURL = faviconURL;
+  constructor(args: {
+    id: Snowflake;
+    host: string;
+    softwareName: string;
+    softwareVersion: string;
+    name: string;
+    description: string;
+    maintainer: string;
+    maintainerEmail: string;
+    iconURL: string;
+    faviconURL: string;
+  }) {
+    this._id = args.id;
+    this._host = args.host;
+    this._softwareName = args.softwareName;
+    this._softwareVersion = args.softwareVersion;
+    this._name = args.name;
+    this._description = args.description;
+    this._maintainer = args.maintainer;
+    this._maintainerEmail = args.maintainerEmail;
+    this._iconURL = args.iconURL;
+    this._faviconURL = args.faviconURL;
   }
 }

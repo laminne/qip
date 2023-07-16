@@ -24,10 +24,11 @@ model User {
 
   userAPData UserAPData @relation(fields: [apDataID], references: [id])
   apDataID   String     @unique
-  Server     Server?    @relation(fields: [serverId], references: [id])
-  serverId   String?
+  Server     Server     @relation(fields: [serverId], references: [id])
+  serverId   String
   post       Post[]
   media      Media[]
+  reactions  Reaction[]
 
   follower  UserFollowEvent[] @relation("Followers")
   following UserFollowEvent[] @relation("Following")
@@ -74,10 +75,20 @@ model Post {
   text       String
   visibility Int
   createdAt  DateTime @default(now())
-  User       User?    @relation(fields: [authorID], references: [id])
-  authorID   String?
+  User       User    @relation(fields: [authorID], references: [id])
+  authorID   String
 
   attachments Media[]
+  reactions   Reaction[]
+}
+
+model Reaction {
+  User   User   @relation(fields: [userId], references: [id])
+  userId String
+  Post   Post   @relation(fields: [postId], references: [id])
+  postId String
+
+  @@id([userId, postId])
 }
 
 model Media {
@@ -92,8 +103,8 @@ model Media {
   thumbnailURL String
   cached       Boolean
 
-  User     User?   @relation(fields: [authorID], references: [id])
-  authorID String?
-  Post     Post?   @relation(fields: [postID], references: [id])
-  postID   String?
+  User     User   @relation(fields: [authorID], references: [id])
+  authorID String
+  Post     Post   @relation(fields: [postID], references: [id])
+  postID   String
 }

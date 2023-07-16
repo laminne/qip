@@ -46,6 +46,10 @@ export class User {
     this._headerImageURL = value;
   }
 
+  get password(): string | null {
+    return this._password;
+  }
+
   get iconImageURL(): string {
     return this._iconImageURL;
   }

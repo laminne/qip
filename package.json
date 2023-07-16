@@ -6,14 +6,15 @@
   "author": "Tatsuto Yamamoto",
   "license": "Apache-2.0",
   "scripts": {
-    "start": "tsc -p . --noImplicitAny && node ./build/main.js",
+    "start": "tsc -p . --noImplicitAny && node --enable-source-maps ./build/main.js",
     "build": "tsc -p . --noImplicitAny",
     "lint": "eslint --ignore-path .gitignore 'src/**/**.{ts}'",
     "format": "prettier . --write",
     "test": "vitest",
     "prisma:format": "prisma format",
     "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate"
+    "prisma:migrate": "prisma migrate",
+    "prisma:studio": "prisma studio"
   },
   "dependencies": {
     "@prisma/client": "5.0.0",

@@ -3,6 +3,10 @@ import { User } from "./user";
 import { Media } from "./media";
 
 export class Post {
+  get visibility(): number {
+    return this._visibility;
+  }
+
   get id(): Snowflake {
     return this._id;
   }
