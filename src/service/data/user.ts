@@ -1,7 +1,7 @@
-// ユーザー
-import { Snowflake } from "../helpers/id_generator";
+import { Snowflake } from "../../helpers/id_generator";
+import { User, UserAPData, UserFollowEvent } from "../../domain/user";
 
-export class User {
+export class UserData {
   get id(): Snowflake {
     return this._id;
   }
@@ -10,52 +10,32 @@ export class User {
     return this._handle;
   }
 
+  get serverID(): Snowflake {
+    return this._serverID;
+  }
+
   get nickName(): string {
     return this._nickName;
   }
 
-  set nickName(value: string) {
-    this._nickName = value;
-  }
-
-  public isAdmin(): boolean {
-    return this._role == 1;
-  }
-
-  public toAdmin(): void {
-    this._role = 1;
-  }
-
-  public toNormal(): void {
-    this._role = 0;
+  get role(): number {
+    return this._role;
   }
 
   get bio(): string {
     return this._bio;
   }
 
-  set bio(value: string) {
-    this._bio = value;
-  }
-
   get headerImageURL(): string {
     return this._headerImageURL;
-  }
-
-  set headerImageURL(value: string) {
-    this._headerImageURL = value;
-  }
-
-  get password(): string | null {
-    return this._password;
   }
 
   get iconImageURL(): string {
     return this._iconImageURL;
   }
 
-  set iconImageURL(value: string) {
-    this._iconImageURL = value;
+  get password(): string {
+    return this._password;
   }
 
   get isLocalUser(): boolean {
@@ -66,40 +46,13 @@ export class User {
     return this._createdAt;
   }
 
-  set createdAt(value: Date) {
-    this._createdAt = value;
-  }
-
-  get apData(): UserAPData {
+  get apData(): UserAPDataData {
     return this._apData;
   }
 
-  set apData(value: UserAPData) {
-    this._apData = value;
+  get following(): Set<UserFollowEventData> {
+    return this._following;
   }
-
-  get serverID(): Snowflake {
-    return this._serverID;
-  }
-
-  public follow(u: User): void {
-    // すでにフォローしていない状態なら
-    if (!this._following.has(new UserFollowEvent(this, u))) {
-      this._following.add(new UserFollowEvent(this, u));
-    }
-  }
-
-  public unFollow(u: User): void {
-    // フォローしていたらフォローを消す
-    if (this._following.has(new UserFollowEvent(this, u))) {
-      this._following.delete(new UserFollowEvent(this, u));
-    }
-  }
-
-  public following() {
-    return [...this._following];
-  }
-
   // id
   private readonly _id: Snowflake;
   // @ユーザー名(ユーザーハンドル)
@@ -123,9 +76,9 @@ export class User {
   // 作成日時
   private _createdAt: Date;
   // APのデータ
-  private _apData: UserAPData;
+  private _apData: UserAPDataData;
   // フォロー中のユーザー
-  private _following: Set<UserFollowEvent>;
+  private _following: Set<UserFollowEventData>;
 
   constructor(args: {
     id: Snowflake;
@@ -139,8 +92,8 @@ export class User {
     password: string;
     isLocalUser: boolean;
     createdAt: Date;
-    apData: UserAPData;
-    following: Array<UserFollowEvent>;
+    apData: UserAPDataData;
+    following: Array<UserFollowEventData>;
   }) {
     // 不変
     this._id = args.id;
@@ -158,25 +111,47 @@ export class User {
     this._apData = args.apData;
     this._following = new Set(args.following);
   }
+
+  public toDomain() {
+    return new User({
+      id: this._id,
+      serverID: this._serverID,
+      bio: this._bio,
+      handle: this._handle,
+      headerImageURL: this._headerImageURL,
+      iconImageURL: this._iconImageURL,
+      isLocalUser: this._isLocalUser,
+      nickName: this._nickName,
+      password: this._password,
+      role: this._role,
+      createdAt: this._createdAt,
+      following: [...this._following].map((v) => v.toDomain()),
+      apData: this._apData.toDomain(),
+    });
+  }
 }
 
-export class UserAPData {
-  set outboxURL(value: string) {
-    this._outboxURL = value;
-  }
+export function UserToUserData(v: User): UserData {
+  return new UserData({
+    id: v.id,
+    serverID: v.serverID,
+    bio: v.bio,
+    handle: v.handle,
+    headerImageURL: v.headerImageURL,
+    iconImageURL: v.iconImageURL,
+    isLocalUser: v.isLocalUser,
+    nickName: v.nickName,
+    password: v.password ?? "",
+    createdAt: v.createdAt,
+    role: v.isAdmin() ? 1 : 0,
+    following: v
+      .following()
+      .map((vv) => UserFollowEventToUserFollowEventData(vv)),
+    apData: UserAPDataToUserAPDataData(v.apData),
+  });
+}
 
-  set followersURL(value: string) {
-    this._followersURL = value;
-  }
-
-  set followingURL(value: string) {
-    this._followingURL = value;
-  }
-
-  set inboxURL(value: string) {
-    this._inboxURL = value;
-  }
-
+export class UserAPDataData {
   get userID(): Snowflake {
     return this._userID;
   }
@@ -208,7 +183,6 @@ export class UserAPData {
   get privateKey(): string | null {
     return this._privateKey;
   }
-
   private readonly _userID: Snowflake;
   private readonly _userAPID: string;
   private _inboxURL: string;
@@ -237,24 +211,62 @@ export class UserAPData {
     this._publicKey = args.publicKey;
     this._privateKey = args.privateKey;
   }
+
+  public toDomain() {
+    return new UserAPData({
+      userID: this._userID,
+      userAPID: this._userAPID,
+      followersURL: this._followersURL,
+      followingURL: this._followingURL,
+      inboxURL: this._inboxURL,
+      outboxURL: this._outboxURL,
+      privateKey: this._privateKey,
+      publicKey: this._publicKey,
+    });
+  }
+}
+export function UserAPDataToUserAPDataData(v: UserAPData) {
+  return new UserAPDataData({
+    userID: v.userID,
+    userAPID: v.userAPID,
+    inboxURL: v.inboxURL,
+    outboxURL: v.outboxURL,
+    followersURL: v.followersURL,
+    followingURL: v.followingURL,
+    privateKey: v.privateKey,
+    publicKey: v.publicKey,
+  });
 }
 
-export class UserFollowEvent {
+export class UserFollowEventData {
   // フォローされたユーザー(dst)
-  private readonly _follower: User;
+  private readonly _follower: UserData;
   // フォローしたユーザー(from)
-  private readonly _following: User;
+  private readonly _following: UserData;
 
-  constructor(following: User, follower: User) {
+  constructor(following: UserData, follower: UserData) {
     this._follower = follower;
     this._following = following;
   }
 
-  get follower(): User {
+  get follower() {
     return this._follower;
   }
 
-  get following(): User {
+  get following() {
     return this._following;
   }
+
+  public toDomain(): UserFollowEvent {
+    return new UserFollowEvent(
+      this._following.toDomain(),
+      this._follower.toDomain(),
+    );
+  }
+}
+export function UserFollowEventToUserFollowEventData(v: UserFollowEvent) {
+  return new UserFollowEventData(
+    UserToUserData(v.following),
+    UserToUserData(v.follower),
+  );
 }
