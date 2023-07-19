@@ -1,21 +1,71 @@
 import { IUserRepository } from "../../repository/user";
-import { User } from "../../domain/user";
+import { User, UserAPData } from "../../domain/user";
 import { Failure, Success } from "../../helpers/result";
 import { UserToUserData } from "../data/user";
+import { Snowflake, SnowflakeIDGenerator } from "../../helpers/id_generator";
 
 export class CreateUserService {
   private readonly repository: IUserRepository;
+  private readonly idGenerator: SnowflakeIDGenerator;
 
-  constructor(repository: IUserRepository) {
+  constructor(repository: IUserRepository, idGenerator: SnowflakeIDGenerator) {
     this.repository = repository;
+    this.idGenerator = idGenerator;
   }
 
-  async Handle(u: User) {
-    const res = await this.repository.Create(u);
+  async Handle(u: CreateUserArgs) {
+    const id = this.idGenerator.generate();
+    const req = new User({
+      id: id,
+      serverID: u.serverID,
+      handle: u.handle,
+      bio: u.bio,
+      headerImageURL: u.headerImageURL,
+      iconImageURL: u.iconImageURL,
+      isLocalUser: u.isLocalUser,
+      nickName: u.nickName,
+      password: u.password,
+      role: u.role,
+      following: [],
+      createdAt: u.createdAt,
+      apData: new UserAPData({
+        userID: id,
+        userAPID: this.idGenerator.generate(),
+        followersURL: u.apData.followersURL,
+        followingURL: u.apData.followingURL,
+        inboxURL: u.apData.inboxURL,
+        outboxURL: u.apData.outboxURL,
+        privateKey: u.apData.privateKey,
+        publicKey: u.apData.publicKey,
+      }),
+    });
+    const res = await this.repository.Create(req);
     if (res.isFailure()) {
       return new Failure(new Error("failed to create user", res.value));
     }
 
-    return new Success(UserToUserData(u));
+    return new Success(UserToUserData(res.value));
   }
+}
+
+export interface CreateUserArgs {
+  handle: string;
+  serverID: Snowflake;
+  nickName: string;
+  role: number;
+  bio: string;
+  headerImageURL: string;
+  iconImageURL: string;
+  password: string;
+  isLocalUser: boolean;
+  createdAt: Date;
+  apData: {
+    id: string;
+    inboxURL: string;
+    outboxURL: string;
+    followersURL: string;
+    followingURL: string;
+    publicKey: string;
+    privateKey: string | null;
+  };
 }
