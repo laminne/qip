@@ -11,7 +11,29 @@ export class MediaRepository implements IMediaRepository {
     this.prisma = prisma;
   }
 
-  // Mediaは投稿作成時にしか生成されないのでここでは書かない
+  async Create(m: Media): Promise<Result<Media, Error>> {
+    try {
+      const res = await this.prisma.media.create({
+        data: {
+          id: m.id,
+          postID: m.postID,
+          authorID: m.authorID,
+          name: m.name,
+          type: m.type,
+          md5Sum: m.md5Sum,
+          size: m.size,
+          isSensitive: m.isSensitive,
+          blurhash: m.blurhash,
+          url: m.url,
+          thumbnailURL: m.thumbnailURL,
+          cached: m.cached,
+        },
+      });
+      return new Success(this.convertToDomain(res));
+    } catch (e: unknown) {
+      return new Failure(new Error("failed to create media", e as any));
+    }
+  }
 
   async FindByID(id: Snowflake): Promise<Result<Media, Error>> {
     try {

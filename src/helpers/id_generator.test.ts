@@ -9,6 +9,7 @@ describe("ID生成ができる", () => {
     for (let i = 0; i < 10000; i++) {
       const newID = generator.generate();
       assert.notEqual(newID, oldID);
+      oldID = newID;
     }
   });
 });

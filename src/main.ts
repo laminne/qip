@@ -1,3 +1,5 @@
+import { StartServer } from "./server/start";
+
 console.log("Qip2\n(C) 2023 Tatsuto 'Laminne' YAMAMOTO");
 console.log(`  ___  _         ____  
  / _ \\(_)_ __   |___ \\ 
@@ -6,3 +8,4 @@ console.log(`  ___  _         ____
  \\__\\_\\_| .__/  |_____|
         |_|`);
 console.log("H e l l o ( a g a i n )");
+StartServer(3000).then((r) => console.log(r));

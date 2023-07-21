@@ -1,4 +1,5 @@
 export type Result<T, E> = Success<T, E> | Failure<T, E>;
+export type AsyncResult<T, E> = Promise<Result<T, E>>;
 
 export class Success<T, E> {
   constructor(readonly value: T) {}

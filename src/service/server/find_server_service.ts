@@ -1,6 +1,5 @@
 import { Snowflake } from "../../helpers/id_generator";
 import { Failure, Success } from "../../helpers/result";
-import { UserToUserData } from "../data/user";
 import { IServerRepository } from "../../repository/server";
 import { ServerToServerData } from "../data/server";
 

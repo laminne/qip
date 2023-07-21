@@ -14,32 +14,6 @@ export class PostRepository implements IPostRepository {
 
   async Create(p: Post): Promise<Result<Post, Error>> {
     try {
-      const attachments = p.attachments.map((v) => {
-        return {
-          id: v.id,
-          name: v.name,
-          type: v.type,
-          md5Sum: v.md5Sum,
-          size: v.size,
-          isSensitive: v.isSensitive,
-          blurhash: v.blurhash,
-          url: v.url,
-          thumbnailURL: v.thumbnailURL,
-          cached: v.cached,
-          authorID: v.authorID,
-          User: {
-            connect: {
-              id: v.authorID,
-            },
-          },
-          Post: {
-            connect: {
-              id: v.postID,
-            },
-          },
-        };
-      });
-
       const res = await this.prisma.post.create({
         data: {
           User: {
@@ -51,9 +25,11 @@ export class PostRepository implements IPostRepository {
           text: p.text,
           visibility: p.visibility,
           attachments: {
-            createMany: {
-              data: attachments,
-            },
+            connect: p.attachments.map((v) => {
+              return {
+                id: v.id,
+              };
+            }),
           },
         },
         include: {
@@ -62,6 +38,7 @@ export class PostRepository implements IPostRepository {
       });
       return new Success(this.convertToDomain(res));
     } catch (e: unknown) {
+      console.log(e);
       return new Failure(new Error(e as any));
     }
   }
@@ -114,30 +91,35 @@ export class PostRepository implements IPostRepository {
         createdAt: i.createdAt,
         text: i.text,
         visibility: i.visibility,
-        reactions: i.reactions.map((v: any) => {
-          return new PostReactionEvent(
-            v.postId as Snowflake,
-            v.userId as Snowflake,
-          );
-        }),
-        attachments: i.attachments.map((v: any) => {
-          return new Media({
-            authorID: v.authorID,
-            blurhash: v.blurhash,
-            cached: v.cached,
-            id: v.id,
-            isSensitive: v.isSensitive,
-            md5Sum: v.md5Sum,
-            name: v.name,
-            postID: v.postID,
-            size: v.size,
-            thumbnailURL: v.thumbnailURL,
-            type: v.type,
-            url: v.url,
-          });
-        }),
+        reactions: !i.reactions
+          ? new Array<PostReactionEvent>()
+          : i.reactions.map((v: any) => {
+              return new PostReactionEvent(
+                v.postId as Snowflake,
+                v.userId as Snowflake,
+              );
+            }),
+        attachments: !i.attachments
+          ? new Array<Media>()
+          : i.attachments.map((v: any) => {
+              return new Media({
+                authorID: v.authorID,
+                blurhash: v.blurhash,
+                cached: v.cached,
+                id: v.id,
+                isSensitive: v.isSensitive,
+                md5Sum: v.md5Sum,
+                name: v.name,
+                postID: v.postID,
+                size: v.size,
+                thumbnailURL: v.thumbnailURL,
+                type: v.type,
+                url: v.url,
+              });
+            }),
       });
     } catch (e: unknown) {
+      console.log(i.reactions, i.attachments);
       throw new Error(e as any);
     }
   }

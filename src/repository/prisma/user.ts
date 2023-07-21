@@ -69,7 +69,7 @@ export class UserRepository implements IUserRepository {
       });
       return new Success(this.convertToDomain(res));
     } catch (e: unknown) {
-      return new Failure(new Error(e as any));
+      return new Failure(new Error(e as Error as any));
     }
   }
 

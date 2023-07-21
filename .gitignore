@@ -9,3 +9,5 @@ config.yml
 tsconfig.tsbuildinfo
 node_modules
 build
+memo.md
+.eslintcache

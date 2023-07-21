@@ -50,8 +50,8 @@ export class UserData {
     return this._apData;
   }
 
-  get following(): Set<UserFollowEventData> {
-    return this._following;
+  get following(): Array<UserFollowEventData> {
+    return [...this._following];
   }
   // id
   private readonly _id: Snowflake;

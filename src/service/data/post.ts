@@ -49,12 +49,12 @@ export class PostData {
     return this._createdAt;
   }
 
-  get attachments(): Set<Media> {
-    return this._attachments;
+  get attachments(): Array<Media> {
+    return [...this._attachments];
   }
 
-  get reactions(): Set<PostReactionEvent> {
-    return this._reactions;
+  get reactions(): Array<PostReactionEvent> {
+    return [...this._reactions];
   }
 
   public toDomain() {
@@ -71,7 +71,7 @@ export class PostData {
 }
 
 export function PostToPostData(v: Post) {
-  return new Post({
+  return new PostData({
     id: v.id,
     authorID: v.authorID,
     text: v.text,
