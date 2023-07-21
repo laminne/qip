@@ -8,4 +8,4 @@ console.log(`  ___  _         ____
  \\__\\_\\_| .__/  |_____|
         |_|`);
 console.log("H e l l o ( a g a i n )");
-StartServer(3000).then((r) => console.log(r));
+StartServer(3000).then((r) => {});

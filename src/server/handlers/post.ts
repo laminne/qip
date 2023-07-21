@@ -19,7 +19,11 @@ export class PostHandler {
       console.log(re.value);
       return;
     }
+    const sleep = async (ms: number) => {
+      return new Promise((r) => setTimeout(r, ms));
+    };
 
+    await sleep(3000);
     res.code(200).send(re.value);
     return;
   };

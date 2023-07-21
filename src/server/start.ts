@@ -10,10 +10,12 @@ import { FindUserService } from "../service/user/find_user_service";
 import { SnowflakeIDGenerator } from "../helpers/id_generator";
 import { ServerRepository } from "../repository/prisma/server";
 import { UserRepository } from "../repository/prisma/user";
+import cors from "@fastify/cors";
 export async function StartServer(port: number) {
   const app = fastify({
     logger: true,
   });
+  app.register(cors, {});
 
   const prisma = new PrismaClient();
 
