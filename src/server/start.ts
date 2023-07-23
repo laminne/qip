@@ -11,6 +11,8 @@ import { SnowflakeIDGenerator } from "../helpers/id_generator";
 import { ServerRepository } from "../repository/prisma/server";
 import { UserRepository } from "../repository/prisma/user";
 import cors from "@fastify/cors";
+import { UserHandlers } from "./handlers/user";
+import { UserController } from "./controller/user";
 export async function StartServer(port: number) {
   const app = fastify({
     logger: true,
@@ -31,6 +33,12 @@ export async function StartServer(port: number) {
       findUserService: new FindUserService(userRepository),
     }),
   );
+  const userHandler = new UserHandlers(
+    new UserController({
+      findServerService: new FindServerService(serverRepository),
+      findUserService: new FindUserService(userRepository),
+    }),
+  );
 
   app.get("/", (q, s) => {
     return { version: "Qip2 Server v0.0.1 (pre-alpha)" };
@@ -38,6 +46,7 @@ export async function StartServer(port: number) {
 
   app.get("/api/v1/posts/:id", postHandler.FindByID);
   app.post("/api/v1/posts", postHandler.CreatePost);
+  app.get("/api/v1/users/:name", userHandler.FindByHandle);
 
   try {
     await app.listen({ port: port });

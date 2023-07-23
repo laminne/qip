@@ -111,7 +111,7 @@ export class PostController {
       author: {
         id: arg.post.authorID,
         nickName: arg.user.nickName,
-        host: `@${arg.user.handle}@${NormalizeURL(arg.server.host).host}`,
+        host: `@${arg.user.handle}@${arg.server.host}`,
         iconImageURL: arg.user.iconImageURL,
       },
       createdAt: arg.post.createdAt,
