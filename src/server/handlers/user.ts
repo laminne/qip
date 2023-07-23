@@ -17,4 +17,16 @@ export class UserHandlers {
       r.code(200).send(res.value);
       return;
     };
+
+  public FindUserPosts: FastifyHandlerMethod<{ Params: { name: string } }> =
+    async (q, r) => {
+      const res = await this.controller.FindUserPosts(q.params.name);
+      if (res.isFailure()) {
+        r.code(500).send({ message: "failed to find user posts" });
+        return;
+      }
+
+      r.code(200).send(res.value);
+      return;
+    };
 }

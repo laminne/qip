@@ -37,6 +37,7 @@ export async function StartServer(port: number) {
     new UserController({
       findServerService: new FindServerService(serverRepository),
       findUserService: new FindUserService(userRepository),
+      findPostService: new FindPostService(postRepository),
     }),
   );
 
@@ -47,6 +48,7 @@ export async function StartServer(port: number) {
   app.get("/api/v1/posts/:id", postHandler.FindByID);
   app.post("/api/v1/posts", postHandler.CreatePost);
   app.get("/api/v1/users/:name", userHandler.FindByHandle);
+  app.get("/api/v1/users/:name/posts", userHandler.FindUserPosts);
 
   try {
     await app.listen({ port: port });
