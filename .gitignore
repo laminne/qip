@@ -11,3 +11,4 @@ node_modules
 build
 memo.md
 .eslintcache
+.DS_Store

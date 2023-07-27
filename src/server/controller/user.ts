@@ -3,7 +3,11 @@ import { AsyncResult, Failure, Result, Success } from "../../helpers/result";
 import { UserResponse } from "../types/user";
 import { FindServerService } from "../../service/server/find_server_service";
 import { FindPostService } from "../../service/post/find_post_service";
-import { CommonPostResponse } from "../types/post";
+import {
+  CommonMediaResponse,
+  CommonPostResponse,
+  PostReactionResponse,
+} from "../types/post";
 import { Snowflake } from "../../helpers/id_generator";
 import { UserData } from "../../service/data/user";
 import { User } from "../../domain/user";
@@ -111,8 +115,25 @@ export class UserController {
             nickName: user.value.nickName,
           },
           createdAt: v.createdAt,
-          reactions: v.reactions,
-          attachments: v.attachments,
+          reactions: v.reactions.map((v): PostReactionResponse => {
+            return { postID: v.postID, userID: v.userID };
+          }),
+          attachments: v.attachments.map((v): CommonMediaResponse => {
+            return {
+              id: v.id,
+              authorID: v.authorID,
+              postID: v.postID,
+              blurhash: v.blurhash,
+              cached: v.cached,
+              isSensitive: v.isSensitive,
+              size: v.size,
+              thumbnailURL: v.thumbnailURL,
+              url: v.url,
+              name: v.name,
+              type: v.type,
+              md5Sum: v.md5Sum,
+            };
+          }),
           text: v.text,
         };
       }),
