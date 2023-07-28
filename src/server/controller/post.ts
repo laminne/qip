@@ -14,23 +14,27 @@ import { PostData } from "../../service/data/post";
 import { UserData } from "../../service/data/user";
 import { ServerData } from "../../service/data/server";
 import { NormalizeURL } from "../../helpers/url";
+import { CreateTimelineService } from "../../service/post/create_timeline_service";
 
 export class PostController {
   private readonly findPostService: FindPostService;
   private readonly findUserService: FindUserService;
   private readonly findServerService: FindServerService;
   private readonly createPostService: CreatePostService;
+  private readonly createTimelineService: CreateTimelineService;
 
   constructor(args: {
     findPostService: FindPostService;
     findUserService: FindUserService;
     findServerService: FindServerService;
     createPostService: CreatePostService;
+    createTimelineService: CreateTimelineService;
   }) {
     this.findPostService = args.findPostService;
     this.findUserService = args.findUserService;
     this.findServerService = args.findServerService;
     this.createPostService = args.createPostService;
+    this.createTimelineService = args.createTimelineService;
   }
 
   async FindByID(id: string): AsyncResult<CommonPostResponse, Error> {
@@ -60,11 +64,41 @@ export class PostController {
     );
   }
 
-  async FindByHandler(
+  async FindByHandle(
     handle: string,
   ): AsyncResult<Array<CommonPostResponse>, Error> {
     // ToDo: Implement
     return new Success(Array<CommonPostResponse>());
+  }
+
+  async ChronologicalPosts(
+    id: string,
+  ): AsyncResult<CommonPostResponse[], Error> {
+    const res = await this.createTimelineService.Handle(id as Snowflake);
+    if (res.isFailure()) {
+      return new Failure(new Error("failed to create timeline", res.value));
+    }
+
+    return new Success(
+      res.value.map((v) =>
+        this.convertToCommonResponse({
+          post: v.posts,
+          user: v.author,
+          server: new ServerData({
+            description: "",
+            faviconURL: "",
+            host: "",
+            iconURL: "",
+            id: "" as Snowflake,
+            maintainer: "",
+            maintainerEmail: "",
+            name: "",
+            softwareName: "",
+            softwareVersion: "",
+          }),
+        }),
+      ),
+    );
   }
 
   async CreatePost(req: CommonPostRequest) {

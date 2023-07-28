@@ -36,4 +36,14 @@ export class PostHandler {
 
     res.code(200).send(re.value);
   };
+
+  public GetTimeline: FastifyHandlerMethod<{}> = async (q, r) => {
+    const res = await this.controller.ChronologicalPosts("123");
+    if (res.isFailure()) {
+      r.code(500).send({ message: "failed to get timeline" });
+      return;
+    }
+
+    r.code(200).send(res.value);
+  };
 }

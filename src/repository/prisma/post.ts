@@ -1,9 +1,10 @@
 import { IPostRepository } from "../post";
-import { Failure, Result, Success } from "../../helpers/result";
+import { AsyncResult, Failure, Result, Success } from "../../helpers/result";
 import { Post, PostReactionEvent } from "../../domain/post";
 import { Snowflake } from "../../helpers/id_generator";
 import { Media } from "../../domain/media";
 import { PrismaClient } from "@prisma/client";
+import { User, UserAPData, UserFollowEvent } from "../../domain/user";
 
 export class PostRepository implements IPostRepository {
   private prisma: PrismaClient;
@@ -81,6 +82,107 @@ export class PostRepository implements IPostRepository {
 
   async Update(p: Post): Promise<Result<Post, Error>> {
     return new Failure(new Error(""));
+  }
+
+  // 時系列順にフォローしているユーザーと自分自身の投稿を取得
+  async ChronologicalPosts(
+    userID: Snowflake,
+    cursor: number,
+  ): AsyncResult<{ posts: Post; author: User }[], Error> {
+    try {
+      const posts = await this.prisma.post.findMany({
+        where: {
+          OR: [
+            {
+              User: {
+                follower: {
+                  some: {
+                    followingID: userID,
+                  },
+                },
+              },
+            },
+            {
+              authorID: userID,
+            },
+          ],
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: {
+          User: true,
+          attachments: true,
+          reactions: true,
+        },
+      });
+
+      return new Success(
+        posts.map((p) => {
+          return {
+            posts: new Post({
+              attachments: !p.attachments
+                ? new Array<Media>()
+                : p.attachments.map((v: any) => {
+                    return new Media({
+                      authorID: v.authorID,
+                      blurhash: v.blurhash,
+                      cached: v.cached,
+                      id: v.id,
+                      isSensitive: v.isSensitive,
+                      md5Sum: v.md5Sum,
+                      name: v.name,
+                      postID: v.postID,
+                      size: v.size,
+                      thumbnailURL: v.thumbnailURL,
+                      type: v.type,
+                      url: v.url,
+                    });
+                  }),
+              authorID: p.authorID as Snowflake,
+              createdAt: p.createdAt,
+              id: p.id as Snowflake,
+              reactions: !p.reactions
+                ? new Array<PostReactionEvent>()
+                : p.reactions.map((v: any) => {
+                    return new PostReactionEvent(
+                      v.postId as Snowflake,
+                      v.userId as Snowflake,
+                    );
+                  }),
+              text: p.text,
+              visibility: 0,
+            }),
+            author: new User({
+              bio: p.User.bio,
+              apData: new UserAPData({
+                followersURL: "",
+                followingURL: "",
+                inboxURL: "",
+                outboxURL: "",
+                privateKey: "",
+                publicKey: "",
+                userAPID: "",
+                userID: "" as Snowflake,
+              }),
+              createdAt: p.User.createdAt,
+              following: new Array<UserFollowEvent>(),
+              handle: p.User.handle,
+              headerImageURL: p.User.headerImageURL,
+              iconImageURL: p.User.iconImageURL,
+              id: p.authorID as Snowflake,
+              isLocalUser: p.User.isLocalUser,
+              nickName: p.User.nickName,
+              password: "",
+              role: p.User.role,
+              serverID: p.User.serverId as Snowflake,
+            }),
+          };
+        }),
+      );
+    } catch (e: unknown) {
+      return new Failure(new Error(e as Error as any));
+    }
   }
 
   private convertToDomain(i: any): Post {

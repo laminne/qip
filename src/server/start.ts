@@ -13,6 +13,7 @@ import { UserRepository } from "../repository/prisma/user";
 import cors from "@fastify/cors";
 import { UserHandlers } from "./handlers/user";
 import { UserController } from "./controller/user";
+import { CreateTimelineService } from "../service/post/create_timeline_service";
 export async function StartServer(port: number) {
   const app = fastify({
     logger: true,
@@ -31,6 +32,10 @@ export async function StartServer(port: number) {
       findPostService: new FindPostService(postRepository),
       findServerService: new FindServerService(serverRepository),
       findUserService: new FindUserService(userRepository),
+      createTimelineService: new CreateTimelineService({
+        postRepository: postRepository,
+        userRepository: userRepository,
+      }),
     }),
   );
   const userHandler = new UserHandlers(
@@ -49,6 +54,7 @@ export async function StartServer(port: number) {
   app.post("/api/v1/posts", postHandler.CreatePost);
   app.get("/api/v1/users/:name", userHandler.FindByHandle);
   app.get("/api/v1/users/:name/posts", userHandler.FindUserPosts);
+  app.get("/api/v1/timeline/home", postHandler.GetTimeline);
 
   try {
     await app.listen({ port: port });

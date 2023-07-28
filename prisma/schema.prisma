@@ -47,9 +47,9 @@ model UserAPData {
 }
 
 model UserFollowEvent {
-  follower    User   @relation("Following", fields: [followerID], references: [id])
+  follower    User   @relation("Followers", fields: [followerID], references: [id])
   followerID  String
-  following   User   @relation("Followers", fields: [followingID], references: [id])
+  following   User   @relation("Following", fields: [followingID], references: [id])
   followingID String
 
   @@id([followingID, followerID])
