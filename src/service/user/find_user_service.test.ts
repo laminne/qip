@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { User, UserAPData, UserFollowEvent } from "../../domain/user.js";
+// import { User, UserAPData, UserFollowEvent } from "../../domain/user.js";
 import { Snowflake } from "../../helpers/id_generator.js";
 import { UserRepository } from "../../repository/inmemory/user.js";
 import { FindUserService } from "./find_user_service.js";
+import { User, UserAPData, UserFollowEvent } from "../../domain/user.js";
 import { UserToUserData } from "../data/user.js";
 
 describe("FindUserService", () => {
@@ -58,6 +59,7 @@ describe("FindUserService", () => {
       following: new Array<UserFollowEvent>(),
     }),
   ];
+  exp[0].follow(exp[1]);
 
   const repository = new UserRepository(exp);
   const service = new FindUserService(repository);

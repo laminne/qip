@@ -57,6 +57,7 @@ export class UserData {
   get following(): Array<UserFollowEventData> {
     return [...this._following];
   }
+
   // id
   private readonly _id: Snowflake;
   // @ユーザー名(ユーザーハンドル)
@@ -146,19 +147,26 @@ export function UserToUserData(v: User): UserData {
       id: v.id,
       serverID: v.serverID,
       bio: v.bio,
-      handle: v.handle,
       fullHandle: v.fullHandle,
+      handle: v.handle,
       headerImageURL: v.headerImageURL,
       iconImageURL: v.iconImageURL,
       isLocalUser: v.isLocalUser,
       nickName: v.nickName,
       password: v.password ?? "",
-      createdAt: v.createdAt,
-      role: v.isAdmin() ? 1 : 0,
-      following: v.following().map((vv) => {
-        return UserFollowEventToUserFollowEventData(vv);
+      role: v.isAdmin ? 1 : 0,
+      following: new Array<UserFollowEventData>(),
+      apData: new UserAPDataData({
+        followersURL: "",
+        followingURL: "",
+        inboxURL: "",
+        outboxURL: "",
+        privateKey: null,
+        publicKey: "",
+        userAPID: "",
+        userID: v.id,
       }),
-      apData: UserAPDataToUserAPDataData(v.apData),
+      createdAt: v.createdAt,
     });
   } catch (e: unknown) {
     console.log(e);
@@ -198,6 +206,7 @@ export class UserAPDataData {
   get privateKey(): string | null {
     return this._privateKey;
   }
+
   private readonly _userID: Snowflake;
   private readonly _userAPID: string;
   private _inboxURL: string;
@@ -240,6 +249,7 @@ export class UserAPDataData {
     });
   }
 }
+
 export function UserAPDataToUserAPDataData(v: UserAPData) {
   return new UserAPDataData({
     userID: v.userID,
@@ -278,10 +288,4 @@ export class UserFollowEventData {
       this._follower.toDomain(),
     );
   }
-}
-export function UserFollowEventToUserFollowEventData(v: UserFollowEvent) {
-  return new UserFollowEventData(
-    UserToUserData(v.following),
-    UserToUserData(v.follower),
-  );
 }

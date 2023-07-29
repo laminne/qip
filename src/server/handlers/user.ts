@@ -11,7 +11,6 @@ export class UserHandlers {
       const res = await this.controller.FindByHandle(q.params.name);
       if (res.isFailure()) {
         r.code(500).send({ message: "failed to find id by ID" });
-        console.log(res.value);
         return;
       }
       r.code(200).send(res.value);

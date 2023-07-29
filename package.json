@@ -1,18 +1,19 @@
 {
-  "name": "qip",
+  "name": "qip2",
   "version": "0.0.1",
-  "description": "",
   "main": "main.js",
   "type": "module",
   "author": "Tatsuto Yamamoto",
   "license": "Apache-2.0",
   "scripts": {
     "start": "node --enable-source-maps ./build/main.js",
+    "dev": "ts-node --esm ./src/main.ts",
     "build": "esbuild ./src/main.ts --bundle --sourcemap --platform=node --target=node16 --format=esm --packages=external --outfile=build/main.js",
     "lint": "eslint --cache --ignore-path .gitignore 'src/**/**.ts'",
     "format": "prettier . --write",
     "test": "vitest run",
     "check": "prettier --check 'src/**/**.ts' && tsc -p . --noEmit",
+    "log": "pino-pretty",
     "prisma:format": "prisma format",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate",
@@ -25,6 +26,7 @@
     "date-fns": "^2.30.0",
     "esbuild": "^0.18.17",
     "fastify": "^4.20.0",
+    "pino": "^8.14.2",
     "typescript": "^5.1.6"
   },
   "devDependencies": {
@@ -32,8 +34,10 @@
     "@typescript-eslint/parser": "^6.1.0",
     "eslint": "^8.45.0",
     "eslint-config-prettier": "^8.8.0",
+    "pino-pretty": "^10.2.0",
     "prettier": "^3.0.0",
     "prisma": "^5.0.0",
+    "ts-node": "^10.9.1",
     "vitest": "^0.33.0"
   }
 }

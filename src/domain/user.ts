@@ -1,5 +1,6 @@
 // ユーザー
 import { Snowflake } from "../helpers/id_generator.js";
+import logger from "../helpers/logger.js";
 
 export class User {
   get id(): Snowflake {
@@ -22,7 +23,7 @@ export class User {
     this._nickName = value;
   }
 
-  public isAdmin(): boolean {
+  get isAdmin(): boolean {
     return this._role == 1;
   }
 
@@ -102,6 +103,7 @@ export class User {
 
   public following() {
     //　FIXME: ここでなぜか {followerID: string, followingID: string}に型が変わってしまっている
+    logger.debug([...this._following][0], "domain");
     return [...this._following];
   }
 

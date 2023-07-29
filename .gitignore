@@ -12,3 +12,4 @@ build
 memo.md
 .eslintcache
 .DS_Store
+/issues.md

@@ -9,30 +9,3 @@ console.log(`  ___  _         ____
         |_|`);
 console.log("H e l l o ( a g a i n )");
 StartServer(6300).then();
-// const prisma = new PrismaClient();
-// const r = new PostRepository(prisma);
-
-// const c = new PostController({
-//   findPostService: new FindPostService(new PostRepository(prisma)),
-//   findServerService: new FindServerService(new ServerRepository(prisma)),
-//   findUserService: new FindUserService(new UserRepository(prisma)),
-//   createTimelineService: new CreateTimelineService({
-//     postRepository: new PostRepository(prisma),
-//     userRepository: new UserRepository(prisma),
-//   }),
-//   createPostService: new CreatePostService(
-//     new PostRepository(prisma),
-//     new SnowflakeIDGenerator(1),
-//   ),
-// });
-
-// c.ChronologicalPosts("9554100359925760").then((r) => console.log(r.value));
-
-// r.ChronologicalPosts("9554100359925760" as Snowflake, 0)
-//   .then((r) => {
-//     // if (r.isFailure()) {
-//     //   return;
-//     // }
-//     console.log(r.value);
-//   })
-//   .catch((e) => console.log(e));

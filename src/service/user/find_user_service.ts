@@ -2,6 +2,7 @@ import { IUserRepository } from "../../repository/user.js";
 import { Snowflake } from "../../helpers/id_generator.js";
 import { Failure, Success } from "../../helpers/result.js";
 import { UserToUserData } from "../data/user.js";
+import logger from "../../helpers/logger.js";
 
 export class FindUserService {
   private repository: IUserRepository;
@@ -15,15 +16,18 @@ export class FindUserService {
     if (res.isFailure()) {
       return new Failure(new Error("failed to find user by id", res.value));
     }
-    return new Success(UserToUserData(res.value));
+    const resp = UserToUserData(res.value);
+    return new Success(resp);
   }
 
   async FindByHandle(handle: string) {
     const res = await this.repository.FindByHandle(handle);
     if (res.isFailure()) {
-      console.log(res.value);
+      logger.error(res.value);
       return new Failure(new Error("failed to find user by id", res.value));
     }
-    return new Success(UserToUserData(res.value));
+    logger.debug(res.value);
+    const resp = UserToUserData(res.value);
+    return new Success(resp);
   }
 }
