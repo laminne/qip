@@ -13,6 +13,7 @@ datasource db {
 model User {
   id             String   @id
   handle         String
+  fullHandle     String   @unique
   nickName       String
   role           Int
   bio            String
@@ -75,7 +76,7 @@ model Post {
   text       String
   visibility Int
   createdAt  DateTime @default(now())
-  User       User    @relation(fields: [authorID], references: [id])
+  User       User     @relation(fields: [authorID], references: [id])
   authorID   String
 
   attachments Media[]

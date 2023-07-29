@@ -10,6 +10,10 @@ export class User {
     return this._handle;
   }
 
+  get fullHandle(): string {
+    return this._fullHandle;
+  }
+
   get nickName(): string {
     return this._nickName;
   }
@@ -97,6 +101,7 @@ export class User {
   }
 
   public following() {
+    //　FIXME: ここでなぜか {followerID: string, followingID: string}に型が変わってしまっている
     return [...this._following];
   }
 
@@ -104,6 +109,8 @@ export class User {
   private readonly _id: Snowflake;
   // @ユーザー名(ユーザーハンドル)
   private readonly _handle: string;
+  // @handle@host (フルハンドル)
+  private readonly _fullHandle: string;
   // ユーザーが属するサーバーID
   private readonly _serverID: Snowflake;
   // 表示名
@@ -130,6 +137,7 @@ export class User {
   constructor(args: {
     id: Snowflake;
     handle: string;
+    fullHandle: string;
     serverID: Snowflake;
     nickName: string;
     role: number;
@@ -145,6 +153,7 @@ export class User {
     // 不変
     this._id = args.id;
     this._handle = args.handle;
+    this._fullHandle = args.fullHandle;
     this._isLocalUser = args.isLocalUser;
     this._serverID = args.serverID;
 

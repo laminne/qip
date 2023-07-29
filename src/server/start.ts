@@ -16,7 +16,7 @@ import { UserController } from "./controller/user";
 import { CreateTimelineService } from "../service/post/create_timeline_service";
 export async function StartServer(port: number) {
   const app = fastify({
-    logger: true,
+    logger: false,
   });
   app.register(cors, {});
 

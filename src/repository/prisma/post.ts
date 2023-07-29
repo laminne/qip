@@ -168,6 +168,7 @@ export class PostRepository implements IPostRepository {
               createdAt: p.User.createdAt,
               following: new Array<UserFollowEvent>(),
               handle: p.User.handle,
+              fullHandle: p.User.fullHandle,
               headerImageURL: p.User.headerImageURL,
               iconImageURL: p.User.iconImageURL,
               id: p.authorID as Snowflake,

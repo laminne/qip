@@ -9,9 +9,6 @@ import {
   PostReactionResponse,
 } from "../types/post";
 import { Snowflake } from "../../helpers/id_generator";
-import { UserData } from "../../service/data/user";
-import { User } from "../../domain/user";
-import { ServerData } from "../../service/data/server";
 
 export class UserController {
   private readonly findUserService: FindUserService;
@@ -29,44 +26,22 @@ export class UserController {
   }
 
   async FindByHandle(name: string): AsyncResult<UserResponse, Error> {
-    // acctを分ける
-    const parsed = name.split("@");
-    let uName: string;
-    let host: string;
-    switch (parsed.length) {
-      case 2:
-        // ABC@EXAMPLE.COM
-        uName = parsed[0];
-        host = parsed[1];
-        break;
-      case 3:
-        // @ABC@EXAMPLE.COM
-        uName = parsed[1];
-        host = parsed[2];
-        break;
-      default:
-        return new Failure(new Error("failed to parse handle"));
-    }
-    const user = await this.findUserService.FindByHandle(uName);
+    const user = await this.findUserService.FindByHandle(name);
     if (user.isFailure()) {
       return new Failure(new Error("failed to find user", user.value));
     }
-    const server = await this.findServerService.FindByHost(host);
+
+    const server = await this.findServerService.FindByID(user.value.serverID);
     if (server.isFailure()) {
       return new Failure(
         new Error("failed to find user server data", server.value),
       );
     }
-    const r = user.value.find((v) => {
-      return v.serverID === server.value.id;
-    });
-    if (!r) {
-      return new Failure(new Error("failed to find user"));
-    }
 
+    const r = user.value;
     const res: UserResponse = {
       id: r.id,
-      host: `@${r.handle}@${server.value.host}`,
+      host: r.fullHandle,
       nickName: r.nickName,
       role: r.role,
       bio: r.bio,
@@ -98,18 +73,12 @@ export class UserController {
       return new Failure(user.value);
     }
 
-    // ユーザーのサーバー情報を持ってくる
-    const server = await this.findServerService.FindByID(user.value.serverID);
-    if (server.isFailure()) {
-      return new Failure(server.value);
-    }
-
     return new Success(
       posts.value.map((v): CommonPostResponse => {
         return {
           id: v.id,
           author: {
-            host: `@${user.value.handle}@${server.value.host}`,
+            host: user.value.fullHandle,
             iconImageURL: user.value.iconImageURL,
             id: user.value.id,
             nickName: user.value.nickName,

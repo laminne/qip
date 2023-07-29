@@ -1,6 +1,6 @@
 import { IUserRepository } from "../user";
 import { AsyncResult, Failure, Result, Success } from "../../helpers/result";
-import { User, UserAPData } from "../../domain/user";
+import { User, UserAPData, UserFollowEvent } from "../../domain/user";
 import { Snowflake } from "../../helpers/id_generator";
 import { PrismaClient } from "@prisma/client";
 
@@ -17,6 +17,7 @@ export class UserRepository implements IUserRepository {
         data: {
           id: u.id,
           handle: u.handle,
+          fullHandle: u.fullHandle,
           nickName: u.nickName,
           role: 0,
           bio: u.bio,
@@ -43,8 +44,8 @@ export class UserRepository implements IUserRepository {
         },
         include: {
           userAPData: true,
-          following: true,
-          follower: true,
+          following: { include: { following: true } },
+          follower: { include: { follower: true } },
         },
       });
 
@@ -55,19 +56,19 @@ export class UserRepository implements IUserRepository {
     }
   }
 
-  async FindByHandle(handle: string): Promise<Result<Array<User>, Error>> {
+  async FindByHandle(handle: string): Promise<Result<User, Error>> {
     try {
-      const res = await this.prisma.user.findMany({
+      const res = await this.prisma.user.findUnique({
         where: {
-          handle: handle,
+          fullHandle: handle,
         },
         include: {
           userAPData: true,
-          following: true,
-          follower: true,
+          following: { include: { following: true, follower: true } },
+          follower: { include: { follower: true, following: true } },
         },
       });
-      return new Success(this.convertToDomain(res));
+      return new Success(this.convertToDomain([res])[0]);
     } catch (e: unknown) {
       return new Failure(new Error(e as Error as any));
     }
@@ -81,8 +82,8 @@ export class UserRepository implements IUserRepository {
         },
         include: {
           userAPData: true,
-          following: true,
-          follower: true,
+          following: { include: { following: true, follower: true } },
+          follower: { include: { follower: true, following: true } },
         },
       });
       return new Success(this.convertToDomain(res)[0]);
@@ -144,13 +145,16 @@ export class UserRepository implements IUserRepository {
         bio: e.bio,
         createdAt: e.createdAt,
         handle: e.handle,
+        fullHandle: e.fullHandle,
         headerImageURL: e.headerImageURL,
         iconImageURL: e.iconImageURL,
         isLocalUser: e.isLocalUser,
         nickName: e.nickName,
         password: e.password,
         role: e.role,
-        following: e.following,
+        following: e.following.map((v: any): UserFollowEvent => {
+          return new UserFollowEvent(v.following, v.follower);
+        }),
         apData: new UserAPData({
           followersURL: e.userAPData.followersURL ?? "",
           followingURL: e.userAPData.followingURL ?? "",
@@ -173,6 +177,7 @@ export class UserRepository implements IUserRepository {
         bio: e.follower.bio,
         createdAt: e.follower.createdAt,
         handle: e.follower.handle,
+        fullHandle: e.follower.fullHandle,
         headerImageURL: e.follower.headerImageURL,
         iconImageURL: e.follower.iconImageURL,
         isLocalUser: e.follower.isLocalUser,
@@ -202,6 +207,7 @@ export class UserRepository implements IUserRepository {
         bio: e.following.bio,
         createdAt: e.following.createdAt,
         handle: e.following.handle,
+        fullHandle: e.following.fullHandle,
         headerImageURL: e.following.headerImageURL,
         iconImageURL: e.following.iconImageURL,
         isLocalUser: e.following.isLocalUser,

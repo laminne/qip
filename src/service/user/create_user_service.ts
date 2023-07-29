@@ -19,6 +19,7 @@ export class CreateUserService {
       id: id,
       serverID: u.serverID,
       handle: u.handle,
+      fullHandle: u.fullHandle,
       bio: u.bio,
       headerImageURL: u.headerImageURL,
       iconImageURL: u.iconImageURL,
@@ -50,6 +51,7 @@ export class CreateUserService {
 
 export interface CreateUserArgs {
   handle: string;
+  fullHandle: string;
   serverID: Snowflake;
   nickName: string;
   role: number;

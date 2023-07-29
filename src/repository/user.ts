@@ -7,7 +7,7 @@ export interface IUserRepository {
   Update(u: User): AsyncResult<User, Error>;
 
   FindByID(id: Snowflake): AsyncResult<User, Error>;
-  FindByHandle(handle: string): AsyncResult<Array<User>, Error>;
+  FindByHandle(handle: string): AsyncResult<User, Error>;
   FindFollowing(id: Snowflake): AsyncResult<Array<User>, Error>;
   FindFollower(id: Snowflake): AsyncResult<Array<User>, Error>;
 }

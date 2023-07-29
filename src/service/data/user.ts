@@ -10,6 +10,10 @@ export class UserData {
     return this._handle;
   }
 
+  get fullHandle(): string {
+    return this._fullHandle;
+  }
+
   get serverID(): Snowflake {
     return this._serverID;
   }
@@ -57,6 +61,8 @@ export class UserData {
   private readonly _id: Snowflake;
   // @ユーザー名(ユーザーハンドル)
   private readonly _handle: string;
+  // @handle@host (フルハンドル)
+  private readonly _fullHandle: string;
   // ユーザーが属するサーバーID
   private readonly _serverID: Snowflake;
   // 表示名
@@ -83,6 +89,7 @@ export class UserData {
   constructor(args: {
     id: Snowflake;
     handle: string;
+    fullHandle: string;
     serverID: Snowflake;
     nickName: string;
     role: number;
@@ -98,6 +105,7 @@ export class UserData {
     // 不変
     this._id = args.id;
     this._handle = args.handle;
+    this._fullHandle = args.fullHandle;
     this._isLocalUser = args.isLocalUser;
     this._serverID = args.serverID;
 
@@ -118,6 +126,7 @@ export class UserData {
       serverID: this._serverID,
       bio: this._bio,
       handle: this._handle,
+      fullHandle: this._fullHandle,
       headerImageURL: this._headerImageURL,
       iconImageURL: this._iconImageURL,
       isLocalUser: this._isLocalUser,
@@ -132,23 +141,30 @@ export class UserData {
 }
 
 export function UserToUserData(v: User): UserData {
-  return new UserData({
-    id: v.id,
-    serverID: v.serverID,
-    bio: v.bio,
-    handle: v.handle,
-    headerImageURL: v.headerImageURL,
-    iconImageURL: v.iconImageURL,
-    isLocalUser: v.isLocalUser,
-    nickName: v.nickName,
-    password: v.password ?? "",
-    createdAt: v.createdAt,
-    role: v.isAdmin() ? 1 : 0,
-    following: v
-      .following()
-      .map((vv) => UserFollowEventToUserFollowEventData(vv)),
-    apData: UserAPDataToUserAPDataData(v.apData),
-  });
+  console.log(v);
+  try {
+    return new UserData({
+      id: v.id,
+      serverID: v.serverID,
+      bio: v.bio,
+      handle: v.handle,
+      fullHandle: v.fullHandle,
+      headerImageURL: v.headerImageURL,
+      iconImageURL: v.iconImageURL,
+      isLocalUser: v.isLocalUser,
+      nickName: v.nickName,
+      password: v.password ?? "",
+      createdAt: v.createdAt,
+      role: v.isAdmin() ? 1 : 0,
+      following: v.following().map((vv) => {
+        return UserFollowEventToUserFollowEventData(vv);
+      }),
+      apData: UserAPDataToUserAPDataData(v.apData),
+    });
+  } catch (e: unknown) {
+    console.log(e);
+    throw new Error(e as any);
+  }
 }
 
 export class UserAPDataData {

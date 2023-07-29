@@ -21,8 +21,9 @@ export class FindUserService {
   async FindByHandle(handle: string) {
     const res = await this.repository.FindByHandle(handle);
     if (res.isFailure()) {
+      console.log(res.value);
       return new Failure(new Error("failed to find user by id", res.value));
     }
-    return new Success(res.value.map((v) => UserToUserData(v)));
+    return new Success(UserToUserData(res.value));
   }
 }

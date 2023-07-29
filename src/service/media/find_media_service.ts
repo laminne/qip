@@ -27,12 +27,10 @@ export class FindMediaService {
       );
     }
 
-    return new Success(
-      res.value.map((v) => {
-        MediaToMediaData(v);
-      }),
-    );
+    const resp = res.value.map((v) => MediaToMediaData(v));
+    return new Success(resp);
   }
+
   public async findByPostID(id: Snowflake) {
     const res = await this.repository.FindByPostID(id);
     if (res.isFailure()) {
@@ -41,10 +39,8 @@ export class FindMediaService {
       );
     }
 
-    return new Success(
-      res.value.map((v) => {
-        MediaToMediaData(v);
-      }),
-    );
+    const resp = res.value.map((v) => MediaToMediaData(v));
+
+    return new Success(resp);
   }
 }

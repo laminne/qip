@@ -12,8 +12,6 @@ import { FindServerService } from "../../service/server/find_server_service";
 import { CreatePostService } from "../../service/post/create_post_service";
 import { PostData } from "../../service/data/post";
 import { UserData } from "../../service/data/user";
-import { ServerData } from "../../service/data/server";
-import { NormalizeURL } from "../../helpers/url";
 import { CreateTimelineService } from "../../service/post/create_timeline_service";
 
 export class PostController {
@@ -48,18 +46,11 @@ export class PostController {
         new Error("failed to find post author's data", user.value),
       );
     }
-    const server = await this.findServerService.FindByID(user.value.serverID);
-    if (server.isFailure()) {
-      return new Failure(
-        new Error("failed to find post author's server data", server.value),
-      );
-    }
 
     return new Success(
       this.convertToCommonResponse({
         post: res.value,
         user: user.value,
-        server: server.value,
       }),
     );
   }
@@ -84,18 +75,6 @@ export class PostController {
         this.convertToCommonResponse({
           post: v.posts,
           user: v.author,
-          server: new ServerData({
-            description: "",
-            faviconURL: "",
-            host: "",
-            iconURL: "",
-            id: "" as Snowflake,
-            maintainer: "",
-            maintainerEmail: "",
-            name: "",
-            softwareName: "",
-            softwareVersion: "",
-          }),
         }),
       ),
     );
@@ -118,34 +97,23 @@ export class PostController {
         new Error("failed to find post author's data", user.value),
       );
     }
-    const server = await this.findServerService.FindByID(user.value.serverID);
-    if (server.isFailure()) {
-      return new Failure(
-        new Error("failed to find post author's server data", server.value),
-      );
-    }
 
     return new Success(
       this.convertToCommonResponse({
         post: res.value,
-        server: server.value,
         user: user.value,
       }),
     );
   }
 
-  private convertToCommonResponse(arg: {
-    post: PostData;
-    user: UserData;
-    server: ServerData;
-  }) {
+  private convertToCommonResponse(arg: { post: PostData; user: UserData }) {
     const resp: CommonPostResponse = {
       id: arg.post.id,
       text: arg.post.text,
       author: {
         id: arg.post.authorID,
         nickName: arg.user.nickName,
-        host: `@${arg.user.handle}@${arg.server.host}`,
+        host: arg.user.fullHandle,
         iconImageURL: arg.user.iconImageURL,
       },
       createdAt: arg.post.createdAt,
