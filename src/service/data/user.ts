@@ -141,7 +141,6 @@ export class UserData {
 }
 
 export function UserToUserData(v: User): UserData {
-  console.log(v);
   try {
     return new UserData({
       id: v.id,

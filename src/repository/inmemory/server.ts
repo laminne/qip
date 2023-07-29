@@ -22,7 +22,8 @@ export class ServerRepository implements IServerRepository {
 
   async FindByHost(host: string): Promise<Result<Server, Error>> {
     try {
-      return new Success([...this.data].filter((v) => v.host === host)[0]);
+      const res = [...this.data].filter((v) => v.host === host)[0];
+      return new Success(res);
     } catch (e: unknown) {
       return new Failure(new Error(e as any));
     }
