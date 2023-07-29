@@ -1,7 +1,7 @@
-import { IUserRepository } from "../../repository/user";
-import { Snowflake } from "../../helpers/id_generator";
-import { Failure, Success } from "../../helpers/result";
-import { UserToUserData } from "../data/user";
+import { IUserRepository } from "../../repository/user.js";
+import { Snowflake } from "../../helpers/id_generator.js";
+import { Failure, Success } from "../../helpers/result.js";
+import { UserToUserData } from "../data/user.js";
 
 export class FindUserService {
   private repository: IUserRepository;

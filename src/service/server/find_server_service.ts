@@ -1,7 +1,7 @@
-import { Snowflake } from "../../helpers/id_generator";
-import { Failure, Success } from "../../helpers/result";
-import { IServerRepository } from "../../repository/server";
-import { ServerToServerData } from "../data/server";
+import { Snowflake } from "../../helpers/id_generator.js";
+import { Failure, Success } from "../../helpers/result.js";
+import { IServerRepository } from "../../repository/server.js";
+import { ServerToServerData } from "../data/server.js";
 
 export class FindServerService {
   private repository: IServerRepository;

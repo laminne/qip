@@ -1,19 +1,20 @@
 import { fastify } from "fastify";
-import { PostHandler } from "./handlers/post";
-import { PostRepository } from "../repository/prisma/post";
-import { PostController } from "./controller/post";
-import { CreatePostService } from "../service/post/create_post_service";
-import { FindPostService } from "../service/post/find_post_service";
+import { PostHandler } from "./handlers/post.js";
+import { PostRepository } from "../repository/prisma/post.js";
+import { PostController } from "./controller/post.js";
+import { CreatePostService } from "../service/post/create_post_service.js";
+import { FindPostService } from "../service/post/find_post_service.js";
 import { PrismaClient } from "@prisma/client";
-import { FindServerService } from "../service/server/find_server_service";
-import { FindUserService } from "../service/user/find_user_service";
-import { SnowflakeIDGenerator } from "../helpers/id_generator";
-import { ServerRepository } from "../repository/prisma/server";
-import { UserRepository } from "../repository/prisma/user";
+import { FindServerService } from "../service/server/find_server_service.js";
+import { FindUserService } from "../service/user/find_user_service.js";
+import { SnowflakeIDGenerator } from "../helpers/id_generator.js";
+import { ServerRepository } from "../repository/prisma/server.js";
+import { UserRepository } from "../repository/prisma/user.js";
 import cors from "@fastify/cors";
-import { UserHandlers } from "./handlers/user";
-import { UserController } from "./controller/user";
-import { CreateTimelineService } from "../service/post/create_timeline_service";
+import { UserHandlers } from "./handlers/user.js";
+import { UserController } from "./controller/user.js";
+import { CreateTimelineService } from "../service/post/create_timeline_service.js";
+
 export async function StartServer(port: number) {
   const app = fastify({
     logger: false,
@@ -30,11 +31,9 @@ export async function StartServer(port: number) {
     new PostController({
       createPostService: new CreatePostService(postRepository, idGen),
       findPostService: new FindPostService(postRepository),
-      findServerService: new FindServerService(serverRepository),
       findUserService: new FindUserService(userRepository),
       createTimelineService: new CreateTimelineService({
         postRepository: postRepository,
-        userRepository: userRepository,
       }),
     }),
   );
@@ -58,6 +57,7 @@ export async function StartServer(port: number) {
 
   try {
     await app.listen({ port: port });
+    return;
   } catch (e: unknown) {
     return new Error("failed to start server", e as Error as any);
   }

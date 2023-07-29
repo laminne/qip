@@ -1,8 +1,8 @@
-import { IServerRepository } from "../../repository/server";
-import { Server } from "../../domain/server";
-import { Failure, Success } from "../../helpers/result";
-import { ServerToServerData } from "../data/server";
-import { SnowflakeIDGenerator } from "../../helpers/id_generator";
+import { IServerRepository } from "../../repository/server.js";
+import { Server } from "../../domain/server.js";
+import { Failure, Success } from "../../helpers/result.js";
+import { ServerToServerData } from "../data/server.js";
+import { SnowflakeIDGenerator } from "../../helpers/id_generator.js";
 
 export class CreateServerService {
   private readonly repository: IServerRepository;

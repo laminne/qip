@@ -1,4 +1,4 @@
-import { StartServer } from "./server/start";
+import { StartServer } from "./server/start.js";
 
 console.log("Qip2\n(C) 2023 Tatsuto 'Laminne' YAMAMOTO");
 console.log(`  ___  _         ____  
@@ -8,7 +8,7 @@ console.log(`  ___  _         ____
  \\__\\_\\_| .__/  |_____|
         |_|`);
 console.log("H e l l o ( a g a i n )");
-StartServer(6300).then((r) => {});
+StartServer(6300).then();
 // const prisma = new PrismaClient();
 // const r = new PostRepository(prisma);
 

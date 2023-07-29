@@ -1,6 +1,6 @@
-import { User } from "../domain/user";
-import { AsyncResult, Result } from "../helpers/result";
-import { Snowflake } from "../helpers/id_generator";
+import { User } from "../domain/user.js";
+import { AsyncResult } from "../helpers/result.js";
+import { Snowflake } from "../helpers/id_generator.js";
 
 export interface IUserRepository {
   Create(u: User): AsyncResult<User, Error>;

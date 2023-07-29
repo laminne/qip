@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { Media } from "../../domain/media";
-import { Snowflake } from "../../helpers/id_generator";
-import { MediaData, MediaToMediaData } from "./media";
+import { Media } from "../../domain/media.js";
+import { Snowflake } from "../../helpers/id_generator.js";
+import { MediaData, MediaToMediaData } from "./media.js";
 
 describe("正しくドメインモデルからDTOに変換できる", () => {
   it("MediaをMediaDataに変換できる", () => {

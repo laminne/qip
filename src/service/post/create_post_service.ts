@@ -1,9 +1,9 @@
-import { Post } from "../../domain/post";
-import { AsyncResult, Failure, Success } from "../../helpers/result";
-import { IPostRepository } from "../../repository/post";
-import { PostData, PostToPostData } from "../data/post";
-import { Snowflake, SnowflakeIDGenerator } from "../../helpers/id_generator";
-import { Media } from "../../domain/media";
+import { Post } from "../../domain/post.js";
+import { AsyncResult, Failure, Success } from "../../helpers/result.js";
+import { IPostRepository } from "../../repository/post.js";
+import { PostData, PostToPostData } from "../data/post.js";
+import { Snowflake, SnowflakeIDGenerator } from "../../helpers/id_generator.js";
+import { Media } from "../../domain/media.js";
 
 export class CreatePostService {
   private readonly repository: IPostRepository;

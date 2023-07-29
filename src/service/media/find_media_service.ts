@@ -1,7 +1,8 @@
-import { IMediaRepository } from "../../repository/media";
-import { Snowflake } from "../../helpers/id_generator";
-import { Failure, Success } from "../../helpers/result";
-import { MediaToMediaData } from "../data/media";
+import { IMediaRepository } from "../../repository/media.js";
+import { Snowflake } from "../../helpers/id_generator.js";
+import { Failure, Success } from "../../helpers/result.js";
+import { MediaToMediaData } from "../data/media.js";
+import { Media } from "../../domain/media.js";
 
 export class FindMediaService {
   private readonly repository: IMediaRepository;
@@ -27,7 +28,7 @@ export class FindMediaService {
       );
     }
 
-    const resp = res.value.map((v) => MediaToMediaData(v));
+    const resp = res.value.map((v: Media) => MediaToMediaData(v));
     return new Success(resp);
   }
 
@@ -39,7 +40,7 @@ export class FindMediaService {
       );
     }
 
-    const resp = res.value.map((v) => MediaToMediaData(v));
+    const resp = res.value.map((v: Media) => MediaToMediaData(v));
 
     return new Success(resp);
   }

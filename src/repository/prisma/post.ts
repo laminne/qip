@@ -1,10 +1,10 @@
-import { IPostRepository } from "../post";
-import { AsyncResult, Failure, Result, Success } from "../../helpers/result";
-import { Post, PostReactionEvent } from "../../domain/post";
-import { Snowflake } from "../../helpers/id_generator";
-import { Media } from "../../domain/media";
+import { IPostRepository } from "../post.js";
+import { AsyncResult, Failure, Result, Success } from "../../helpers/result.js";
+import { Post, PostReactionEvent } from "../../domain/post.js";
+import { Snowflake } from "../../helpers/id_generator.js";
+import { Media } from "../../domain/media.js";
 import { PrismaClient } from "@prisma/client";
-import { User, UserAPData, UserFollowEvent } from "../../domain/user";
+import { User, UserAPData, UserFollowEvent } from "../../domain/user.js";
 
 export class PostRepository implements IPostRepository {
   private prisma: PrismaClient;

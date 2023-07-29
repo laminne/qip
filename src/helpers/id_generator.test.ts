@@ -1,5 +1,5 @@
 import { assert, describe, it } from "vitest";
-import { SnowflakeIDGenerator } from "./id_generator";
+import { SnowflakeIDGenerator } from "./id_generator.js";
 
 const generator = new SnowflakeIDGenerator(0);
 

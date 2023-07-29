@@ -1,7 +1,7 @@
-import { IMediaRepository } from "../media";
-import { Media } from "../../domain/media";
-import { Failure, Result, Success } from "../../helpers/result";
-import { Snowflake } from "../../helpers/id_generator";
+import { IMediaRepository } from "../media.js";
+import { Media } from "../../domain/media.js";
+import { Failure, Result, Success } from "../../helpers/result.js";
+import { Snowflake } from "../../helpers/id_generator.js";
 import { PrismaClient } from "@prisma/client";
 
 export class MediaRepository implements IMediaRepository {

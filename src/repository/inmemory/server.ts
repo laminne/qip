@@ -1,7 +1,7 @@
-import { IServerRepository } from "../server";
-import { Server } from "../../domain/server";
-import { Failure, Result, Success } from "../../helpers/result";
-import { Snowflake } from "../../helpers/id_generator";
+import { IServerRepository } from "../server.js";
+import { Server } from "../../domain/server.js";
+import { Failure, Result, Success } from "../../helpers/result.js";
+import { Snowflake } from "../../helpers/id_generator.js";
 
 export class ServerRepository implements IServerRepository {
   private data: Set<Server>;

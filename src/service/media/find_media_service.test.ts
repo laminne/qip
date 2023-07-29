@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { FindMediaService } from "./find_media_service";
-import { MediaRepository } from "../../repository/inmemory/media";
-import { Media } from "../../domain/media";
-import { Snowflake } from "../../helpers/id_generator";
-import { MediaToMediaData } from "../data/media";
+import { FindMediaService } from "./find_media_service.js";
+import { MediaRepository } from "../../repository/inmemory/media.js";
+import { Media } from "../../domain/media.js";
+import { Snowflake } from "../../helpers/id_generator.js";
+import { MediaToMediaData } from "../data/media.js";
 
 describe("FindMediaService", () => {
   const data = new Media({

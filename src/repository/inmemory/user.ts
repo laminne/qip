@@ -1,7 +1,7 @@
-import { IUserRepository } from "../user";
-import { AsyncResult, Failure, Result, Success } from "../../helpers/result";
-import { User } from "../../domain/user";
-import { Snowflake } from "../../helpers/id_generator";
+import { IUserRepository } from "../user.js";
+import { AsyncResult, Failure, Result, Success } from "../../helpers/result.js";
+import { User } from "../../domain/user.js";
+import { Snowflake } from "../../helpers/id_generator.js";
 
 export class UserRepository implements IUserRepository {
   private data: Set<User>;
@@ -12,7 +12,7 @@ export class UserRepository implements IUserRepository {
 
   async Create(u: User): Promise<Result<User, Error>> {
     try {
-      const res = this.data.add(u);
+      this.data.add(u);
 
       return new Success(u);
     } catch (e: unknown) {

@@ -1,5 +1,5 @@
 // ユーザー
-import { Snowflake } from "../helpers/id_generator";
+import { Snowflake } from "../helpers/id_generator.js";
 
 export class User {
   get id(): Snowflake {

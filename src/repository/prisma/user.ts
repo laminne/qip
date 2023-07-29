@@ -1,7 +1,7 @@
-import { IUserRepository } from "../user";
-import { AsyncResult, Failure, Result, Success } from "../../helpers/result";
-import { User, UserAPData, UserFollowEvent } from "../../domain/user";
-import { Snowflake } from "../../helpers/id_generator";
+import { IUserRepository } from "../user.js";
+import { AsyncResult, Failure, Result, Success } from "../../helpers/result.js";
+import { User, UserAPData, UserFollowEvent } from "../../domain/user.js";
+import { Snowflake } from "../../helpers/id_generator.js";
 import { PrismaClient } from "@prisma/client";
 
 export class UserRepository implements IUserRepository {

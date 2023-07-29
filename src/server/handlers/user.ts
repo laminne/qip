@@ -1,5 +1,5 @@
-import { FastifyHandlerMethod } from "../../helpers/fastify";
-import { UserController } from "../controller/user";
+import { FastifyHandlerMethod } from "../../helpers/fastify.js";
+import { UserController } from "../controller/user.js";
 export class UserHandlers {
   private readonly controller: UserController;
   constructor(controller: UserController) {

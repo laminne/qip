@@ -1,6 +1,6 @@
-import { Media } from "../domain/media";
-import { Result } from "../helpers/result";
-import { Snowflake } from "../helpers/id_generator";
+import { Media } from "../domain/media.js";
+import { Result } from "../helpers/result.js";
+import { Snowflake } from "../helpers/id_generator.js";
 
 export interface IMediaRepository {
   Create(m: Media): Promise<Result<Media, Error>>;

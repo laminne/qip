@@ -1,6 +1,6 @@
-import { PostController } from "../controller/post";
-import { FastifyHandlerMethod } from "../../helpers/fastify";
-import { CommonPostRequest } from "../types/post";
+import { PostController } from "../controller/post.js";
+import { FastifyHandlerMethod } from "../../helpers/fastify.js";
+import { CommonPostRequest } from "../types/post.js";
 
 export class PostHandler {
   private readonly controller: PostController;

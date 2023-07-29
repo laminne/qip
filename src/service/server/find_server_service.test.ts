@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { ServerRepository } from "../../repository/inmemory/server";
-import { Server } from "../../domain/server";
-import { Snowflake } from "../../helpers/id_generator";
-import { FindServerService } from "./find_server_service";
-import { ServerToServerData } from "../data/server";
+import { ServerRepository } from "../../repository/inmemory/server.js";
+import { Server } from "../../domain/server.js";
+import { Snowflake } from "../../helpers/id_generator.js";
+import { FindServerService } from "./find_server_service.js";
+import { ServerToServerData } from "../data/server.js";
 
 describe("findServerService", () => {
   const exp = [

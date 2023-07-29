@@ -1,7 +1,8 @@
-import { IPostRepository } from "../../repository/post";
-import { Snowflake } from "../../helpers/id_generator";
-import { Failure, Success } from "../../helpers/result";
-import { PostToPostData } from "../data/post";
+import { IPostRepository } from "../../repository/post.js";
+import { Snowflake } from "../../helpers/id_generator.js";
+import { Failure, Success } from "../../helpers/result.js";
+import { PostToPostData } from "../data/post.js";
+import { Post } from "../../domain/post.js";
 
 export class FindPostService {
   private repository: IPostRepository;
@@ -27,6 +28,6 @@ export class FindPostService {
       );
     }
 
-    return new Success(res.value.map((v) => PostToPostData(v)));
+    return new Success(res.value.map((v: Post) => PostToPostData(v)));
   }
 }

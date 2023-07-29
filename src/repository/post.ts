@@ -1,7 +1,7 @@
-import { AsyncResult, Result } from "../helpers/result";
-import { Post } from "../domain/post";
-import { Snowflake } from "../helpers/id_generator";
-import { User } from "../domain/user";
+import { AsyncResult, Result } from "../helpers/result.js";
+import { Post } from "../domain/post.js";
+import { Snowflake } from "../helpers/id_generator.js";
+import { User } from "../domain/user.js";
 
 export interface IPostRepository {
   Create(p: Post): Promise<Result<Post, Error>>;

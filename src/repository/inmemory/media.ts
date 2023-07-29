@@ -1,7 +1,7 @@
-import { IMediaRepository } from "../media";
-import { Media } from "../../domain/media";
-import { Failure, Result, Success } from "../../helpers/result";
-import { Snowflake } from "../../helpers/id_generator";
+import { IMediaRepository } from "../media.js";
+import { Media } from "../../domain/media.js";
+import { Failure, Result, Success } from "../../helpers/result.js";
+import { Snowflake } from "../../helpers/id_generator.js";
 
 export class MediaRepository implements IMediaRepository {
   private media: Set<Media>;
@@ -12,7 +12,7 @@ export class MediaRepository implements IMediaRepository {
 
   async Create(m: Media): Promise<Result<Media, Error>> {
     try {
-      const res = this.media.add(m);
+      this.media.add(m);
       return new Success(m);
     } catch (e: unknown) {
       return new Failure(new Error("failed to create media", e as any));

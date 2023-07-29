@@ -1,5 +1,5 @@
-import { Media } from "../../domain/media";
-import { Snowflake } from "../../helpers/id_generator";
+import { Media } from "../../domain/media.js";
+import { Snowflake } from "../../helpers/id_generator.js";
 
 export class MediaData {
   get id(): Snowflake {

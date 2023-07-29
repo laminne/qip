@@ -1,6 +1,6 @@
-import { Snowflake } from "../../helpers/id_generator";
-import { Media } from "../../domain/media";
-import { Post, PostReactionEvent } from "../../domain/post";
+import { Snowflake } from "../../helpers/id_generator.js";
+import { Media } from "../../domain/media.js";
+import { Post, PostReactionEvent } from "../../domain/post.js";
 
 export class PostData {
   private readonly _id: Snowflake;

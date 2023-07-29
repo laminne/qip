@@ -1,5 +1,5 @@
-import { Snowflake } from "../../helpers/id_generator";
-import { User, UserAPData, UserFollowEvent } from "../../domain/user";
+import { Snowflake } from "../../helpers/id_generator.js";
+import { User, UserAPData, UserFollowEvent } from "../../domain/user.js";
 
 export class UserData {
   get id(): Snowflake {

@@ -1,8 +1,8 @@
-import { IUserRepository } from "../../repository/user";
-import { User, UserAPData } from "../../domain/user";
-import { Failure, Success } from "../../helpers/result";
-import { UserToUserData } from "../data/user";
-import { Snowflake, SnowflakeIDGenerator } from "../../helpers/id_generator";
+import { IUserRepository } from "../../repository/user.js";
+import { User, UserAPData } from "../../domain/user.js";
+import { Failure, Success } from "../../helpers/result.js";
+import { UserToUserData } from "../data/user.js";
+import { Snowflake, SnowflakeIDGenerator } from "../../helpers/id_generator.js";
 
 export class CreateUserService {
   private readonly repository: IUserRepository;

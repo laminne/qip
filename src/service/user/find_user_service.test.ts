@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { User, UserAPData, UserFollowEvent } from "../../domain/user";
-import { Snowflake } from "../../helpers/id_generator";
-import { UserRepository } from "../../repository/inmemory/user";
-import { FindUserService } from "./find_user_service";
-import { UserToUserData } from "../data/user";
+import { User, UserAPData, UserFollowEvent } from "../../domain/user.js";
+import { Snowflake } from "../../helpers/id_generator.js";
+import { UserRepository } from "../../repository/inmemory/user.js";
+import { FindUserService } from "./find_user_service.js";
+import { UserToUserData } from "../data/user.js";
 
 describe("FindUserService", () => {
   const exp = [

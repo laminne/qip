@@ -1,4 +1,4 @@
-import { Snowflake } from "../helpers/id_generator";
+import { Snowflake } from "../helpers/id_generator.js";
 
 export class Media {
   get id(): Snowflake {

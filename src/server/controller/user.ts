@@ -1,14 +1,15 @@
-import { FindUserService } from "../../service/user/find_user_service";
-import { AsyncResult, Failure, Result, Success } from "../../helpers/result";
-import { UserResponse } from "../types/user";
-import { FindServerService } from "../../service/server/find_server_service";
-import { FindPostService } from "../../service/post/find_post_service";
+import { FindUserService } from "../../service/user/find_user_service.js";
+import { AsyncResult, Failure, Success } from "../../helpers/result.js";
+import { UserResponse } from "../types/user.js";
+import { FindServerService } from "../../service/server/find_server_service.js";
+import { FindPostService } from "../../service/post/find_post_service.js";
 import {
   CommonMediaResponse,
   CommonPostResponse,
   PostReactionResponse,
-} from "../types/post";
-import { Snowflake } from "../../helpers/id_generator";
+} from "../types/post.js";
+import { Snowflake } from "../../helpers/id_generator.js";
+import { PostData } from "../../service/data/post.js";
 
 export class UserController {
   private readonly findUserService: FindUserService;
@@ -74,7 +75,7 @@ export class UserController {
     }
 
     return new Success(
-      posts.value.map((v): CommonPostResponse => {
+      posts.value.map((v: PostData): CommonPostResponse => {
         return {
           id: v.id,
           author: {

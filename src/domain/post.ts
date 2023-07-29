@@ -1,6 +1,6 @@
-import { Snowflake } from "../helpers/id_generator";
-import { User } from "./user";
-import { Media } from "./media";
+import { Snowflake } from "../helpers/id_generator.js";
+import { User } from "./user.js";
+import { Media } from "./media.js";
 
 export class Post {
   get visibility(): number {

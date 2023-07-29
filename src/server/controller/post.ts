@@ -1,36 +1,32 @@
-import { AsyncResult, Failure, Success } from "../../helpers/result";
+import { AsyncResult, Failure, Success } from "../../helpers/result.js";
 import {
   CommonMediaResponse,
   CommonPostRequest,
   CommonPostResponse,
   PostReactionResponse,
-} from "../types/post";
-import { FindPostService } from "../../service/post/find_post_service";
-import { Snowflake } from "../../helpers/id_generator";
-import { FindUserService } from "../../service/user/find_user_service";
-import { FindServerService } from "../../service/server/find_server_service";
-import { CreatePostService } from "../../service/post/create_post_service";
-import { PostData } from "../../service/data/post";
-import { UserData } from "../../service/data/user";
-import { CreateTimelineService } from "../../service/post/create_timeline_service";
+} from "../types/post.js";
+import { FindPostService } from "../../service/post/find_post_service.js";
+import { Snowflake } from "../../helpers/id_generator.js";
+import { FindUserService } from "../../service/user/find_user_service.js";
+import { CreatePostService } from "../../service/post/create_post_service.js";
+import { PostData } from "../../service/data/post.js";
+import { UserData } from "../../service/data/user.js";
+import { CreateTimelineService } from "../../service/post/create_timeline_service.js";
 
 export class PostController {
   private readonly findPostService: FindPostService;
   private readonly findUserService: FindUserService;
-  private readonly findServerService: FindServerService;
   private readonly createPostService: CreatePostService;
   private readonly createTimelineService: CreateTimelineService;
 
   constructor(args: {
     findPostService: FindPostService;
     findUserService: FindUserService;
-    findServerService: FindServerService;
     createPostService: CreatePostService;
     createTimelineService: CreateTimelineService;
   }) {
     this.findPostService = args.findPostService;
     this.findUserService = args.findUserService;
-    this.findServerService = args.findServerService;
     this.createPostService = args.createPostService;
     this.createTimelineService = args.createTimelineService;
   }

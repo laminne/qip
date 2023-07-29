@@ -1,8 +1,8 @@
-import { IPostRepository } from "../post";
-import { AsyncResult, Failure, Result, Success } from "../../helpers/result";
-import { Post } from "../../domain/post";
-import { Snowflake } from "../../helpers/id_generator";
-import { User } from "../../domain/user";
+import { IPostRepository } from "../post.js";
+import { AsyncResult, Failure, Result, Success } from "../../helpers/result.js";
+import { Post } from "../../domain/post.js";
+import { Snowflake } from "../../helpers/id_generator.js";
+import { User } from "../../domain/user.js";
 
 export class PostRepository implements IPostRepository {
   private data: Set<Post>;
@@ -51,7 +51,7 @@ export class PostRepository implements IPostRepository {
   ): AsyncResult<{ posts: Post; author: User }[], Error> {
     try {
       // ToDo: 自分がフォローしているユーザーの投稿の取得
-      const posts = [...this.data].filter((v) => {
+      [...this.data].filter((v) => {
         return v.id;
       });
 

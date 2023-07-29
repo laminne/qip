@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { PostRepository } from "../../repository/inmemory/post";
-import { Post, PostReactionEvent } from "../../domain/post";
-import { Snowflake } from "../../helpers/id_generator";
-import { Media } from "../../domain/media";
-import { FindPostService } from "./find_post_service";
-import { PostToPostData } from "../data/post";
+import { PostRepository } from "../../repository/inmemory/post.js";
+import { Post, PostReactionEvent } from "../../domain/post.js";
+import { Snowflake } from "../../helpers/id_generator.js";
+import { Media } from "../../domain/media.js";
+import { FindPostService } from "./find_post_service.js";
+import { PostToPostData } from "../data/post.js";
 
 describe("FindPostService", () => {
   const exp = [

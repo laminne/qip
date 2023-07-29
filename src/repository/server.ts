@@ -1,6 +1,6 @@
-import { Server } from "../domain/server";
-import { Result } from "../helpers/result";
-import { Snowflake } from "../helpers/id_generator";
+import { Server } from "../domain/server.js";
+import { Result } from "../helpers/result.js";
+import { Snowflake } from "../helpers/id_generator.js";
 
 export interface IServerRepository {
   Create(s: Server): Promise<Result<Server, Error>>;

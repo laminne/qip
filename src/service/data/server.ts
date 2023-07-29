@@ -1,5 +1,5 @@
-import { Snowflake } from "../../helpers/id_generator";
-import { Server } from "../../domain/server";
+import { Snowflake } from "../../helpers/id_generator.js";
+import { Server } from "../../domain/server.js";
 
 export class ServerData {
   get id(): Snowflake {
