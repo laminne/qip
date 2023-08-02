@@ -12,23 +12,27 @@ import { CreatePostService } from "../../service/post/create_post_service.js";
 import { PostData } from "../../service/data/post.js";
 import { UserData } from "../../service/data/user.js";
 import { CreateTimelineService } from "../../service/post/create_timeline_service.js";
+import { DeletePostService } from "../../service/post/delete_post_service.js";
 
 export class PostController {
   private readonly findPostService: FindPostService;
   private readonly findUserService: FindUserService;
   private readonly createPostService: CreatePostService;
   private readonly createTimelineService: CreateTimelineService;
+  private readonly deletePostService: DeletePostService;
 
   constructor(args: {
     findPostService: FindPostService;
     findUserService: FindUserService;
     createPostService: CreatePostService;
     createTimelineService: CreateTimelineService;
+    deletePostService: DeletePostService;
   }) {
     this.findPostService = args.findPostService;
     this.findUserService = args.findUserService;
     this.createPostService = args.createPostService;
     this.createTimelineService = args.createTimelineService;
+    this.deletePostService = args.deletePostService;
   }
 
   async FindByID(id: string): AsyncResult<CommonPostResponse, Error> {
@@ -100,6 +104,15 @@ export class PostController {
         user: user.value,
       }),
     );
+  }
+
+  async DeletePost(id: string) {
+    const res = await this.deletePostService.Delete(id as Snowflake);
+    if (res.isFailure()) {
+      return new Failure(new Error("failed to delete post", res.value));
+    }
+
+    return new Success(res.value);
   }
 
   private convertToCommonResponse(arg: { post: PostData; user: UserData }) {

@@ -37,6 +37,17 @@ export class PostHandler {
     res.code(200).send(re.value);
   };
 
+  public DeletePost: FastifyHandlerMethod<{ Params: { id: string } }> = async (
+    q,
+    r,
+  ) => {
+    const re = await this.controller.DeletePost(q.params.id);
+    if (re.isFailure()) {
+      return r.code(500).send({ message: "failed to delete post" });
+    }
+    r.code(204).send();
+  };
+
   public GetTimeline: FastifyHandlerMethod<{}> = async (q, r) => {
     const res = await this.controller.ChronologicalPosts("123");
     if (res.isFailure()) {

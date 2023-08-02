@@ -50,7 +50,9 @@ export class PostRepository implements IPostRepository {
         where: {
           id: id,
         },
-        data: {},
+        data: {
+          deletedAt: new Date(),
+        },
       });
       return new Success(void "");
     } catch (e: unknown) {
