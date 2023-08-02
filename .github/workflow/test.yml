@@ -1,0 +1,21 @@
+name: Test
+
+on:
+  pull_request:
+    paths-ignore:
+      - "**.md"
+      - "config.yml.example"
+
+jobs:
+  run_test:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: setup
+        uses: actions/setup-node@v3
+      - name: install
+        run: npm ci
+      - name: run test
+        run: npm test

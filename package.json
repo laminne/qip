@@ -12,6 +12,7 @@
     "lint": "eslint --cache --ignore-path .gitignore 'src/**/**.ts'",
     "format": "prettier . --write",
     "test": "vitest run",
+    "coverage": "vitest run --coverage",
     "check": "prettier --check 'src/**/**.ts' && tsc -p . --noEmit",
     "log": "pino-pretty",
     "prisma:format": "prisma format",
