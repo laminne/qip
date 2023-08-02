@@ -57,4 +57,13 @@ export class PostHandler {
 
     r.code(200).send(res.value);
   };
+
+  public CreateReaction: FastifyHandlerMethod<{ Params: { id: string } }> =
+    async (q, r) => {
+      const re = await this.controller.Reaction("123", q.params.id);
+      if (re.isFailure()) {
+        return r.code(500).send({ message: "failed to reaction" });
+      }
+      r.code(200).send(re.value);
+    };
 }
