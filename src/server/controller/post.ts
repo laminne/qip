@@ -13,6 +13,7 @@ import { PostData } from "../../service/data/post.js";
 import { UserData } from "../../service/data/user.js";
 import { CreateTimelineService } from "../../service/post/create_timeline_service.js";
 import { DeletePostService } from "../../service/post/delete_post_service.js";
+import { CreateReactionService } from "../../service/post/create_reaction_service.js";
 
 export class PostController {
   private readonly findPostService: FindPostService;
@@ -20,6 +21,7 @@ export class PostController {
   private readonly createPostService: CreatePostService;
   private readonly createTimelineService: CreateTimelineService;
   private readonly deletePostService: DeletePostService;
+  private readonly createReactionService: CreateReactionService;
 
   constructor(args: {
     findPostService: FindPostService;
@@ -27,12 +29,14 @@ export class PostController {
     createPostService: CreatePostService;
     createTimelineService: CreateTimelineService;
     deletePostService: DeletePostService;
+    createReactionService: CreateReactionService;
   }) {
     this.findPostService = args.findPostService;
     this.findUserService = args.findUserService;
     this.createPostService = args.createPostService;
     this.createTimelineService = args.createTimelineService;
     this.deletePostService = args.deletePostService;
+    this.createReactionService = args.createReactionService;
   }
 
   async FindByID(id: string): AsyncResult<CommonPostResponse, Error> {
@@ -113,6 +117,23 @@ export class PostController {
     }
 
     return new Success(res.value);
+  }
+
+  async Reaction(userID: string, postID: string) {
+    const res = await this.createReactionService.Handle(
+      postID as Snowflake,
+      userID as Snowflake,
+    );
+    if (res.isFailure()) {
+      return new Failure(res.value);
+    }
+
+    // ToDo: 独立した型として提供する
+    const resp = {
+      userID: res.value.userID,
+      postID: res.value.postID,
+    };
+    return new Success(resp);
   }
 
   private convertToCommonResponse(arg: { post: PostData; user: UserData }) {
