@@ -14,4 +14,6 @@ export interface IPostRepository {
     authorIDs: Snowflake,
     cursor: number,
   ): AsyncResult<{ posts: Post; author: User }[], Error>;
+
+  Delete(id: Snowflake): AsyncResult<void, Error>;
 }

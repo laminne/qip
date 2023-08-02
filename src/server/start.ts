@@ -14,6 +14,7 @@ import cors from "@fastify/cors";
 import { UserHandlers } from "./handlers/user.js";
 import { UserController } from "./controller/user.js";
 import { CreateTimelineService } from "../service/post/create_timeline_service.js";
+import { DeletePostService } from "../service/post/delete_post_service.js";
 
 export async function StartServer(port: number) {
   const app = fastify({
@@ -35,6 +36,7 @@ export async function StartServer(port: number) {
       createTimelineService: new CreateTimelineService({
         postRepository: postRepository,
       }),
+      deletePostService: new DeletePostService(postRepository),
     }),
   );
   const userHandler = new UserHandlers(
@@ -50,6 +52,7 @@ export async function StartServer(port: number) {
   });
 
   app.get("/api/v1/posts/:id", postHandler.FindByID);
+  app.delete("/api/v1/posts/:id", postHandler.DeletePost);
   app.post("/api/v1/posts", postHandler.CreatePost);
   app.get("/api/v1/users/:name", userHandler.FindByHandle);
   app.get("/api/v1/users/:name/posts", userHandler.FindUserPosts);

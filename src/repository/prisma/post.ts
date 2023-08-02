@@ -44,11 +44,28 @@ export class PostRepository implements IPostRepository {
     }
   }
 
+  async Delete(id: Snowflake): AsyncResult<void, Error> {
+    try {
+      await this.prisma.post.update({
+        where: {
+          id: id,
+        },
+        data: {
+          deletedAt: new Date(),
+        },
+      });
+      return new Success(void "");
+    } catch (e: unknown) {
+      return new Failure(new Error("failed to delete post", e as Error as any));
+    }
+  }
+
   async FindByAuthor(id: Snowflake): Promise<Result<Array<Post>, Error>> {
     try {
       const res = await this.prisma.post.findMany({
         where: {
           authorID: id,
+          deletedAt: null,
         },
         include: {
           attachments: true,
@@ -67,6 +84,7 @@ export class PostRepository implements IPostRepository {
       const res = await this.prisma.post.findUnique({
         where: {
           id: id,
+          deletedAt: null,
         },
         include: {
           attachments: true,
@@ -101,11 +119,17 @@ export class PostRepository implements IPostRepository {
                   },
                 },
               },
+              attachments: {
+                some: {
+                  deletedAt: null,
+                },
+              },
             },
             {
               authorID: userID,
             },
           ],
+          deletedAt: null,
         },
         orderBy: {
           createdAt: "desc",

@@ -26,7 +26,6 @@ export class FindUserService {
       logger.error(res.value);
       return new Failure(new Error("failed to find user by id", res.value));
     }
-    logger.debug(res.value);
     const resp = UserToUserData(res.value);
     return new Success(resp);
   }
