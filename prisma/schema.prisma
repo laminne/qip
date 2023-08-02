@@ -76,6 +76,7 @@ model Post {
   text       String
   visibility Int
   createdAt  DateTime @default(now())
+  deletedAt  DateTime?
   User       User     @relation(fields: [authorID], references: [id])
   authorID   String
 
@@ -103,6 +104,7 @@ model Media {
   url          String
   thumbnailURL String
   cached       Boolean
+  deletedAt    DateTime?
 
   User     User   @relation(fields: [authorID], references: [id])
   authorID String

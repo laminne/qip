@@ -45,6 +45,10 @@ export class PostRepository implements IPostRepository {
     return new Failure(new Error(""));
   }
 
+  async Delete(id: Snowflake): AsyncResult<void, Error> {
+    return new Failure(new Error("todo"));
+  }
+
   async ChronologicalPosts(
     userID: Snowflake,
     cursor: number,
