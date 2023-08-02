@@ -15,6 +15,7 @@ import { UserHandlers } from "./handlers/user.js";
 import { UserController } from "./controller/user.js";
 import { CreateTimelineService } from "../service/post/create_timeline_service.js";
 import { DeletePostService } from "../service/post/delete_post_service.js";
+import { PreCheck } from "./pre_check.js";
 
 export async function StartServer(port: number) {
   const app = fastify({
@@ -23,7 +24,7 @@ export async function StartServer(port: number) {
   app.register(cors, {});
 
   const prisma = new PrismaClient();
-
+  await PreCheck(prisma);
   const postRepository = new PostRepository(prisma);
   const serverRepository = new ServerRepository(prisma);
   const userRepository = new UserRepository(prisma);
