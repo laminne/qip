@@ -1,0 +1,113 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String   @id
+  handle         String
+  fullHandle     String   @unique
+  nickName       String
+  role           Int
+  bio            String
+  headerImageURL String
+  iconImageURL   String
+  password       String
+  isLocalUser    Boolean
+  createdAt      DateTime @default(now())
+
+  userAPData UserAPData @relation(fields: [apDataID], references: [id])
+  apDataID   String     @unique
+  Server     Server     @relation(fields: [serverId], references: [id])
+  serverId   String
+  post       Post[]
+  media      Media[]
+  reactions  Reaction[]
+
+  follower  UserFollowEvent[] @relation("Followers")
+  following UserFollowEvent[] @relation("Following")
+}
+
+model UserAPData {
+  id           String  @id
+  inboxURL     String
+  outboxURL    String
+  followersURL String
+  followingURL String
+  publicKey    String
+  privateKey   String?
+
+  User User?
+}
+
+model UserFollowEvent {
+  follower    User   @relation("Followers", fields: [followerID], references: [id])
+  followerID  String
+  following   User   @relation("Following", fields: [followingID], references: [id])
+  followingID String
+
+  @@id([followingID, followerID])
+}
+
+model Server {
+  id              String @id
+  host            String @unique
+  softwareName    String
+  softwareVersion String
+  name            String
+  description     String
+  maintainer      String
+  maintainerEmail String
+  iconURL         String
+  faviconURL      String
+
+  users User[]
+}
+
+model Post {
+  id         String   @id
+  text       String
+  visibility Int
+  createdAt  DateTime @default(now())
+  deletedAt  DateTime?
+  User       User     @relation(fields: [authorID], references: [id])
+  authorID   String
+
+  attachments Media[]
+  reactions   Reaction[]
+}
+
+model Reaction {
+  User   User   @relation(fields: [userId], references: [id])
+  userId String
+  Post   Post   @relation(fields: [postId], references: [id])
+  postId String
+
+  @@id([userId, postId])
+}
+
+model Media {
+  id           String  @id
+  name         String
+  type         String
+  md5Sum       String
+  size         Int
+  isSensitive  Boolean
+  blurhash     String
+  url          String
+  thumbnailURL String
+  cached       Boolean
+  deletedAt    DateTime?
+
+  User     User   @relation(fields: [authorID], references: [id])
+  authorID String
+  Post     Post   @relation(fields: [postID], references: [id])
+  postID   String
+}

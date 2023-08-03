@@ -5,3 +5,11 @@ raw
 *.log
 config.yml
 *.txt
+.env
+tsconfig.tsbuildinfo
+node_modules
+build
+memo.md
+.eslintcache
+.DS_Store
+/issues.md
