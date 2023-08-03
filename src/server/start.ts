@@ -15,9 +15,13 @@ import { UserHandlers } from "./handlers/user.js";
 import { UserController } from "./controller/user.js";
 import { CreateTimelineService } from "../service/post/create_timeline_service.js";
 import { DeletePostService } from "../service/post/delete_post_service.js";
-// import { PreCheck } from "./pre_check.js";
+import { PreCheck } from "./pre_check.js";
 import { CreateReactionService } from "../service/post/create_reaction_service.js";
 import { ReactionRepository } from "../repository/prisma/reaction.js";
+import { WebFingerHandler } from "./handlers/activitypub/webfinger.js";
+import { WebFingerController } from "./controller/activitypub/webfinger.js";
+import { NodeInfoHandlers } from "./handlers/activitypub/nodeinfo.js";
+import { NodeInfoController } from "./controller/activitypub/nodeinfo.js";
 
 export async function StartServer(port: number) {
   const app = fastify({
@@ -26,7 +30,7 @@ export async function StartServer(port: number) {
   app.register(cors, {});
 
   const prisma = new PrismaClient();
-  // await PreCheck(prisma);
+  await PreCheck(prisma);
   const postRepository = new PostRepository(prisma);
   const serverRepository = new ServerRepository(prisma);
   const userRepository = new UserRepository(prisma);
@@ -53,6 +57,10 @@ export async function StartServer(port: number) {
       findPostService: new FindPostService(postRepository),
     }),
   );
+  const apHandler = new WebFingerHandler(
+    new WebFingerController(new FindUserService(userRepository)),
+  );
+  const nodeinfoHandler = new NodeInfoHandlers(new NodeInfoController());
 
   app.get("/", (q, s) => {
     return { version: "Qip2 Server v0.0.1 (pre-alpha)" };
@@ -65,6 +73,9 @@ export async function StartServer(port: number) {
   app.get("/api/v1/users/:name", userHandler.FindByHandle);
   app.get("/api/v1/users/:name/posts", userHandler.FindUserPosts);
   app.get("/api/v1/timeline/home", postHandler.GetTimeline);
+
+  app.get("/.well-known/webfinger", apHandler.Handle);
+  app.get("/nodeinfo/2.0", nodeinfoHandler.Handle);
 
   try {
     await app.listen({ port: port });
