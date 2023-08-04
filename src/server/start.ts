@@ -24,11 +24,24 @@ import { NodeInfoHandlers } from "./handlers/activitypub/nodeinfo.js";
 import { NodeInfoController } from "./controller/activitypub/nodeinfo.js";
 import { PersonHandler } from "./handlers/activitypub/person.js";
 import { PersonController } from "./controller/activitypub/person.js";
+import logger from "../helpers/logger.js";
 
 export async function StartServer(port: number) {
   const app = fastify({
-    logger: false,
+    logger: true,
   });
+  app.addContentTypeParser(
+    "application/activity+json",
+    { parseAs: "string" },
+    (req, body, done) => {
+      try {
+        const parsedBody = JSON.parse(typeof body === "string" ? body : "");
+        done(null, parsedBody);
+      } catch (err) {
+        done(err as Error as any);
+      }
+    },
+  );
   app.register(cors, {});
 
   const prisma = new PrismaClient();
@@ -81,7 +94,10 @@ export async function StartServer(port: number) {
   app.get("/.well-known/webfinger", apHandler.Handle);
   app.get("/nodeinfo/2.0", nodeinfoHandler.Handle);
   app.get("/users/:id", personHandler.Handle);
-
+  app.post("/users/:id/inbox", (q, r) => {
+    logger.info(q.body, "inbox");
+    r.code(503).send();
+  });
   try {
     await app.listen({ port: port, host: "0.0.0.0" });
     return;

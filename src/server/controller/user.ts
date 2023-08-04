@@ -1,5 +1,5 @@
 import { FindUserService } from "../../service/user/find_user_service.js";
-import { AsyncResult, Failure, Success } from "../../helpers/result.js";
+import { AsyncResult, Failure, Result, Success } from "../../helpers/result.js";
 import { UserResponse } from "../types/user.js";
 import { FindServerService } from "../../service/server/find_server_service.js";
 import { FindPostService } from "../../service/post/find_post_service.js";
@@ -27,7 +27,11 @@ export class UserController {
   }
 
   async FindByHandle(name: string): AsyncResult<UserResponse, Error> {
-    const user = await this.findUserService.FindByHandle(name);
+    const acct = this.acctConverter(name);
+    if (acct.isFailure()) {
+      return new Failure(acct.value);
+    }
+    const user = await this.findUserService.FindByHandle(acct.value);
     if (user.isFailure()) {
       return new Failure(new Error("failed to find user", user.value));
     }
@@ -108,5 +112,18 @@ export class UserController {
         };
       }),
     );
+  }
+
+  private acctConverter(acct: string): Result<string, Error> {
+    const split = acct.split("@");
+    switch (split.length) {
+      case 2:
+        return new Success(`${split[0]}@${split[1]}`);
+      case 3:
+        return new Success(`${split[1]}@${split[2]}`);
+      default:
+        // パースエラー
+        return new Failure(new Error("failed to parse acct"));
+    }
   }
 }
