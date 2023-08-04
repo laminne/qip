@@ -24,7 +24,7 @@ export class PersonController {
         "https://w3id.org/security/v1",
       ],
       id: `https://wrt2.laminne33569.net/users/${uHandle}`,
-
+      url: `https://gate-laminne.vercel.app/users/@${user.value.fullHandle}`,
       type: "Person",
       discoverable: true,
       preferredUsername: user.value.handle,
@@ -60,6 +60,7 @@ export interface APActor {
   "@context": string[];
   id: string;
   type: string;
+  url: string;
   preferredUsername: string;
   inbox: string;
   outbox: string;
