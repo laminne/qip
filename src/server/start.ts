@@ -22,6 +22,8 @@ import { WebFingerHandler } from "./handlers/activitypub/webfinger.js";
 import { WebFingerController } from "./controller/activitypub/webfinger.js";
 import { NodeInfoHandlers } from "./handlers/activitypub/nodeinfo.js";
 import { NodeInfoController } from "./controller/activitypub/nodeinfo.js";
+import { PersonHandler } from "./handlers/activitypub/person.js";
+import { PersonController } from "./controller/activitypub/person.js";
 
 export async function StartServer(port: number) {
   const app = fastify({
@@ -61,7 +63,9 @@ export async function StartServer(port: number) {
     new WebFingerController(new FindUserService(userRepository)),
   );
   const nodeinfoHandler = new NodeInfoHandlers(new NodeInfoController());
-
+  const personHandler = new PersonHandler(
+    new PersonController(new FindUserService(userRepository)),
+  );
   app.get("/", (q, s) => {
     return { version: "Qip2 Server v0.0.1 (pre-alpha)" };
   });
@@ -76,9 +80,10 @@ export async function StartServer(port: number) {
 
   app.get("/.well-known/webfinger", apHandler.Handle);
   app.get("/nodeinfo/2.0", nodeinfoHandler.Handle);
+  app.get("/users/:id", personHandler.Handle);
 
   try {
-    await app.listen({ port: port });
+    await app.listen({ port: port, host: "0.0.0.0" });
     return;
   } catch (e: unknown) {
     return new Error("failed to start server", e as Error as any);
