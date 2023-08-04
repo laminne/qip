@@ -29,12 +29,12 @@ export class WebFingerController {
     const res: WebFinger = {
       subject: `acct:${a.value}`,
       // ToDo: 自分自身のFQDNをグローバル定数として用意する
-      aliases: [`http://localhost:6300/users/${user.value.id}`],
+      aliases: [`https://wrt2.laminne33569.net/users/${user.value.id}`],
       links: [
         {
           rel: "self",
           type: "application/activity+json",
-          href: `http://localhost:6300/users/${user.value.id}`,
+          href: `https://wrt2.laminne33569.net/users/${user.value.id}`,
         },
       ],
     };
