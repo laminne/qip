@@ -1,6 +1,7 @@
 import { PostController } from "../controller/post.js";
 import { FastifyHandlerMethod } from "../../helpers/fastify.js";
 import { CommonPostRequest } from "../types/post.js";
+import { ErrorConverter } from "./error.js";
 
 export class PostHandler {
   private readonly controller: PostController;
@@ -29,7 +30,8 @@ export class PostHandler {
   ) => {
     const re = await this.controller.CreatePost(req.body);
     if (re.isFailure()) {
-      res.code(500).send({ message: "failed to create post" });
+      const [code, message] = ErrorConverter(re.value);
+      res.code(code).send(message);
       console.log(re.value);
       return;
     }
@@ -43,7 +45,8 @@ export class PostHandler {
   ) => {
     const re = await this.controller.DeletePost(q.params.id);
     if (re.isFailure()) {
-      return r.code(500).send({ message: "failed to delete post" });
+      const [code, message] = ErrorConverter(re.value);
+      return r.code(code).send(message);
     }
     r.code(204).send();
   };
@@ -51,7 +54,8 @@ export class PostHandler {
   public GetTimeline: FastifyHandlerMethod<{}> = async (q, r) => {
     const res = await this.controller.ChronologicalPosts("123");
     if (res.isFailure()) {
-      r.code(500).send({ message: "failed to get timeline" });
+      const [code, message] = ErrorConverter(res.value);
+      r.code(code).send(message);
       return;
     }
 
@@ -62,7 +66,8 @@ export class PostHandler {
     async (q, r) => {
       const re = await this.controller.Reaction("123", q.params.id);
       if (re.isFailure()) {
-        return r.code(500).send({ message: "failed to reaction" });
+        const [code, message] = ErrorConverter(re.value);
+        return r.code(code).send(message);
       }
       r.code(200).send(re.value);
     };

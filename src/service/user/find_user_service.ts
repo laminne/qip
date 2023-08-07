@@ -14,7 +14,7 @@ export class FindUserService {
   async FindByID(id: Snowflake) {
     const res = await this.repository.FindByID(id);
     if (res.isFailure()) {
-      return new Failure(new Error("failed to find user by id", res.value));
+      return new Failure(res.value);
     }
     const resp = UserToUserData(res.value);
     return new Success(resp);
@@ -24,7 +24,7 @@ export class FindUserService {
     const res = await this.repository.FindByHandle(handle);
     if (res.isFailure()) {
       logger.error(res.value);
-      return new Failure(new Error("failed to find user by id", res.value));
+      return new Failure(res.value);
     }
     const resp = UserToUserData(res.value);
     return new Success(resp);
