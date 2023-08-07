@@ -33,14 +33,12 @@ export class UserController {
     }
     const user = await this.findUserService.FindByHandle(acct.value);
     if (user.isFailure()) {
-      return new Failure(new Error("failed to find user", user.value));
+      return new Failure(user.value);
     }
 
     const server = await this.findServerService.FindByID(user.value.serverID);
     if (server.isFailure()) {
-      return new Failure(
-        new Error("failed to find user server data", server.value),
-      );
+      return new Failure(server.value);
     }
 
     const r = user.value;

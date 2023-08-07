@@ -3,6 +3,7 @@ import { AsyncResult, Failure, Result, Success } from "../../helpers/result.js";
 import { User, UserAPData, UserFollowEvent } from "../../domain/user.js";
 import { Snowflake } from "../../helpers/id_generator.js";
 import { PrismaClient } from "@prisma/client";
+import { PrismaErrorConverter } from "./error.js";
 
 export class UserRepository implements IUserRepository {
   private prisma: PrismaClient;
@@ -52,13 +53,13 @@ export class UserRepository implements IUserRepository {
       const response: Array<User> = this.convertToDomain(new Array<any>(res));
       return new Success(response[0]);
     } catch (e: unknown) {
-      return new Failure(new Error(e as any));
+      return new Failure(PrismaErrorConverter(e));
     }
   }
 
   async FindByHandle(handle: string): Promise<Result<User, Error>> {
     try {
-      const res = await this.prisma.user.findUnique({
+      const res = await this.prisma.user.findUniqueOrThrow({
         where: {
           fullHandle: handle,
         },
@@ -70,12 +71,13 @@ export class UserRepository implements IUserRepository {
       });
       return new Success(this.convertToDomain([res])[0]);
     } catch (e: unknown) {
-      return new Failure(new Error(e as Error as any));
+      return new Failure(PrismaErrorConverter(e));
     }
   }
 
   async FindByID(id: Snowflake): Promise<Result<User, Error>> {
     try {
+      // Fixme: ID検索がFindManyになっている
       const res = await this.prisma.user.findMany({
         where: {
           id: id,
@@ -88,7 +90,7 @@ export class UserRepository implements IUserRepository {
       });
       return new Success(this.convertToDomain(res)[0]);
     } catch (e: unknown) {
-      return new Failure(new Error(e as any));
+      return new Failure(PrismaErrorConverter(e));
     }
   }
 
@@ -111,9 +113,7 @@ export class UserRepository implements IUserRepository {
       });
       return new Success(this.convertToFollowDomain(res));
     } catch (e: unknown) {
-      return new Failure(
-        new Error("failed to find user follow", e as Error as any),
-      );
+      return new Failure(PrismaErrorConverter(e));
     }
   }
 
@@ -132,9 +132,7 @@ export class UserRepository implements IUserRepository {
       });
       return new Success(this.convertToFollowerDomain(res));
     } catch (e: unknown) {
-      return new Failure(
-        new Error("failed to find user follow", e as Error as any),
-      );
+      return new Failure(PrismaErrorConverter(e));
     }
   }
 
