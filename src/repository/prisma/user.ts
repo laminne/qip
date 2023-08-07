@@ -4,6 +4,7 @@ import { User, UserAPData, UserFollowEvent } from "../../domain/user.js";
 import { Snowflake } from "../../helpers/id_generator.js";
 import { PrismaClient } from "@prisma/client";
 import { PrismaErrorConverter } from "./error.js";
+import { InternalError } from "../../helpers/errors.js";
 
 export class UserRepository implements IUserRepository {
   private prisma: PrismaClient;
@@ -136,8 +137,15 @@ export class UserRepository implements IUserRepository {
     }
   }
 
+  private isUser(obj: any): obj is user {
+    return typeof obj.id === "string";
+  }
+
   private convertToDomain(ew: Array<any>): Array<User> {
-    return ew.map((e) => {
+    return ew.map((e: any) => {
+      if (!this.isUser(e)) {
+        throw new InternalError();
+      }
       return new User({
         id: e.id as Snowflake,
         bio: e.bio,
@@ -228,3 +236,29 @@ export class UserRepository implements IUserRepository {
     });
   }
 }
+
+type user = {
+  id: string;
+  serverId: string;
+  bio: string;
+  createdAt: Date;
+  handle: string;
+  fullHandle: string;
+  headerImageURL: string;
+  iconImageURL: string;
+  nickName: string;
+  isLocalUser: boolean;
+  password: string;
+  role: number;
+  following: object[];
+  userAPData: {
+    followersURL: string;
+    followingURL: string;
+    inboxURL: string;
+    outboxURL: string;
+    privateKey: string | null;
+    publicKey: string;
+    id: string;
+    userID: string;
+  };
+};
