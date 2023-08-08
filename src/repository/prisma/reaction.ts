@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { PostReactionEvent } from "../../domain/post.js";
 import { AsyncResult, Failure, Success } from "../../helpers/result.js";
 import { Snowflake } from "../../helpers/id_generator.js";
+import { PrismaErrorConverter } from "./error.js";
 
 export class ReactionRepository implements IReactionRepository {
   private readonly prisma: PrismaClient;
@@ -28,11 +29,9 @@ export class ReactionRepository implements IReactionRepository {
         },
       });
 
-      return new Success(this.toDomain([res]));
+      return new Success(this.toDomain(res as PostReactionEntity));
     } catch (e: unknown) {
-      return new Failure(
-        new Error("failed to create reaction", e as Error as any),
-      );
+      return new Failure(PrismaErrorConverter(e));
     }
   }
 
@@ -50,11 +49,9 @@ export class ReactionRepository implements IReactionRepository {
         },
       });
 
-      return new Success(this.toDomain(res));
+      return new Success(this.toDomain(res as PostReactionEntity));
     } catch (e: unknown) {
-      return new Failure(
-        new Error("failed to find reaction", e as Error as any),
-      );
+      return new Failure(PrismaErrorConverter(e));
     }
   }
 
@@ -70,13 +67,13 @@ export class ReactionRepository implements IReactionRepository {
       });
       return new Success(void "");
     } catch (e: unknown) {
-      return new Failure(
-        new Error("failed to undo reaction", e as Error as any),
-      );
+      return new Failure(PrismaErrorConverter(e));
     }
   }
 
-  private toDomain(v: any) {
+  private toDomain(v: PostReactionEntity) {
     return new PostReactionEvent(v.postId as Snowflake, v.userId as Snowflake);
   }
 }
+
+export type PostReactionEntity = { postId: string; userId: string };

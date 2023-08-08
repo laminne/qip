@@ -69,7 +69,10 @@ export class UserRepository implements IUserRepository {
           follower: { include: { follower: true, following: true } },
         },
       });
-      return new Success(this.convertToDomain([res])[0]);
+      // Memo:
+      //  follower[N].following -> そのユーザーがフォローしているユーザー
+      //  following[N].follower -> そのユーザーをフォローしているユーザー
+      return new Success(this.convertToDomain([res as UserEntity])[0]);
     } catch (e: unknown) {
       return new Failure(PrismaErrorConverter(e));
     }
@@ -77,8 +80,7 @@ export class UserRepository implements IUserRepository {
 
   async FindByID(id: Snowflake): Promise<Result<User, Error>> {
     try {
-      // Fixme: ID検索がFindManyになっている
-      const res = await this.prisma.user.findMany({
+      const res = await this.prisma.user.findUnique({
         where: {
           id: id,
         },
@@ -88,13 +90,15 @@ export class UserRepository implements IUserRepository {
           follower: { include: { follower: true, following: true } },
         },
       });
-      return new Success(this.convertToDomain(res)[0]);
+
+      return new Success(this.convertToDomain([res as UserEntity])[0]);
+      // return new Success(this.convertToDomain([res as UserEntity])[0]);
     } catch (e: unknown) {
       return new Failure(PrismaErrorConverter(e));
     }
   }
 
-  async Update(u: User): Promise<Result<User, Error>> {
+  async Update(): Promise<Result<User, Error>> {
     return new Failure(new Error(""));
   }
 
@@ -136,7 +140,7 @@ export class UserRepository implements IUserRepository {
     }
   }
 
-  private convertToDomain(ew: Array<any>): Array<User> {
+  private convertToDomain<T extends UserEntity>(ew: Array<T>): Array<User> {
     return ew.map((e) => {
       return new User({
         id: e.id as Snowflake,
@@ -150,41 +154,24 @@ export class UserRepository implements IUserRepository {
         nickName: e.nickName,
         password: e.password,
         role: e.role,
-        following: e.following.map(
-          (v: {
-            following: {
-              id: string;
-              fullHandle: string;
-              nickName: string;
-              iconImageURL: string;
-              bio: string;
-            };
-            follower: {
-              id: string;
-              fullHandle: string;
-              nickName: string;
-              iconImageURL: string;
-              bio: string;
-            };
-          }): UserFollowEvent => {
-            return new UserFollowEvent(
-              {
-                id: v.following.id as Snowflake,
-                bio: v.following.bio,
-                fullHandle: v.following.fullHandle,
-                iconImageURL: v.following.iconImageURL,
-                nickName: v.following.nickName,
-              },
-              {
-                id: v.follower.id as Snowflake,
-                bio: v.follower.bio,
-                fullHandle: v.follower.fullHandle,
-                iconImageURL: v.follower.iconImageURL,
-                nickName: v.follower.nickName,
-              },
-            );
-          },
-        ),
+        following: e.follower.map((v) => {
+          return new UserFollowEvent(
+            {
+              id: v.following.id as Snowflake,
+              bio: v.following.bio,
+              iconImageURL: v.following.iconImageURL,
+              nickName: v.following.nickName,
+              fullHandle: v.following.fullHandle,
+            },
+            {
+              id: v.follower.id as Snowflake,
+              bio: v.follower.bio,
+              iconImageURL: v.follower.iconImageURL,
+              nickName: v.follower.nickName,
+              fullHandle: v.follower.fullHandle,
+            },
+          );
+        }),
         apData: new UserAPData({
           followersURL: e.userAPData.followersURL ?? "",
           followingURL: e.userAPData.followingURL ?? "",
@@ -260,3 +247,43 @@ export class UserRepository implements IUserRepository {
     });
   }
 }
+
+export type UserEntity = {
+  id: string;
+  serverId: string;
+  bio: string;
+  createdAt: Date;
+  handle: string;
+  fullHandle: string;
+  headerImageURL: string;
+  iconImageURL: string;
+  nickName: string;
+  isLocalUser: boolean;
+  password: string;
+  role: number;
+  follower: Array<{
+    follower: {
+      id: string;
+      fullHandle: string;
+      nickName: string;
+      bio: string;
+      iconImageURL: string;
+    };
+    following: {
+      id: string;
+      fullHandle: string;
+      nickName: string;
+      bio: string;
+      iconImageURL: string;
+    };
+  }>;
+  userAPData: {
+    followersURL: string;
+    followingURL: string;
+    inboxURL: string;
+    outboxURL: string;
+    privateKey: string | null;
+    publicKey: string;
+    id: string;
+  };
+};
