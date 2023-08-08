@@ -4,14 +4,12 @@ on:
   pull_request:
 
 jobs:
-  run_test:
+  test:
     name: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
-      - name: setup
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v3
       - name: install
         run: npm ci
       - name: run test
