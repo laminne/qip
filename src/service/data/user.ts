@@ -157,60 +157,20 @@ export function UserToUserData(v: User): UserData {
       role: v.isAdmin ? 1 : 0,
       following: v.following().map<UserFollowEventData>((e) => {
         return new UserFollowEventData(
-          new UserData({
-            id: e.follower.id,
-            serverID: e.follower.serverID,
-            bio: e.follower.bio,
-            fullHandle: e.follower.fullHandle,
-            handle: e.follower.handle,
-            headerImageURL: e.follower.headerImageURL,
-            iconImageURL: e.follower.iconImageURL,
-            isLocalUser: e.follower.isLocalUser,
-            nickName: e.follower.nickName,
-            role: e.follower.isAdmin ? 1 : 0,
-            createdAt: e.follower.createdAt,
-
-            // 以下のデータはフォロー関係を示すのには必要ないので空欄
-            password: "",
-            following: new Array<UserFollowEventData>(),
-            apData: new UserAPDataData({
-              userID: e.following.id,
-              userAPID: "",
-              followersURL: "",
-              followingURL: "",
-              inboxURL: "",
-              outboxURL: "",
-              privateKey: null,
-              publicKey: "",
-            }),
-          }),
-          new UserData({
+          {
             id: e.following.id,
-            serverID: e.following.serverID,
             bio: e.following.bio,
             fullHandle: e.following.fullHandle,
-            handle: e.following.handle,
-            headerImageURL: e.following.headerImageURL,
             iconImageURL: e.following.iconImageURL,
-            isLocalUser: e.following.isLocalUser,
             nickName: e.following.nickName,
-            role: e.following.isAdmin ? 1 : 0,
-            createdAt: e.following.createdAt,
-
-            // 以下のデータはフォロー関係を示すのには必要ないので空欄
-            password: "",
-            following: new Array<UserFollowEventData>(),
-            apData: new UserAPDataData({
-              userID: e.following.id,
-              userAPID: "",
-              followersURL: "",
-              followingURL: "",
-              inboxURL: "",
-              outboxURL: "",
-              privateKey: null,
-              publicKey: "",
-            }),
-          }),
+          },
+          {
+            id: e.follower.id,
+            bio: e.follower.bio,
+            fullHandle: e.follower.fullHandle,
+            iconImageURL: e.follower.iconImageURL,
+            nickName: e.follower.nickName,
+          },
         );
       }),
       apData: new UserAPDataData({
@@ -322,11 +282,11 @@ export function UserAPDataToUserAPDataData(v: UserAPData) {
 
 export class UserFollowEventData {
   // フォローされたユーザー(dst)
-  private readonly _follower: UserData;
+  private readonly _follower: FollowUserData;
   // フォローしたユーザー(from)
-  private readonly _following: UserData;
+  private readonly _following: FollowUserData;
 
-  constructor(following: UserData, follower: UserData) {
+  constructor(following: FollowUserData, follower: FollowUserData) {
     this._follower = follower;
     this._following = following;
   }
@@ -340,9 +300,14 @@ export class UserFollowEventData {
   }
 
   public toDomain(): UserFollowEvent {
-    return new UserFollowEvent(
-      this._following.toDomain(),
-      this._follower.toDomain(),
-    );
+    return new UserFollowEvent(this._following, this._follower);
   }
+}
+
+export interface FollowUserData {
+  id: Snowflake;
+  nickName: string;
+  fullHandle: string;
+  iconImageURL: string;
+  bio: string;
 }

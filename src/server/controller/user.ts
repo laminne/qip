@@ -50,7 +50,15 @@ export class UserController {
       bio: r.bio,
       headerImageURL: r.headerImageURL,
       iconImageURL: r.iconImageURL,
-      following: r.following,
+      following: r.following.map((v) => {
+        return {
+          id: v.following.id,
+          fullHandle: v.following.fullHandle,
+          nickName: v.following.nickName,
+          bio: v.following.bio,
+          iconImageURL: v.following.iconImageURL,
+        };
+      }),
       softwareName: server.value.softwareName,
     };
     return new Success(res);

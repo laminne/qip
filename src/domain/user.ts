@@ -248,21 +248,33 @@ export class UserAPData {
 }
 
 export class UserFollowEvent {
-  // フォローされたユーザー(dst)
-  private readonly _follower: User;
-  // フォローしたユーザー(from)
-  private readonly _following: User;
+  // ToDo:
+  //  DTOなどへの変換時に再帰的に変換が行われる可能性がある
+  //  ->必要なデータ: id,nickName, fullHandle, iconImageURL, bio
 
-  constructor(following: User, follower: User) {
+  // フォローされたユーザー(dst)
+  private readonly _follower: FollowUser;
+  // フォローしたユーザー(from)
+  private readonly _following: FollowUser;
+
+  constructor(following: FollowUser, follower: FollowUser) {
     this._follower = follower;
     this._following = following;
   }
 
-  get follower(): User {
+  get follower(): FollowUser {
     return this._follower;
   }
 
-  get following(): User {
+  get following(): FollowUser {
     return this._following;
   }
+}
+
+export interface FollowUser {
+  id: Snowflake;
+  nickName: string;
+  fullHandle: string;
+  iconImageURL: string;
+  bio: string;
 }
