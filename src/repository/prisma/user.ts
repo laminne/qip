@@ -9,7 +9,7 @@ import { InternalError } from "../../helpers/errors.js";
 export class UserRepository implements IUserRepository {
   private prisma: PrismaClient;
 
-  constructor(prisma: any) {
+  constructor(prisma: PrismaClient) {
     this.prisma = prisma;
   }
 
@@ -158,9 +158,41 @@ export class UserRepository implements IUserRepository {
         nickName: e.nickName,
         password: e.password,
         role: e.role,
-        following: e.following.map((v: any): UserFollowEvent => {
-          return new UserFollowEvent(v.following, v.follower);
-        }),
+        following: e.following.map(
+          (v: {
+            following: {
+              id: string;
+              fullHandle: string;
+              nickName: string;
+              iconImageURL: string;
+              bio: string;
+            };
+            follower: {
+              id: string;
+              fullHandle: string;
+              nickName: string;
+              iconImageURL: string;
+              bio: string;
+            };
+          }): UserFollowEvent => {
+            return new UserFollowEvent(
+              {
+                id: v.following.id as Snowflake,
+                bio: v.following.bio,
+                fullHandle: v.following.fullHandle,
+                iconImageURL: v.following.iconImageURL,
+                nickName: v.following.nickName,
+              },
+              {
+                id: v.follower.id as Snowflake,
+                bio: v.follower.bio,
+                fullHandle: v.follower.fullHandle,
+                iconImageURL: v.follower.iconImageURL,
+                nickName: v.follower.nickName,
+              },
+            );
+          },
+        ),
         apData: new UserAPData({
           followersURL: e.userAPData.followersURL ?? "",
           followingURL: e.userAPData.followingURL ?? "",

@@ -1,0 +1,17 @@
+# プルリクに対してテストを実行
+name: run test
+on:
+  pull_request:
+    paths-ignore:
+      - "**.md"
+
+jobs:
+  run_test:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: install packages
+        run: npm i
+      - name: test
+        run: npm test
