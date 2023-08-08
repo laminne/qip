@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { IUserRepository } from "../user.js";
 import { AsyncResult, Failure, Result, Success } from "../../helpers/result.js";
 import { User, UserAPData, UserFollowEvent } from "../../domain/user.js";

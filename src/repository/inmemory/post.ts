@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { IPostRepository } from "../post.js";
 import { AsyncResult, Failure, Result, Success } from "../../helpers/result.js";
 import { Post } from "../../domain/post.js";
@@ -41,18 +42,18 @@ export class PostRepository implements IPostRepository {
     }
   }
 
-  async Update(p: Post): Promise<Result<Post, Error>> {
+  async Update(): Promise<Result<Post, Error>> {
     return new Failure(new Error(""));
   }
 
-  async Delete(id: Snowflake): AsyncResult<void, Error> {
+  async Delete(): AsyncResult<void, Error> {
     return new Failure(new Error("todo"));
   }
 
-  async ChronologicalPosts(
-    userID: Snowflake,
-    cursor: number,
-  ): AsyncResult<{ posts: Post; author: User }[], Error> {
+  async ChronologicalPosts(): AsyncResult<
+    { posts: Post; author: User }[],
+    Error
+  > {
     try {
       // ToDo: 自分がフォローしているユーザーの投稿の取得
       [...this.data].filter((v) => {

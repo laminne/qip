@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { IServerRepository } from "../server.js";
 import { Server } from "../../domain/server.js";
 import { Failure, Result, Success } from "../../helpers/result.js";
@@ -37,7 +38,7 @@ export class ServerRepository implements IServerRepository {
     }
   }
 
-  async Update(s: Server): Promise<Result<Server, Error>> {
+  async Update(): Promise<Result<Server, Error>> {
     return new Failure(new Error(""));
   }
 }

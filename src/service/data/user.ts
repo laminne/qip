@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Snowflake } from "../../helpers/id_generator.js";
 import { User, UserAPData, UserFollowEvent } from "../../domain/user.js";
 
