@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { IPostRepository } from "../post.js";
 import { AsyncResult, Failure, Result, Success } from "../../helpers/result.js";
 import { Post, PostReactionEvent } from "../../domain/post.js";

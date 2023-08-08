@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { IUserRepository } from "../user.js";
 import { AsyncResult, Failure, Result, Success } from "../../helpers/result.js";
 import { User } from "../../domain/user.js";
@@ -38,12 +39,12 @@ export class UserRepository implements IUserRepository {
     }
   }
 
-  async Update(u: User): Promise<Result<User, Error>> {
+  async Update(): Promise<Result<User, Error>> {
     return new Failure(new Error(""));
   }
 
   // 指定したユーザーがフォローしているユーザー一覧を取得
-  async FindFollowing(id: Snowflake): AsyncResult<Array<User>, Error> {
+  async FindFollowing(): AsyncResult<Array<User>, Error> {
     try {
       // ToDo: 実装する
       return new Success(new Array<User>());
@@ -55,7 +56,7 @@ export class UserRepository implements IUserRepository {
   }
 
   // 指定したユーザーをフォローしているユーザー一覧を取得
-  async FindFollower(id: Snowflake): AsyncResult<Array<User>, Error> {
+  async FindFollower(): AsyncResult<Array<User>, Error> {
     try {
       // ToDo: 実装する
       return new Success(new Array<User>());

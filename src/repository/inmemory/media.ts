@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { IMediaRepository } from "../media.js";
 import { Media } from "../../domain/media.js";
 import { Failure, Result, Success } from "../../helpers/result.js";
@@ -49,7 +50,7 @@ export class MediaRepository implements IMediaRepository {
     }
   }
 
-  async Update(m: Media): Promise<Result<Media, Error>> {
+  async Update(): Promise<Result<Media, Error>> {
     return new Failure(new Error(""));
   }
 }

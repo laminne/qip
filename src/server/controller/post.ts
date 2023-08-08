@@ -59,9 +59,7 @@ export class PostController {
     );
   }
 
-  async FindByHandle(
-    handle: string,
-  ): AsyncResult<Array<CommonPostResponse>, Error> {
+  async FindByHandle(): AsyncResult<Array<CommonPostResponse>, Error> {
     // ToDo: Implement
     return new Success(Array<CommonPostResponse>());
   }

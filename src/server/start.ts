@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { fastify } from "fastify";
 import { PostHandler } from "./handlers/post.js";
 import { PostRepository } from "../repository/prisma/post.js";
@@ -79,7 +80,7 @@ export async function StartServer(port: number) {
   const personHandler = new PersonHandler(
     new PersonController(new FindUserService(userRepository)),
   );
-  app.get("/", (q, s) => {
+  app.get("/", () => {
     return { version: "Qip2 Server v0.0.1 (pre-alpha)" };
   });
 

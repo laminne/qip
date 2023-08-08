@@ -7,7 +7,7 @@ export class NodeInfoHandlers {
     this.controller = c;
   }
 
-  public Handle: FastifyHandlerMethod<{}> = async (q, r) => {
+  public Handle: FastifyHandlerMethod<{ Params: object }> = async (q, r) => {
     const res = this.controller.Handle();
     return r.code(200).send(res);
   };
