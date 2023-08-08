@@ -5,6 +5,9 @@ import { Snowflake } from "../../helpers/id_generator.js";
 import { Media } from "../../domain/media.js";
 import { PrismaClient } from "@prisma/client";
 import { User, UserAPData, UserFollowEvent } from "../../domain/user.js";
+import { MediaEntity } from "./media.js";
+import { PrismaErrorConverter } from "./error.js";
+import { PostReactionEntity } from "./reaction.js";
 
 export class PostRepository implements IPostRepository {
   private prisma: PrismaClient;
@@ -37,10 +40,10 @@ export class PostRepository implements IPostRepository {
           attachments: true,
         },
       });
-      return new Success(this.convertToDomain(res));
+      return new Success(this.convertToDomain(res as PostEntity));
     } catch (e: unknown) {
       console.log(e);
-      return new Failure(new Error(e as any));
+      return new Failure(PrismaErrorConverter(e));
     }
   }
 
@@ -56,7 +59,7 @@ export class PostRepository implements IPostRepository {
       });
       return new Success(void "");
     } catch (e: unknown) {
-      return new Failure(new Error("failed to delete post", e as Error as any));
+      return new Failure(PrismaErrorConverter(e));
     }
   }
 
@@ -75,7 +78,7 @@ export class PostRepository implements IPostRepository {
 
       return new Success(res.map((r) => this.convertToDomain(r)));
     } catch (e: unknown) {
-      return new Failure(new Error(e as any));
+      return new Failure(PrismaErrorConverter(e));
     }
   }
 
@@ -92,20 +95,19 @@ export class PostRepository implements IPostRepository {
         },
       });
 
-      return new Success(this.convertToDomain(res));
+      return new Success(this.convertToDomain(res as PostEntity));
     } catch (e: unknown) {
-      return new Failure(new Error(e as any));
+      return new Failure(PrismaErrorConverter(e));
     }
   }
 
-  async Update(p: Post): Promise<Result<Post, Error>> {
+  async Update(): Promise<Result<Post, Error>> {
     return new Failure(new Error(""));
   }
 
   // 時系列順にフォローしているユーザーと自分自身の投稿を取得
   async ChronologicalPosts(
     userID: Snowflake,
-    cursor: number,
   ): AsyncResult<{ posts: Post; author: User }[], Error> {
     try {
       const posts = await this.prisma.post.findMany({
@@ -145,35 +147,31 @@ export class PostRepository implements IPostRepository {
         posts.map((p) => {
           return {
             posts: new Post({
-              attachments: !p.attachments
-                ? new Array<Media>()
-                : p.attachments.map((v: any) => {
-                    return new Media({
-                      authorID: v.authorID,
-                      blurhash: v.blurhash,
-                      cached: v.cached,
-                      id: v.id,
-                      isSensitive: v.isSensitive,
-                      md5Sum: v.md5Sum,
-                      name: v.name,
-                      postID: v.postID,
-                      size: v.size,
-                      thumbnailURL: v.thumbnailURL,
-                      type: v.type,
-                      url: v.url,
-                    });
-                  }),
+              attachments: p.attachments?.map((v: MediaEntity) => {
+                return new Media({
+                  id: v.id as Snowflake,
+                  authorID: v.authorID as Snowflake,
+                  postID: v.postID as Snowflake,
+                  blurhash: v.blurhash,
+                  cached: v.cached,
+                  isSensitive: v.isSensitive,
+                  md5Sum: v.md5Sum,
+                  name: v.name,
+                  size: v.size,
+                  thumbnailURL: v.thumbnailURL,
+                  type: v.type,
+                  url: v.url,
+                });
+              }),
               authorID: p.authorID as Snowflake,
               createdAt: p.createdAt,
               id: p.id as Snowflake,
-              reactions: !p.reactions
-                ? new Array<PostReactionEvent>()
-                : p.reactions.map((v: any) => {
-                    return new PostReactionEvent(
-                      v.postId as Snowflake,
-                      v.userId as Snowflake,
-                    );
-                  }),
+              reactions: p.reactions?.map((v: PostReactionEntity) => {
+                return new PostReactionEvent(
+                  v.postId as Snowflake,
+                  v.userId as Snowflake,
+                );
+              }),
               text: p.text,
               visibility: 0,
             }),
@@ -206,44 +204,42 @@ export class PostRepository implements IPostRepository {
         }),
       );
     } catch (e: unknown) {
-      return new Failure(new Error(e as Error as any));
+      return new Failure(PrismaErrorConverter(e));
     }
   }
 
-  private convertToDomain(i: any): Post {
+  private convertToDomain(i: PostEntity): Post {
     try {
       return new Post({
         id: i.id as Snowflake,
-        authorID: i.authorID,
+        authorID: i.authorID as Snowflake,
         createdAt: i.createdAt,
         text: i.text,
         visibility: i.visibility,
-        reactions: !i.reactions
-          ? new Array<PostReactionEvent>()
-          : i.reactions.map((v: any) => {
-              return new PostReactionEvent(
-                v.postId as Snowflake,
-                v.userId as Snowflake,
-              );
-            }),
-        attachments: !i.attachments
-          ? new Array<Media>()
-          : i.attachments.map((v: any) => {
-              return new Media({
-                authorID: v.authorID,
-                blurhash: v.blurhash,
-                cached: v.cached,
-                id: v.id,
-                isSensitive: v.isSensitive,
-                md5Sum: v.md5Sum,
-                name: v.name,
-                postID: v.postID,
-                size: v.size,
-                thumbnailURL: v.thumbnailURL,
-                type: v.type,
-                url: v.url,
-              });
-            }),
+        reactions:
+          i.reactions?.map((v: PostReactionEntity): PostReactionEvent => {
+            return new PostReactionEvent(
+              v.postId as Snowflake,
+              v.userId as Snowflake,
+            );
+          }) ?? new Array<PostReactionEvent>(),
+        attachments:
+          i.attachments?.map((v) => {
+            return new Media({
+              id: v.id as Snowflake,
+              authorID: v.authorID as Snowflake,
+              postID: v.postID as Snowflake,
+              blurhash: v.blurhash,
+              cached: v.cached,
+              isSensitive: v.isSensitive,
+              md5Sum: v.md5Sum,
+              name: v.name,
+              size: v.size,
+              thumbnailURL: v.thumbnailURL,
+              type: v.type,
+              url: v.url,
+            });
+          }) ?? new Array<Media>(),
       });
     } catch (e: unknown) {
       console.log(i.reactions, i.attachments);
@@ -251,3 +247,15 @@ export class PostRepository implements IPostRepository {
     }
   }
 }
+
+type PostEntity = {
+  id: string;
+  authorID: string;
+  createdAt: Date;
+  text: string;
+  visibility: number;
+  reactions?: PostReactionEntity[];
+  attachments?: AttachmentEntity[];
+};
+
+type AttachmentEntity = MediaEntity;

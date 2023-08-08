@@ -3,6 +3,7 @@ import { Media } from "../../domain/media.js";
 import { Failure, Result, Success } from "../../helpers/result.js";
 import { Snowflake } from "../../helpers/id_generator.js";
 import { PrismaClient } from "@prisma/client";
+import { PrismaErrorConverter } from "./error.js";
 
 export class MediaRepository implements IMediaRepository {
   private prisma: PrismaClient;
@@ -31,7 +32,7 @@ export class MediaRepository implements IMediaRepository {
       });
       return new Success(this.convertToDomain(res));
     } catch (e: unknown) {
-      return new Failure(new Error("failed to create media", e as any));
+      return new Failure(PrismaErrorConverter(e));
     }
   }
 
@@ -42,9 +43,9 @@ export class MediaRepository implements IMediaRepository {
           id: id,
         },
       });
-      return new Success(this.convertToDomain(res));
+      return new Success(this.convertToDomain(res as MediaEntity));
     } catch (e: unknown) {
-      return new Failure(new Error(e as any));
+      return new Failure(PrismaErrorConverter(e));
     }
   }
 
@@ -55,9 +56,11 @@ export class MediaRepository implements IMediaRepository {
           postID: id,
         },
       });
-      return new Success(res.map((v: any) => this.convertToDomain(v)));
+      return new Success(
+        (res as MediaEntity[]).map((v) => this.convertToDomain(v)),
+      );
     } catch (e: unknown) {
-      return new Failure(new Error(e as any));
+      return new Failure(PrismaErrorConverter(e));
     }
   }
 
@@ -68,21 +71,23 @@ export class MediaRepository implements IMediaRepository {
           authorID: id,
         },
       });
-      return new Success(res.map((v: any) => this.convertToDomain(v)));
+      return new Success(
+        (res as MediaEntity[]).map((v) => this.convertToDomain(v)),
+      );
     } catch (e: unknown) {
-      return new Failure(new Error(e as any));
+      return new Failure(PrismaErrorConverter(e));
     }
   }
 
-  async Update(m: Media): Promise<Result<Media, Error>> {
+  async Update(): Promise<Result<Media, Error>> {
     return new Failure(new Error(""));
   }
 
-  private convertToDomain(v: any): Media {
+  private convertToDomain(v: MediaEntity): Media {
     return new Media({
-      id: v.id,
-      authorID: v.authorID,
-      postID: v.postID,
+      id: v.id as Snowflake,
+      authorID: v.authorID as Snowflake,
+      postID: v.postID as Snowflake,
       blurhash: v.blurhash,
       cached: v.cached,
       isSensitive: v.isSensitive,
@@ -95,3 +100,18 @@ export class MediaRepository implements IMediaRepository {
     });
   }
 }
+
+export type MediaEntity = {
+  id: string;
+  authorID: string;
+  postID: string;
+  blurhash: string;
+  cached: boolean;
+  isSensitive: boolean;
+  md5Sum: string;
+  name: string;
+  size: number;
+  thumbnailURL: string;
+  type: string;
+  url: string;
+};

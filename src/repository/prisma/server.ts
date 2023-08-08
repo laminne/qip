@@ -3,11 +3,12 @@ import { Server } from "../../domain/server.js";
 import { Failure, Result, Success } from "../../helpers/result.js";
 import { Snowflake } from "../../helpers/id_generator.js";
 import { PrismaClient } from "@prisma/client";
+import { PrismaErrorConverter } from "./error.js";
 
 export class ServerRepository implements IServerRepository {
   private prisma: PrismaClient;
 
-  constructor(prisma: any) {
+  constructor(prisma: PrismaClient) {
     this.prisma = prisma;
   }
 
@@ -28,9 +29,9 @@ export class ServerRepository implements IServerRepository {
         },
       });
 
-      return new Success(this.convertToDomain(res));
+      return new Success(this.convertToDomain(res as ServerEntity));
     } catch (e: unknown) {
-      return new Failure(new Error(e as any));
+      return new Failure(PrismaErrorConverter(e));
     }
   }
 
@@ -42,9 +43,9 @@ export class ServerRepository implements IServerRepository {
         },
       });
 
-      return new Success(this.convertToDomain(res));
+      return new Success(this.convertToDomain(res as ServerEntity));
     } catch (e: unknown) {
-      return new Failure(new Error(e as any));
+      return new Failure(PrismaErrorConverter(e));
     }
   }
 
@@ -56,17 +57,17 @@ export class ServerRepository implements IServerRepository {
         },
       });
 
-      return new Success(this.convertToDomain(res));
+      return new Success(this.convertToDomain(res as ServerEntity));
     } catch (e: unknown) {
-      return new Failure(new Error(e as any));
+      return new Failure(PrismaErrorConverter(e));
     }
   }
 
-  async Update(s: Server): Promise<Result<Server, Error>> {
+  async Update(): Promise<Result<Server, Error>> {
     return new Failure(new Error(""));
   }
 
-  private convertToDomain(i: any): Server {
+  private convertToDomain(i: ServerEntity): Server {
     return new Server({
       id: i.id as Snowflake,
       description: i.description,
@@ -81,3 +82,16 @@ export class ServerRepository implements IServerRepository {
     });
   }
 }
+
+export type ServerEntity = {
+  id: string;
+  description: string;
+  faviconURL: string;
+  host: string;
+  iconURL: string;
+  maintainer: string;
+  maintainerEmail: string;
+  name: string;
+  softwareName: string;
+  softwareVersion: string;
+};
