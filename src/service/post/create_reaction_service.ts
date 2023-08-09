@@ -26,6 +26,14 @@ export class CreateReactionService {
     return new Success(data);
   }
 
+  async Undo(postID: Snowflake, userID: Snowflake): AsyncResult<void, Error> {
+    const res = await this.repository.Undo(postID, userID);
+    if (res.isFailure()) {
+      return new Failure(res.value);
+    }
+    return new Success(void "");
+  }
+
   private async isExists(d: PostReactionEvent): Promise<boolean> {
     const res = await this.repository.Find(d.postID, d.userID);
     return res.isSuccess();

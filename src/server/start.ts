@@ -87,6 +87,7 @@ export async function StartServer(port: number) {
   app.get("/api/v1/posts/:id", postHandler.FindByID);
   app.delete("/api/v1/posts/:id", postHandler.DeletePost);
   app.post("/api/v1/posts/:id/reaction", postHandler.CreateReaction);
+  app.delete("/api/v1/posts/:id/reaction", postHandler.UndoReaction);
   app.post("/api/v1/posts", postHandler.CreatePost);
   app.get("/api/v1/users/:name", userHandler.FindByHandle);
   app.get("/api/v1/users/:name/posts", userHandler.FindUserPosts);

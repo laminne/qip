@@ -74,4 +74,14 @@ export class PostHandler {
       }
       r.code(200).send(re.value);
     };
+
+  public UndoReaction: FastifyHandlerMethod<{ Params: { id: string } }> =
+    async (q, r) => {
+      const re = await this.controller.UndoReaction("123", q.params.id);
+      if (re.isFailure()) {
+        const [code, message] = ErrorConverter(re.value);
+        return r.code(code).send(message);
+      }
+      r.code(204).send();
+    };
 }

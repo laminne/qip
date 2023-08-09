@@ -134,6 +134,17 @@ export class PostController {
     return new Success(resp);
   }
 
+  async UndoReaction(userID: string, postID: string) {
+    const res = await this.createReactionService.Undo(
+      postID as Snowflake,
+      userID as Snowflake,
+    );
+    if (res.isFailure()) {
+      return new Failure(res.value);
+    }
+    return new Success(res);
+  }
+
   private convertToCommonResponse(arg: { post: PostData; user: UserData }) {
     const resp: CommonPostResponse = {
       id: arg.post.id,
