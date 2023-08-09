@@ -99,6 +99,7 @@ export async function StartServer(port: number) {
     logger.info(q.body, "inbox");
     r.code(503).send();
   });
+
   try {
     await app.listen({ port: port, host: "0.0.0.0" });
     return;
