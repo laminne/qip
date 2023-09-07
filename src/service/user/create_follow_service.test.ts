@@ -61,7 +61,6 @@ describe("create_follow_service", () => {
 
   it("フォローできる", async () => {
     const res = await service.Handle("1" as Snowflake, "2" as Snowflake);
-    console.log(res.value);
     expect(res.value).not.toBeUndefined();
     expect(res.isFailure()).toBe(false);
   });
