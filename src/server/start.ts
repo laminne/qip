@@ -26,6 +26,7 @@ import { NodeInfoController } from "./controller/activitypub/nodeinfo.js";
 import { PersonHandler } from "./handlers/activitypub/person.js";
 import { PersonController } from "./controller/activitypub/person.js";
 import logger from "../helpers/logger.js";
+import { CreateFollowService } from "../service/user/create_follow_service.js";
 
 export async function StartServer(port: number) {
   const app = fastify({
@@ -71,6 +72,7 @@ export async function StartServer(port: number) {
       findServerService: new FindServerService(serverRepository),
       findUserService: new FindUserService(userRepository),
       findPostService: new FindPostService(postRepository),
+      createFollowService: new CreateFollowService(userRepository),
     }),
   );
   const apHandler = new WebFingerHandler(
@@ -90,6 +92,7 @@ export async function StartServer(port: number) {
   app.delete("/api/v1/posts/:id/reaction", postHandler.UndoReaction);
   app.post("/api/v1/posts", postHandler.CreatePost);
   app.get("/api/v1/users/:name", userHandler.FindByHandle);
+  app.post("/api/v1/users/:id/follow", userHandler.CreateFollow);
   app.get("/api/v1/users/:name/posts", userHandler.FindUserPosts);
   app.get("/api/v1/timeline/home", postHandler.GetTimeline);
 
