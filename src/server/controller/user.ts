@@ -1,6 +1,10 @@
 import { FindUserService } from "../../service/user/find_user_service.js";
 import { AsyncResult, Failure, Result, Success } from "../../helpers/result.js";
-import { UserResponse } from "../types/user.js";
+import {
+  DomainToUserFollowResponse,
+  UserFollowResponse,
+  UserResponse,
+} from "../types/user.js";
 import { FindServerService } from "../../service/server/find_server_service.js";
 import { FindPostService } from "../../service/post/find_post_service.js";
 import {
@@ -10,20 +14,24 @@ import {
 } from "../types/post.js";
 import { Snowflake } from "../../helpers/id_generator.js";
 import { PostData } from "../../service/data/post.js";
+import { CreateFollowService } from "../../service/user/create_follow_service.js";
 
 export class UserController {
   private readonly findUserService: FindUserService;
   private readonly findServerService: FindServerService;
   private readonly findPostService: FindPostService;
+  private readonly createFollowService: CreateFollowService;
 
   constructor(args: {
     findUserService: FindUserService;
     findServerService: FindServerService;
     findPostService: FindPostService;
+    createFollowService: CreateFollowService;
   }) {
     this.findUserService = args.findUserService;
     this.findServerService = args.findServerService;
     this.findPostService = args.findPostService;
+    this.createFollowService = args.createFollowService;
   }
 
   async FindByHandle(name: string): AsyncResult<UserResponse, Error> {
@@ -118,6 +126,20 @@ export class UserController {
         };
       }),
     );
+  }
+
+  async CreateFollow(
+    followerID: string,
+    followingID: string,
+  ): AsyncResult<UserFollowResponse, Error> {
+    const res = await this.createFollowService.Handle(
+      followingID as Snowflake,
+      followerID as Snowflake,
+    );
+    if (res.isFailure()) {
+      return new Failure(res.value);
+    }
+    return new Success(DomainToUserFollowResponse(res.value));
   }
 
   private acctConverter(acct: string): Result<string, Error> {

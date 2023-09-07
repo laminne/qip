@@ -248,10 +248,6 @@ export class UserAPData {
 }
 
 export class UserFollowEvent {
-  // ToDo:
-  //  DTOなどへの変換時に再帰的に変換が行われる可能性がある
-  //  ->必要なデータ: id,nickName, fullHandle, iconImageURL, bio
-
   // フォローされたユーザー(dst)
   private readonly _follower: FollowUser;
   // フォローしたユーザー(from)

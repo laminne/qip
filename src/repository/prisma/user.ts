@@ -58,6 +58,33 @@ export class UserRepository implements IUserRepository {
     }
   }
 
+  async CreateFollow(u: UserFollowEvent): AsyncResult<UserFollowEvent, Error> {
+    try {
+      const res = await this.prisma.userFollowEvent.create({
+        data: {
+          follower: {
+            connect: {
+              id: u.follower.id,
+            },
+          },
+          following: {
+            connect: {
+              id: u.following.id,
+            },
+          },
+        },
+        include: {
+          follower: true,
+          following: true,
+        },
+      });
+      const resp: UserFollowEvent = this.convertToFollowEventDomain(res);
+      return new Success(resp);
+    } catch (e: unknown) {
+      return new Failure(PrismaErrorConverter(e));
+    }
+  }
+
   async FindByHandle(handle: string): Promise<Result<User, Error>> {
     try {
       const res = await this.prisma.user.findUniqueOrThrow({
@@ -247,6 +274,38 @@ export class UserRepository implements IUserRepository {
       });
     });
   }
+
+  private convertToFollowEventDomain<T extends UserFollowEventEntity>(
+    i: T,
+  ): UserFollowEvent {
+    return new UserFollowEvent(
+      { ...i.following, id: i.following.id as Snowflake },
+      { ...i.follower, id: i.follower.id as Snowflake },
+    );
+  }
+
+  async FindFollowEvent(
+    followingID: Snowflake,
+    followerID: Snowflake,
+  ): AsyncResult<UserFollowEvent, Error> {
+    try {
+      const res = await this.prisma.userFollowEvent.findUniqueOrThrow({
+        where: {
+          followingID_followerID: {
+            followingID: followingID,
+            followerID: followerID,
+          },
+        },
+        include: {
+          follower: true,
+          following: true,
+        },
+      });
+      return new Success(this.convertToFollowEventDomain(res));
+    } catch (e: unknown) {
+      return new Failure(PrismaErrorConverter(e));
+    }
+  }
 }
 
 export type UserEntity = {
@@ -286,5 +345,22 @@ export type UserEntity = {
     privateKey: string | null;
     publicKey: string;
     id: string;
+  };
+};
+
+export type UserFollowEventEntity = {
+  follower: {
+    id: string;
+    fullHandle: string;
+    nickName: string;
+    bio: string;
+    iconImageURL: string;
+  };
+  following: {
+    id: string;
+    fullHandle: string;
+    nickName: string;
+    bio: string;
+    iconImageURL: string;
   };
 };

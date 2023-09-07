@@ -29,4 +29,16 @@ export class UserHandlers {
       r.code(200).send(res.value);
       return;
     };
+
+  public CreateFollow: FastifyHandlerMethod<{ Params: { id: string } }> =
+    async (q, r) => {
+      // APIを叩いたユーザー - フォロー > フォロー先(params.id)
+      const res = await this.controller.CreateFollow(q.params.id, "123");
+      if (res.isFailure()) {
+        const [code, message] = ErrorConverter(res.value);
+        return r.code(code).send(message);
+      }
+
+      r.code(200).send(res.value);
+    };
 }

@@ -305,6 +305,12 @@ export class UserFollowEventData {
   }
 }
 
+export function UserFollowEventToUserFollowEventData(
+  u: UserFollowEvent,
+): UserFollowEventData {
+  return new UserFollowEventData(u.following, u.follower);
+}
+
 export interface FollowUserData {
   id: Snowflake;
   nickName: string;
