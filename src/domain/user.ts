@@ -1,6 +1,23 @@
 // ユーザー
 import { Snowflake } from "../helpers/id_generator.js";
 
+export interface UserArgs {
+  id: Snowflake;
+  handle: string;
+  fullHandle: string;
+  serverID: Snowflake;
+  nickName: string;
+  role: number;
+  bio: string;
+  headerImageURL: string;
+  iconImageURL: string;
+  password: string;
+  isLocalUser: boolean;
+  createdAt: Date;
+  apData: UserAPData;
+  following: Array<UserFollowEvent>;
+}
+
 export class User {
   get id(): Snowflake {
     return this._id;
@@ -70,10 +87,6 @@ export class User {
     return this._createdAt;
   }
 
-  set createdAt(value: Date) {
-    this._createdAt = value;
-  }
-
   get apData(): UserAPData {
     return this._apData;
   }
@@ -133,28 +146,16 @@ export class User {
   // フォロー中のユーザー
   private _following: Set<UserFollowEvent>;
 
-  constructor(args: {
-    id: Snowflake;
-    handle: string;
-    fullHandle: string;
-    serverID: Snowflake;
-    nickName: string;
-    role: number;
-    bio: string;
-    headerImageURL: string;
-    iconImageURL: string;
-    password: string;
-    isLocalUser: boolean;
-    createdAt: Date;
-    apData: UserAPData;
-    following: Array<UserFollowEvent>;
-  }) {
+  constructor(args: UserArgs) {
+    this.validate(args);
+
     // 不変
     this._id = args.id;
     this._handle = args.handle;
     this._fullHandle = args.fullHandle;
     this._isLocalUser = args.isLocalUser;
     this._serverID = args.serverID;
+    this._createdAt = args.createdAt;
 
     this._nickName = args.nickName;
     this._role = args.role;
@@ -162,9 +163,35 @@ export class User {
     this._password = args.password;
     this._headerImageURL = args.headerImageURL;
     this._iconImageURL = args.iconImageURL;
-    this._createdAt = args.createdAt;
     this._apData = args.apData;
     this._following = new Set(args.following);
+  }
+
+  private validate(args: UserArgs) {
+    if ([...args.nickName].length > 64) {
+      throw new Error("failed to create user: nickname is too long");
+    } else if ([...args.nickName].length < 1) {
+      throw new Error("failed to create user: nickname is too short");
+    }
+
+    if ([...args.handle].length > 64) {
+      throw new Error("failed to create user: handle is too long");
+    } else if ([...args.handle].length < 1) {
+      throw new Error("failed to create user: handle is too short");
+    }
+
+    // ホスト名は最小4文字, @で1文字、ハンドルが最小1文字: 合計6文字以上
+    if ([...args.fullHandle].length < 6) {
+      throw new Error("failed to create user: fullHandle is too short");
+    }
+
+    if ([...args.bio].length > 3000) {
+      throw new Error("failed to create user: bio is too long");
+    }
+
+    if (args.isLocalUser && args.password.length < 1) {
+      throw new Error("failed to create user: password is not set");
+    }
   }
 }
 
