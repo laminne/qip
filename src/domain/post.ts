@@ -2,6 +2,16 @@ import { Snowflake } from "../helpers/id_generator.js";
 import { User } from "./user.js";
 import { Media } from "./media.js";
 
+export interface PostArgs {
+  id: Snowflake;
+  authorID: Snowflake;
+  text: string;
+  visibility: number;
+  createdAt: Date;
+  attachments: Array<Media>;
+  reactions: Array<PostReactionEvent>;
+}
+
 export class Post {
   get visibility(): number {
     return this._visibility;
@@ -54,6 +64,7 @@ export class Post {
     attachments: Array<Media>;
     reactions: Array<PostReactionEvent>;
   }) {
+    this.validate(args);
     this._id = args.id;
     this._authorID = args.authorID;
 
@@ -69,6 +80,14 @@ export class Post {
       return text.substring(0, 5000);
     }
     return text;
+  }
+
+  private validate(args: PostArgs) {
+    if (args.attachments.length > 16) {
+      throw new Error(
+        "failed to create post: The number of attachments must be less than 16.",
+      );
+    }
   }
 }
 

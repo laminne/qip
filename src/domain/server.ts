@@ -1,5 +1,18 @@
 import { Snowflake } from "../helpers/id_generator.js";
 
+export interface ServerArgs {
+  id: Snowflake;
+  host: string;
+  softwareName: string;
+  softwareVersion: string;
+  name: string;
+  description: string;
+  maintainer: string;
+  maintainerEmail: string;
+  iconURL: string;
+  faviconURL: string;
+}
+
 export class Server {
   get softwareName(): string {
     return this._softwareName;
@@ -105,6 +118,8 @@ export class Server {
     iconURL: string;
     faviconURL: string;
   }) {
+    this.validate(args);
+
     this._id = args.id;
     this._host = args.host;
     this._softwareName = args.softwareName;
@@ -115,5 +130,37 @@ export class Server {
     this._maintainerEmail = args.maintainerEmail;
     this._iconURL = args.iconURL;
     this._faviconURL = args.faviconURL;
+  }
+
+  private validate(args: ServerArgs) {
+    if ([...args.host].length > 128) {
+      throw new Error("failed to create server: host is too long");
+    } else if ([...args.host].length < 4) {
+      throw new Error("failed to create server: host is too short");
+    }
+
+    if ([...args.softwareName].length > 128) {
+      throw new Error("failed to create server: softwareName is too long");
+    }
+
+    if ([...args.softwareVersion].length > 128) {
+      throw new Error("failed to create server: softwareVersion is too long");
+    }
+
+    if ([...args.name].length > 128) {
+      throw new Error("failed to create server: name is too long");
+    }
+
+    if ([...args.description].length > 3000) {
+      throw new Error("failed to create server: description is too long");
+    }
+
+    if ([...args.maintainer].length > 256) {
+      throw new Error("failed to create server: maintainer is too long");
+    }
+
+    if ([...args.maintainerEmail].length > 256) {
+      throw new Error("failed to create server: maintainerEmail is too long");
+    }
   }
 }
