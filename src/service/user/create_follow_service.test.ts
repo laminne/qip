@@ -9,7 +9,7 @@ describe("create_follow_service", () => {
     new User({
       id: "1" as Snowflake,
       fullHandle: "testuser@example.com",
-      password: "",
+      password: "testUserPassword",
       role: 0,
       nickName: "test",
       handle: "test",
@@ -34,7 +34,7 @@ describe("create_follow_service", () => {
     new User({
       id: "2" as Snowflake,
       fullHandle: "testuser2@example.com",
-      password: "",
+      password: "testuser2password",
       role: 0,
       nickName: "test",
       handle: "test",
